@@ -1,7 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
+from app.api.v1 import health, jobs
+
 app = FastAPI(title="TalentFilter API")
+
+# Register routers
+app.include_router(health.router, prefix="/api/v1", tags=["Health"])
+app.include_router(jobs.router, prefix="/api/v1/jobs", tags=["Jobs"])
 
 # Configure CORS
 app.add_middleware(
