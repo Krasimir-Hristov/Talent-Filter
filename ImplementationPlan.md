@@ -21,7 +21,7 @@ This document outlines the step-by-step roadmap for building the MVP.
   - Install dependencies: `zustand`, `@tanstack/react-query`, `lucide-react`, `clsx`, `tailwind-merge`.
   - Initialize Shadcn/UI (`npx shadcn-ui@latest init`).
 
-- [ ] **1.4. Supabase Setup**
+- [x] **1.4. Supabase Setup**
   - Create new Supabase Project.
   - Run SQL script to create `profiles`, `jobs` tables.
   - Get API Keys (Publishable, Secret) and add to `.env` files in both frontend and backend.
@@ -30,7 +30,7 @@ This document outlines the step-by-step roadmap for building the MVP.
 
 **Goal**: Enable the backend to generate questions from descriptions and create jobs.
 
-- [ ] **2.1. AI Service Implementation**
+- [x] **2.1. AI Service Implementation**
   - Create `AIService` class in `backend/app/services/ai.py`.
   - Implement `generate_questions(text: str)` using Gemini API.
   - Create Pydantic models for `Question` output to ensure strict JSON structure.
