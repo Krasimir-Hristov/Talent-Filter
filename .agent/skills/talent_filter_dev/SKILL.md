@@ -11,7 +11,7 @@ Use this skill whenever you are generating code, planning features, or debugging
 
 ### Frontend (User & Recruiter)
 
-- **Framework**: Next.js 16+ (App Router). Always check for security updates.
+- **Framework**: Next.js 16.1.4+ (App Router). **CRITICAL**: Versions below 16.1.4 are vulnerable to RCE and Source Code Exposure (CVE-2025-66478, CVE-2025-55183). Always verify against the latest security advisories.
 - **Styling**: Tailwind CSS + Shadcn/UI (Radix primitives). Use `clsx` and `tailwind-merge` for class manipulation.
 - **State Management**:
   - **Zustand**: Use for client-side ephemeral state (Timer, Interview Phase, Tab Switching flags).
@@ -60,9 +60,11 @@ Strictly separate concerns.
 
 **CRITICAL**: This is a competitive screening tool.
 
-1.  **Visibility Tracking**: Use the `visibilitychange` API. If `document.hidden` is true, increment a `tab_switches` counter.
-2.  **Input Lockdown**: Prevent Copy/Paste on answer fields.
-3.  **Timers**: Trust the Backend timestamp. The frontend timer is just for UI. Validate `submission_time - start_time` on the server.
+1.  **Visibility Tracking**: Use the `visibilitychange` API as detailed in the `security` skill.
+2.  **Input Lockdown**: Prevent Copy/Paste on answer fields via the `usePreventCopyPaste` hook.
+3.  **Timers**: Trust the Backend timestamp. The frontend timer is just for UI.
+4.  **Request Limiting**: All AI-heavy endpoints must implement rate limiting to control costs and prevent abuse.
+5.  **Skill Reference**: Always refer to `.agent/skills/security/SKILL.md` for the full implementation details of these measures.
 
 ## 4. Development Workflow
 
