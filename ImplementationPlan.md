@@ -6,17 +6,17 @@ This document outlines the step-by-step roadmap for building the MVP.
 
 **Goal**: Establish the repository structure for the Monorepo (Frontend + Backend) and connect to cloud services.
 
-- [ ] **1.1. Monorepo Init**
+- [x] **1.1. Monorepo Init**
   - Create root folder structure (`frontend`, `backend`).
   - Initialize Git repository.
   - Set up `.gitignore` for Python and Node.
 
-- [ ] **1.2. Backend (FastAPI) Setup**
+- [x] **1.2. Backend (FastAPI) Setup**
   - Initialize poetry or pip requirements (`fastapi`, `uvicorn`, `pydantic`, `google-generativeai`, `supabase`).
   - Create `app/main.py` "Hello World".
   - Configure CORS to allow `localhost:3000`.
 
-- [ ] **1.3. Frontend (Next.js) Setup**
+- [x] **1.3. Frontend (Next.js) Setup**
   - `npx create-next-app` (TypeScript, Tailwind, App Router).
   - Install dependencies: `zustand`, `@tanstack/react-query`, `lucide-react`, `clsx`, `tailwind-merge`.
   - Initialize Shadcn/UI (`npx shadcn-ui@latest init`).
@@ -24,7 +24,7 @@ This document outlines the step-by-step roadmap for building the MVP.
 - [ ] **1.4. Supabase Setup**
   - Create new Supabase Project.
   - Run SQL script to create `profiles`, `jobs` tables.
-  - Get API Keys (Anon, Service Role) and add to `.env` files in both frontend and backend.
+  - Get API Keys (Publishable, Secret) and add to `.env` files in both frontend and backend.
 
 ## Phase 2: Core Backend & AI Engine
 
@@ -61,8 +61,10 @@ This document outlines the step-by-step roadmap for building the MVP.
 **Goal**: The core value proposition - the automated interview.
 
 - [ ] **4.1. Access Control**
-  - Public route `/interview/[token]`.
-  - Validate token against Backend/Database. Show "Welcome" screen.
+  - Public route `/interview/[jobId]`.
+  - Step 1: Candidate Registration (Name, Email, Phone).
+  - Step 2: On submission, Backend creates `candidate` and `interview` records.
+  - Step 3: Show "Welcome" screen.
 
 - [ ] **4.2. Interview State Machine (Zustand)**
   - Store: `currentStep`, `timer`, `answers`.
@@ -85,8 +87,8 @@ This document outlines the step-by-step roadmap for building the MVP.
   - Updates database record with `score` and `summary`.
 
 - [ ] **5.2. Dashboard Results View**
-  - List candidates for a Job.
-  - Detail View: Show parsed strengths/weaknesses and chat transcript.
+  - List candidates who have completed an interview for a specific Job.
+  - Detail View: Show parsed strengths/weaknesses, score, and contact info (Email, Phone).
 
 ## Phase 6: Polish & Deployment (MVP Release)
 

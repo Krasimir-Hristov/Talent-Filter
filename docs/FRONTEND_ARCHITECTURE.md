@@ -99,7 +99,7 @@ src/
   app/
     [locale]/
       dashboard/      # Recruiter App
-      interview/      # Candidate App
+      interview/      # Candidate App (Registration & Interview Room)
   components/
     ui/               # Shadcn primitives
     features/

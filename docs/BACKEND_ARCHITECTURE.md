@@ -23,7 +23,8 @@ The API follows a RESTful structure, versioned for future compatibility.
   - `POST /analyze`: Accepts a Raw Job Description -> Returns AI-extracted criteria and suggested questions.
   - `POST /create`: Saves a finalized Job -> Generates a shareable public link.
 - **/interviews**:
-  - `GET /session/{token}`: Validates candidate link and returns safe interview data (no correct answers).
+  - `GET /jobs/{id}/public`: Returns safe public job data for the interview welcome screen.
+  - `POST /interviews/start`: Accepts candidate info -> Creates session -> Returns interview data.
   - `POST /submit`: Accepts candidate answers -> Triggers async grading.
 - **/webhooks**: Listeners for Supabase database events (if needed for async triggers).
 
