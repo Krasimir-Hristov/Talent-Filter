@@ -21,6 +21,7 @@ src/
 ├── app/
 │   ├── [locale]/            # Internationalized routes
 │   │   ├── layout.tsx       # Locale-specific root layout
+│   │   ├── page.tsx         # Landing Page (localized)
 │   │   ├── dashboard/       # Recruiter Dashboard
 │   │   └── auth/            # Login/Register pages
 │   ├── layout.tsx           # Global root wrapper

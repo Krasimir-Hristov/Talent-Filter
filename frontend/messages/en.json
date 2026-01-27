@@ -1,4 +1,10 @@
 {
+  "Landing": {
+    "title": "Interview Smarter with AI",
+    "subtitle": "The intelligent recruitment platform that screens candidates 24/7, saving you months of manual work.",
+    "getStarted": "Get Started",
+    "recruiterLogin": "Recruiter Login"
+  },
   "Sidebar": {
     "title": "TalentFilter",
     "subtitle": "SAAS PLATFORM",

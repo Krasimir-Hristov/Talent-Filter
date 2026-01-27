@@ -1,4 +1,10 @@
 {
+  "Landing": {
+    "title": "Intelligenter interviewen с AI",
+    "subtitle": "Die intelligente Rekrutierungsplattform, die Kandidaten rund um die Uhr prüft и Ihnen monatelange manual Arbeit erspart.",
+    "getStarted": "Jetzt starten",
+    "recruiterLogin": "Recruiter-Login"
+  },
   "Sidebar": {
     "title": "TalentFilter",
     "subtitle": "SAAS PLATTFORM",

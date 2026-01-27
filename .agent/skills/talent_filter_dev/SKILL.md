@@ -46,6 +46,7 @@ Organize code by business feature within the internationalization wrapper.
 - **Proxy**: `proxy.ts` (Next.js 16) for redirects and auth checks.
 - **State**: Zustand for client state, TanStack Query for server state.
 - **i18n**: All UI text must be in `messages/*.json`. Use `@/i18n/routing` for navigation.
+- **Landing Page**: Must use high-impact visual design (Gradients, Motion) and clear CTAs.
 
 ```text
 src/components/features/

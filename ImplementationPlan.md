@@ -60,21 +60,25 @@ This document outlines the step-by-step roadmap for building the MVP.
     - Configure `next-intl` with locale-based routing.
     - Setup English and German translation files.
     - Configure `proxy.ts` (Next.js 16) for routing.
-  - [x] **3.4. Authentication UI**
+  - [x] **3.4. Landing Page Development**
+    - Create a premium "Midnight & Indigo" hero section.
+    - Implement CTA buttons for Login and Register.
+    - Add localized copy (EN/DE).
+  - [x] **3.5. Authentication UI**
     - Design Login page (Glassmorphism).
     - Design Register page.
-  - [ ] **3.5. Auth Logic & Integration**
+  - [ ] **3.6. Auth Logic & Integration**
     - Create `apiFetch` utility.
     - Set up Zustand Auth Store.
     - Connect Login/Register to FastAPI endpoints.
-  - [ ] **3.6. Dashboard Landing (`/dashboard`)**
+  - [ ] **3.7. Dashboard Landing (`/dashboard`)**
     - Design Stats Overview section.
     - Implement Active Jobs Grid (Card View).
     - Add "New Job" primary button.
-  - [ ] **3.7. Job Details View (`/dashboard/jobs/[id]`)**
+  - [ ] **3.8. Job Details View (`/dashboard/jobs/[id]`)**
     - Design Candidate Table (sortable).
     - Job Settings & Question Overview.
-  - [ ] **3.8. Job Creation Wizard**
+  - [ ] **3.9. Job Creation Wizard**
     - Multi-step form for job descriptions.
     - Integration with AI generation endpoints.
 
