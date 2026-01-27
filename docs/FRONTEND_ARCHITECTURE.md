@@ -11,8 +11,30 @@ The frontend is built with **Next.js (App Router) (check the newst version to av
 - **Animations**: Framer Motion
 - **State Management**: Zustand
 - **Data Fetching**: TanStack Query (React Query)
-- **Internationalization**: next-intl
+- **Internationalization**: `next-intl` (Locale-based routing)
 - **Forms**: React Hook Form + Zod
+
+## Directory Structure
+
+```text
+src/
+├── app/
+│   ├── [locale]/            # Internationalized routes
+│   │   ├── layout.tsx       # Locale-specific root layout
+│   │   ├── dashboard/       # Recruiter Dashboard
+│   │   └── auth/            # Login/Register pages
+│   ├── layout.tsx           # Global root wrapper
+│   └── globals.css          # Tailwind & global styles
+├── i18n/
+│   ├── routing.ts           # next-intl configuration
+│   └── request.ts           # Loading localized messages
+├── components/
+│   ├── ui/                  # Shadcn UI (atomic components)
+│   └── features/            # Business-logic specific components
+├── hooks/                   # Custom reusable hooks
+├── messages/                # Translation JSON files (en, de)
+└── lib/                     # Utils, constants, API client
+```
 
 ## 1. State Management (Zustand)
 
@@ -119,3 +141,20 @@ src/
     hooks/            # Custom hooks
     store/            # Zustand stores
 ```
+
+## 6. Internationalization (i18n)
+
+We use `next-intl` for robust, SEO-friendly multi-language support (English and German).
+
+### Key Features:
+
+1. **Locale-based Routing**: URLs include the locale prefix (e.g., `/en/dashboard`, `/de/dashboard`).
+2. **Middleware Detection**: Automatically detects user preference and redirects to the correct locale.
+3. **Type-Safe Routing**: Custom `Link` and `useRouter` hooks from `@/i18n/routing` ensure correct locale persistence.
+4. **Server & Client Support**: Translations work in both Server and Client Components.
+
+### Usage:
+
+- **Server Components**: Use `await getMessages()` and `NextIntlClientProvider` in layouts.
+- **Client Components**: Use the `useTranslations` hook.
+- **Navigation**: Always use `@/i18n/routing` instead of `next/link`.

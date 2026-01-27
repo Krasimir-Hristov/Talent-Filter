@@ -1,0 +1,25 @@
+{
+  "Sidebar": {
+    "title": "TalentFilter",
+    "subtitle": "SAAS PLATFORM",
+    "overview": "Overview",
+    "jobs": "Jobs",
+    "candidates": "Candidates",
+    "settings": "Settings",
+    "mainMenu": "Main Menu",
+    "profile": "Profile",
+    "accountSettings": "Account Settings",
+    "logout": "Log out"
+  },
+  "Dashboard": {
+    "title": "Dashboard Overview",
+    "welcome": "Welcome back! Here is what's happening with your recruitment pipelines today."
+  },
+  "Auth": {
+    "login": "Login to your account",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Sign In",
+    "register": "Create an account"
+  }
+}

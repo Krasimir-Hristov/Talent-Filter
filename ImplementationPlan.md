@@ -56,21 +56,24 @@ This document outlines the step-by-step roadmap for building the MVP.
     - Install Shadcn Sidebar (via CLI).
     - Create responsive Dashboard Layout.
     - Set up Lucide icons (strokeWidth: 1.5).
-  - [ ] **3.3. Authentication UI**
+  - [x] **3.3. Internationalization (i18n) Setup**
+    - Configure `next-intl` with locale-based routing.
+    - Setup English and German translation files.
+  - [ ] **3.4. Authentication UI**
     - Design Login page (Glassmorphism).
     - Design Register page.
-  - [ ] **3.4. Auth Logic & Integration**
+  - [ ] **3.5. Auth Logic & Integration**
     - Create `apiFetch` utility.
     - Set up Zustand Auth Store.
     - Connect Login/Register to FastAPI endpoints.
-  - [ ] **3.5. Dashboard Landing (`/dashboard`)**
+  - [ ] **3.6. Dashboard Landing (`/dashboard`)**
     - Design Stats Overview section.
     - Implement Active Jobs Grid (Card View).
     - Add "New Job" primary button.
-  - [ ] **3.6. Job Details View (`/dashboard/jobs/[id]`)**
+  - [ ] **3.7. Job Details View (`/dashboard/jobs/[id]`)**
     - Design Candidate Table (sortable).
     - Job Settings & Question Overview.
-  - [ ] **3.7. Job Creation Wizard**
+  - [ ] **3.8. Job Creation Wizard**
     - Multi-step form for job descriptions.
     - Integration with AI generation endpoints.
 

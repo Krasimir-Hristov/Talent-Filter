@@ -1,4 +1,5 @@
 import { AppSidebar } from '@/components/features/dashboard/app-sidebar';
+import { Link } from '@/i18n/routing';
 import {
   SidebarInset,
   SidebarProvider,
@@ -33,11 +34,13 @@ export default function DashboardLayout({
             <Breadcrumb>
               <BreadcrumbList>
                 <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink
-                    href='/dashboard'
-                    className='text-muted-foreground hover:text-white'
-                  >
-                    Dashboard
+                  <BreadcrumbLink asChild>
+                    <Link
+                      href='/dashboard'
+                      className='text-muted-foreground hover:text-white'
+                    >
+                      Dashboard
+                    </Link>
                   </BreadcrumbLink>
                 </BreadcrumbItem>
                 <BreadcrumbSeparator className='hidden md:block text-muted-foreground/50' />

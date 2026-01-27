@@ -1,14 +1,15 @@
+import { useTranslations } from 'next-intl';
+
 export default function DashboardPage() {
+  const t = useTranslations('Dashboard');
+
   return (
     <div className='flex flex-col gap-6'>
       <div>
         <h1 className='text-3xl font-bold tracking-tight text-white'>
-          Dashboard Overview
+          {t('title')}
         </h1>
-        <p className='text-muted-foreground'>
-          Welcome back! Here is what's happening with your recruitment pipelines
-          today.
-        </p>
+        <p className='text-muted-foreground'>{t('welcome')}</p>
       </div>
 
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-4'>

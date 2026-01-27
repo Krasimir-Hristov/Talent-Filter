@@ -1,8 +1,7 @@
 'use client';
 
-import * as React from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Link, usePathname } from '@/i18n/routing';
+import { useTranslations } from 'next-intl';
 import {
   LayoutDashboard,
   Briefcase,
@@ -35,31 +34,32 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
-const items = [
-  {
-    title: 'Overview',
-    url: '/dashboard',
-    icon: LayoutDashboard,
-  },
-  {
-    title: 'Jobs',
-    url: '/dashboard/jobs',
-    icon: Briefcase,
-  },
-  {
-    title: 'Candidates',
-    url: '/dashboard/candidates',
-    icon: Users,
-  },
-  {
-    title: 'Settings',
-    url: '/dashboard/settings',
-    icon: Settings,
-  },
-];
-
 export function AppSidebar() {
   const pathname = usePathname();
+  const t = useTranslations('Sidebar');
+
+  const items = [
+    {
+      title: t('overview'),
+      url: '/dashboard',
+      icon: LayoutDashboard,
+    },
+    {
+      title: t('jobs'),
+      url: '/dashboard/jobs',
+      icon: Briefcase,
+    },
+    {
+      title: t('candidates'),
+      url: '/dashboard/candidates',
+      icon: Users,
+    },
+    {
+      title: t('settings'),
+      url: '/dashboard/settings',
+      icon: Settings,
+    },
+  ];
 
   return (
     <Sidebar collapsible='icon' className='border-r border-white/5'>
@@ -80,10 +80,10 @@ export function AppSidebar() {
                 </div>
                 <div className='flex flex-col gap-0.5 leading-none group-data-[collapsible=icon]:hidden'>
                   <span className='text-lg font-bold tracking-tight text-white'>
-                    TalentFilter
+                    {t('title')}
                   </span>
                   <span className='text-[10px] font-medium uppercase tracking-wider text-muted-foreground/80'>
-                    SaaS Platform
+                    {t('subtitle')}
                   </span>
                 </div>
               </Link>
@@ -95,7 +95,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className='px-4 text-[11px] font-bold uppercase tracking-widest text-muted-foreground/50'>
-            Main Menu
+            {t('mainMenu')}
           </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu className='gap-1 px-2'>
