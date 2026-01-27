@@ -47,7 +47,7 @@ This document outlines the step-by-step roadmap for building the MVP.
 **Goal**: Allow a recruiter to log in and create an automated interview.
 
 - [ ] **Phase 3: Frontend Development (Next.js)**
-  - [ ] **3.1. Branding & Global Styling**
+  - [x] **3.1. Branding & Global Styling**
     - Configure Tailwind colors (Midnight & Indigo).
     - Set up fonts (Plus Jakarta Sans & Inter).
     - Configure Dark Mode via `next-themes`.
