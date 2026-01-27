@@ -28,6 +28,7 @@ src/
 ├── i18n/
 │   ├── routing.ts           # next-intl configuration
 │   └── request.ts           # Loading localized messages
+├── proxy.ts                 # Next.js 16 Proxy layer (replacing middleware)
 ├── components/
 │   ├── ui/                  # Shadcn UI (atomic components)
 │   └── features/            # Business-logic specific components

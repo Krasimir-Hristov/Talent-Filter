@@ -59,6 +59,7 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **3.3. Internationalization (i18n) Setup**
     - Configure `next-intl` with locale-based routing.
     - Setup English and German translation files.
+    - Configure `proxy.ts` (Next.js 16) for routing.
   - [x] **3.4. Authentication UI**
     - Design Login page (Glassmorphism).
     - Design Register page.

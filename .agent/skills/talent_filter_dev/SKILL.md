@@ -43,6 +43,7 @@ Use this skill whenever you are generating code, planning features, or debugging
 Organize code by business feature within the internationalization wrapper.
 
 - **Routing**: Locale-based routing (`src/app/[locale]`).
+- **Proxy**: `proxy.ts` (Next.js 16) for redirects and auth checks.
 - **State**: Zustand for client state, TanStack Query for server state.
 - **i18n**: All UI text must be in `messages/*.json`. Use `@/i18n/routing` for navigation.
 
