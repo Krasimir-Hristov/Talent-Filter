@@ -1,16 +1,16 @@
 ---
 name: Step-by-Step Execution Workflow
-description: Стриктен протокол за изпълнение на задачи по одобрен от потребителя ред.
+description: Strict protocol for executing tasks in a sequence approved by the user.
 ---
 
 # Step-by-Step Execution Workflow
 
-Този "skill" определя начина, по който изкуственият интелект взаимодейства с потребителя за изпълнение на задачите в TalentFilter:
+This skill defines the governance for the AI agent's interaction with the user during task execution for the TalentFilter project:
 
-1. **Предложение преди действие**: Преди всяка работа (писане на код, команди и др.), ИИ трябва да обясни ясно:
-   - Номера на Фазата от `ImplementationPlan.md`.
-   - Номера на под-точката.
-   - Детайлно описание на това, което предстои да се направи.
-2. **Изчакване на одобрение**: ИИ **задължително** изчаква "ОК" от потребителя, преди да започне реалното изпълнение на стъпката.
-3. **Финализиране и преглед**: След завършване на стъпката, ИИ докладва резултата и предлага следващата под-точка за обсъждане.
-4. **Забрана за самоинициатива**: ИИ не трябва да прескача към следващи точки или да изпълнява няколко точки наведнъж без изрично потвърждение.
+1. **Pre-Action Proposal**: Before performing any work (writing code, running commands, etc.), the AI must clearly explain:
+   - The Phase number from `ImplementationPlan.md`.
+   - The Sub-step number.
+   - A detailed description of the intended actions.
+2. **Mandatory Approval**: The AI **must** wait for an explicit "OK" or "Proceed" from the user before starting the actual execution of the step.
+3. **Completion & Review**: Once a step is finished, the AI reports the outcome and proposes the next sub-step for discussion.
+4. **No Self-Initiative**: The AI must not jump ahead to subsequent points or execute multiple steps simultaneously without express permission.
