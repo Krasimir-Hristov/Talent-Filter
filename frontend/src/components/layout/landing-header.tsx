@@ -1,0 +1,85 @@
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
+import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Globe, LogIn } from 'lucide-react';
+
+export function LandingHeader() {
+  const t = useTranslations('Landing');
+  const tCommon = useTranslations('Sidebar'); // Reusing "TalentFilter" title
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const switchLocale = (locale: 'en' | 'de') => {
+    router.replace(pathname, { locale });
+  };
+
+  return (
+    <header className='fixed top-0 left-0 right-0 z-50 flex h-16 items-center justify-between border-b border-white/5 bg-[#0f172a]/80 px-6 backdrop-blur-xl'>
+      {/* Logo */}
+      <Link href='/' className='flex items-center gap-2'>
+        <div className='flex size-8 items-center justify-center rounded-lg bg-linear-to-br from-brand-accent to-brand-glow text-white shadow-lg shadow-brand-accent/20'>
+          <span className='font-bold'>TF</span>
+        </div>
+        <span className='hidden font-bold tracking-tight text-white sm:inline-block'>
+          {tCommon('title')}
+        </span>
+      </Link>
+
+      {/* Actions */}
+      <div className='flex items-center gap-4'>
+        {/* Language Switcher */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant='ghost'
+              size='icon'
+              className='size-9 rounded-full text-slate-400 hover:bg-white/5 hover:text-white'
+            >
+              <Globe className='size-5' />
+              <span className='sr-only'>Switch Language</span>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align='end'
+            className='w-32 bg-[#1e293b] border-white/10 text-white'
+          >
+            <DropdownMenuItem
+              onClick={() => switchLocale('en')}
+              className='cursor-pointer focus:bg-white/5 focus:text-white'
+            >
+              🇺🇸 English
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onClick={() => switchLocale('de')}
+              className='cursor-pointer focus:bg-white/5 focus:text-white'
+            >
+              🇩🇪 Deutsch
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        <div className='h-6 w-px bg-white/10' />
+
+        <Button
+          asChild
+          variant='ghost'
+          size='sm'
+          className='text-slate-300 hover:bg-white/5 hover:text-white'
+        >
+          <Link href='/auth/login'>
+            <LogIn className='mr-2 size-4' />
+            {t('recruiterLogin')}
+          </Link>
+        </Button>
+      </div>
+    </header>
+  );
+}

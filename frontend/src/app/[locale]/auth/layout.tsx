@@ -1,6 +1,7 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { LandingHeader } from '@/components/layout/landing-header';
 
 export default function AuthLayout({
   children,
@@ -9,6 +10,7 @@ export default function AuthLayout({
 }) {
   return (
     <div className='relative min-h-screen w-full overflow-hidden bg-[#0f172a] flex items-center justify-center p-4'>
+      <LandingHeader />
       {/* Background Ambient Glows */}
       <div className='absolute inset-0 overflow-hidden pointer-events-none'>
         <motion.div

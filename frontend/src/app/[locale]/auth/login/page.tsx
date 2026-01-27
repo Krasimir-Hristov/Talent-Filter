@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { motion } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,6 +21,7 @@ import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
   const t = useTranslations('Auth');
+  const [showPassword, setShowPassword] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email(t('validation.invalidEmail')),
@@ -36,7 +38,7 @@ export default function LoginPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Logic will be added in Step 3.5
+    // Logic will be added in Step 3.6
   }
 
   return (
@@ -82,12 +84,25 @@ export default function LoginPage() {
                     {t('fields.password')}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type='password'
-                      placeholder='••••••••'
-                      {...field}
-                      className='bg-white/5 border-white/5 h-12 rounded-xl text-white placeholder:text-slate-600 focus:border-brand-accent/50 focus:ring-brand-accent/20 transition-all'
-                    />
+                    <div className='relative'>
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder='••••••••'
+                        {...field}
+                        className='bg-white/5 border-white/5 h-12 rounded-xl text-white placeholder:text-slate-600 focus:border-brand-accent/50 focus:ring-brand-accent/20 transition-all pr-10'
+                      />
+                      <button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors'
+                      >
+                        {showPassword ? (
+                          <EyeOff className='size-4' />
+                        ) : (
+                          <Eye className='size-4' />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage className='text-red-400 text-xs' />
                 </FormItem>

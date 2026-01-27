@@ -1,11 +1,12 @@
 'use client';
 
+import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/routing';
-import { motion } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -20,13 +21,21 @@ import { Input } from '@/components/ui/input';
 
 export default function RegisterPage() {
   const t = useTranslations('Auth');
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
-  const formSchema = z.object({
-    fullName: z.string().min(2, t('validation.required')),
-    email: z.string().email(t('validation.invalidEmail')),
-    companyName: z.string().min(2, t('validation.required')),
-    password: z.string().min(8, t('validation.passwordLength')),
-  });
+  const formSchema = z
+    .object({
+      fullName: z.string().min(2, t('validation.required')),
+      email: z.string().email(t('validation.invalidEmail')),
+      companyName: z.string().min(2, t('validation.required')),
+      password: z.string().min(8, t('validation.passwordLength')),
+      confirmPassword: z.string().min(1, t('validation.required')),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t('validation.passwordMismatch'),
+      path: ['confirmPassword'],
+    });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -35,12 +44,13 @@ export default function RegisterPage() {
       email: '',
       companyName: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     console.log(values);
-    // Logic will be added in Step 3.5
+    // Logic will be added in Step 3.6
   }
 
   return (
@@ -116,6 +126,7 @@ export default function RegisterPage() {
                 )}
               />
             </div>
+
             <FormField
               control={form.control}
               name='password'
@@ -125,12 +136,61 @@ export default function RegisterPage() {
                     {t('fields.password')}
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      type='password'
-                      placeholder='••••••••'
-                      {...field}
-                      className='bg-white/5 border-white/5 h-11 rounded-xl text-white placeholder:text-slate-600 focus:border-brand-accent/50 focus:ring-brand-accent/20 transition-all'
-                    />
+                    <div className='relative'>
+                      <Input
+                        type={showPassword ? 'text' : 'password'}
+                        placeholder='••••••••'
+                        {...field}
+                        className='bg-white/5 border-white/5 h-11 rounded-xl text-white placeholder:text-slate-600 focus:border-brand-accent/50 focus:ring-brand-accent/20 transition-all pr-10'
+                      />
+                      <button
+                        type='button'
+                        onClick={() => setShowPassword(!showPassword)}
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors'
+                      >
+                        {showPassword ? (
+                          <EyeOff className='size-4' />
+                        ) : (
+                          <Eye className='size-4' />
+                        )}
+                      </button>
+                    </div>
+                  </FormControl>
+                  <FormMessage className='text-red-400 text-xs' />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className='text-slate-300 text-xs font-medium uppercase tracking-wider'>
+                    {t('fields.repeatPassword')}
+                  </FormLabel>
+                  <FormControl>
+                    <div className='relative'>
+                      <Input
+                        type={showConfirmPassword ? 'text' : 'password'}
+                        placeholder='••••••••'
+                        {...field}
+                        className='bg-white/5 border-white/5 h-11 rounded-xl text-white placeholder:text-slate-600 focus:border-brand-accent/50 focus:ring-brand-accent/20 transition-all pr-10'
+                      />
+                      <button
+                        type='button'
+                        onClick={() =>
+                          setShowConfirmPassword(!showConfirmPassword)
+                        }
+                        className='absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white transition-colors'
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className='size-4' />
+                        ) : (
+                          <Eye className='size-4' />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage className='text-red-400 text-xs' />
                 </FormItem>

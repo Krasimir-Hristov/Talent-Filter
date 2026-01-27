@@ -32,6 +32,8 @@ src/
 ├── proxy.ts                 # Next.js 16 Proxy layer (replacing middleware)
 ├── components/
 │   ├── ui/                  # Shadcn UI (atomic components)
+│   ├── layout/              # Structural components (Headers, Sidebars) - NEW
+│   │   └── landing-header.tsx  # Used in Landing & Auth
 │   └── features/            # Business-logic specific components
 ├── hooks/                   # Custom reusable hooks
 ├── messages/                # Translation JSON files (en, de)
@@ -160,3 +162,5 @@ We use `next-intl` for robust, SEO-friendly multi-language support (English and 
 - **Server Components**: Use `await getMessages()` and `NextIntlClientProvider` in layouts.
 - **Client Components**: Use the `useTranslations` hook.
 - **Navigation**: Always use `@/i18n/routing` instead of `next/link`.
+- **Landing Page**: Must use high-impact visual design (Gradients, Motion) and clear CTAs.
+- **Header Strategy**: Separate `LandingHeader` (Public) vs `AppSidebar` (Dashboard). Dashboard has NO top header to maximize work area.

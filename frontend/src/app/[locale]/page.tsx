@@ -5,12 +5,14 @@ import { Link } from '@/i18n/routing';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { LandingHeader } from '@/components/layout/landing-header';
 
 export default function HomePage() {
   const t = useTranslations('Landing');
 
   return (
     <div className='relative min-h-screen w-full overflow-hidden bg-[#0f172a] text-white'>
+      <LandingHeader />
       {/* Background Animated Glows (Matching Auth Layout) */}
       <div className='absolute inset-0 overflow-hidden pointer-events-none'>
         <motion.div

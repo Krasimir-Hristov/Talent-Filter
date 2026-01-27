@@ -40,12 +40,14 @@
       "email": "Email Address",
       "password": "Password",
       "fullName": "Full Name",
-      "companyName": "Company Name"
+      "companyName": "Company Name",
+      "repeatPassword": "Repeat Password"
     },
     "validation": {
       "required": "This field is required",
       "invalidEmail": "Please enter a valid email address",
-      "passwordLength": "Password must be at least 8 characters"
+      "passwordLength": "Password must be at least 8 characters",
+      "passwordMismatch": "Passwords do not match"
     }
   }
 }
