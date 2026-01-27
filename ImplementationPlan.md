@@ -51,7 +51,7 @@ This document outlines the step-by-step roadmap for building the MVP.
     - Configure Tailwind colors (Midnight & Indigo).
     - Set up fonts (Plus Jakarta Sans & Inter).
     - Configure Dark Mode via `next-themes`.
-  - [ ] **3.2. Layout & Sidebar Setup**
+  - [x] **3.2. Layout & Sidebar Setup**
     - Install Shadcn Sidebar (via CLI).
     - Create responsive Dashboard Layout.
     - Set up Lucide icons (strokeWidth: 1.5).
