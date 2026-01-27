@@ -38,9 +38,13 @@ Use this skill whenever you are generating code, planning features, or debugging
 
 ## 2. Architectural Patterns
 
-### Frontend: Feature-Based Structure
+### Frontend: Locale-Based Feature Structure
 
-Organize code by business feature, not just technical role.
+Organize code by business feature within the internationalization wrapper.
+
+- **Routing**: Locale-based routing (`src/app/[locale]`).
+- **State**: Zustand for client state, TanStack Query for server state.
+- **i18n**: All UI text must be in `messages/*.json`. Use `@/i18n/routing` for navigation.
 
 ```text
 src/components/features/
