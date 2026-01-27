@@ -35,11 +35,11 @@ This document outlines the step-by-step roadmap for building the MVP.
   - Implement `generate_questions(text: str)` using Gemini API.
   - Create Pydantic models for `Question` output to ensure strict JSON structure.
 
-- [ ] **2.2. Job Management API**
-  - `POST /jobs/parse`: Endpoint receiving text, calling AI, returning list of questions.
-  - `POST /jobs`: Endpoint to save the confirmed Job + Questions to Supabase.
+- [x] **2.2. Job Management API**
+  - `POST /jobs/analyze`: Endpoint receiving text, calling AI, returning list of questions.
+  - `POST /jobs/create`: Endpoint to save the confirmed Job + Questions to Supabase.
 
-- [ ] **2.3. Database Security**
+- [x] **2.3. Database Security**
   - Write RLS policies in Supabase: "Users can only select their own jobs".
 
 ## Phase 3: Recruiter Dashboard (Frontend)

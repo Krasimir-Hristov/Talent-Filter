@@ -1,6 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException
+from supabase import Client
 from app.schemas.jobs import JobParseRequest, JobParseResponse, JobCreateRequest
 from app.services.ai import AIService
+from app.services.job_service import JobService
+from app.api.deps import get_current_user, get_supabase_client
 import os
 
 router = APIRouter()
@@ -26,6 +29,15 @@ async def analyze_job(
 
 
 @router.post("/create")
-async def create_job(request: JobCreateRequest):
-    # This will be implemented in Step 2.2 fully with Supabase integration
-    return {"message": "Job received", "title": request.title}
+async def create_job(
+    request: JobCreateRequest,
+    user=Depends(get_current_user),
+    supabase: Client = Depends(get_supabase_client),
+):
+    service = JobService(supabase)
+    try:
+        # User object from Supabase has an 'id' attribute
+        new_job = await service.create_job(user.id, request)
+        return {"message": "Job created successfully", "job_id": new_job["id"]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
