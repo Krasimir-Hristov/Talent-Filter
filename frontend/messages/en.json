@@ -16,10 +16,30 @@
     "welcome": "Welcome back! Here is what's happening with your recruitment pipelines today."
   },
   "Auth": {
-    "login": "Login to your account",
-    "email": "Email",
-    "password": "Password",
-    "submit": "Sign In",
-    "register": "Create an account"
+    "login": {
+      "title": "Welcome Back",
+      "description": "Enter your credentials to access your dashboard",
+      "submit": "Sign In",
+      "noAccount": "Don't have an account?",
+      "registerLink": "Create one now"
+    },
+    "register": {
+      "title": "Get Started",
+      "description": "Create your recruiter account to start screening",
+      "submit": "Create Account",
+      "hasAccount": "Already have an account?",
+      "loginLink": "Sign in instead"
+    },
+    "fields": {
+      "email": "Email Address",
+      "password": "Password",
+      "fullName": "Full Name",
+      "companyName": "Company Name"
+    },
+    "validation": {
+      "required": "This field is required",
+      "invalidEmail": "Please enter a valid email address",
+      "passwordLength": "Password must be at least 8 characters"
+    }
   }
 }
