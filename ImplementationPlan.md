@@ -46,15 +46,32 @@ This document outlines the step-by-step roadmap for building the MVP.
 
 **Goal**: Allow a recruiter to log in and create an automated interview.
 
-- [ ] **3.1. Auth Implementation**
-  - Set up Supabase Auth Helpers for Next.js.
-  - Create Login Page (`/login`) and Protected Layout.
-
-- [ ] **3.2. "Create Job" Flow**
-  - Step 1: Input Job Description (Text Area).
-  - Step 2: "Generating..." Loader (Call Backend API).
-  - Step 3: Review Questions (Edit/Delete generated questions).
-  - Step 4: Publish -> Get Unique Link.
+- [ ] **Phase 3: Frontend Development (Next.js)**
+  - [ ] **3.1. Branding & Global Styling**
+    - Configure Tailwind colors (Midnight & Indigo).
+    - Set up fonts (Plus Jakarta Sans & Inter).
+    - Configure Dark Mode via `next-themes`.
+  - [ ] **3.2. Layout & Sidebar Setup**
+    - Install Shadcn Sidebar (via CLI).
+    - Create responsive Dashboard Layout.
+    - Set up Lucide icons (strokeWidth: 1.5).
+  - [ ] **3.3. Authentication UI**
+    - Design Login page (Glassmorphism).
+    - Design Register page.
+  - [ ] **3.4. Auth Logic & Integration**
+    - Create `apiFetch` utility.
+    - Set up Zustand Auth Store.
+    - Connect Login/Register to FastAPI endpoints.
+  - [ ] **3.5. Dashboard Landing (`/dashboard`)**
+    - Design Stats Overview section.
+    - Implement Active Jobs Grid (Card View).
+    - Add "New Job" primary button.
+  - [ ] **3.6. Job Details View (`/dashboard/jobs/[id]`)**
+    - Design Candidate Table (sortable).
+    - Job Settings & Question Overview.
+  - [ ] **3.7. Job Creation Wizard**
+    - Multi-step form for job descriptions.
+    - Integration with AI generation endpoints.
 
 ## Phase 4: Candidate Experience (Interview Room)
 
