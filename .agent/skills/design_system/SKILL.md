@@ -70,7 +70,22 @@ This skill defines the visual "soul" of the TalentFilter platform. It ensures th
 - **Icons**: Always use `lucide-react` with a stroke width of `1.5` for a refined look.
 - **Images**: Use the `generate_image` tool for brand assets like "Welcome Backgrounds" or "Success Illustrations."
 
-## 5. Design Principles
+## 5. Tailwind CSS v4 Best Practices
+
+To avoid lint warnings and ensure forward compatibility, always use the canonical v4 syntax:
+
+- **Gradients**: Use `bg-linear-to-[dir]` instead of `bg-gradient-to-[dir]`.
+  - _Correct_: `bg-linear-to-br`
+- **Opacity**: Use simplified integer syntax for background/text/border opacity.
+  - _Correct_: `bg-white/2` (for 2% opacity) instead of `bg-white/[0.02]`.
+- **Data Attributes**: Use the съкратен `data-` syntax for state and custom attributes.
+  - _Correct_: `data-state-open`, `data-state-closed`, `data-side-bottom`.
+- **Group Selectors**: Use direct data attribute mapping for complex group states.
+  - _Correct_: `group-has-data-[collapsible=icon]` instead of `group-has-[[data-collapsible=icon]]`.
+- **Arbitrary Values (Calc)**: Keep `calc()` functions without spaces when used in arbitrary values.
+  - _Correct_: `translate-y-[calc(-50%-2px)]`.
+
+## 6. Design Principles
 
 - **Hierarchy**: Use color (Indigo/White vs Slate-400) to guide the user's eye. The most important action (e.g., "Submit Answer" or "Create Job") must be clearly colored.
 - **Contrast**: Maintain AA/AAA accessibility standards despite the dark-mode focus.

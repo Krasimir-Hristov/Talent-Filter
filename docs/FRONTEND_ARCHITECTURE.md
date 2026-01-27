@@ -7,7 +7,7 @@ The frontend is built with **Next.js (App Router) (check the newst version to av
 ## Core Technologies
 
 - **Framework**: Next.js 16+ (App Router)
-- **Styling**: Tailwind CSS, Shadcn/UI (Radix Primitives), Lucide React
+- **Styling**: Tailwind CSS v4, Shadcn/UI (Radix Primitives), Lucide React. Always follow the v4 syntax guidelines in `.agent/skills/design_system/SKILL.md`.
 - **Animations**: Framer Motion
 - **State Management**: Zustand
 - **Data Fetching**: TanStack Query (React Query)
