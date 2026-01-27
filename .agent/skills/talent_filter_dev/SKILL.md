@@ -17,6 +17,7 @@ Use this skill whenever you are generating code, planning features, or debugging
   - **Zustand**: Use for client-side ephemeral state (Timer, Interview Phase, Tab Switching flags).
   - **TanStack Query**: Use for **ALL** server data fetching. No distinct `useEffect` data fetching.
 - **Internationalization**: `next-intl` for EN/DE support.
+- **Animations**: `framer-motion` for premium micro-interactions.
 - **Icons**: Lucide React.
 
 ### Backend (API & AI)

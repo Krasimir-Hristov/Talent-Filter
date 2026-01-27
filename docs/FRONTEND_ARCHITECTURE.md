@@ -8,6 +8,7 @@ The frontend is built with **Next.js (App Router) (check the newst version to av
 
 - **Framework**: Next.js 16+ (App Router)
 - **Styling**: Tailwind CSS, Shadcn/UI (Radix Primitives), Lucide React
+- **Animations**: Framer Motion
 - **State Management**: Zustand
 - **Data Fetching**: TanStack Query (React Query)
 - **Internationalization**: next-intl
@@ -44,7 +45,15 @@ interface InterviewState {
 
 Manages transient UI states like sidebar expansion, active modals, and theme preferences.
 
-## 2. Data Flow (TanStack Query)
+## 2. Animations (Framer Motion)
+
+We use Framer Motion for premium, non-distractive animations that enhance the user experience.
+
+- **Micro-interactions**: Subtle hover effects, spring-based transitions for progress bars, and status indicators.
+- **Layout Transitions**: `AnimatePresence` is used for smooth entry/exit of components, especially in the Interview Room and Dashboard widgets.
+- **Principles**: Keep animations short (0.2s-0.3s) and purposeful. Avoid over-animating; focus on guiding the user's attention.
+
+## 3. Data Flow (TanStack Query)
 
 Server state is managed exclusively by React Query to ensure synchronization and efficient caching.
 

@@ -51,6 +51,7 @@ This document outlines the step-by-step roadmap for building the MVP.
     - Configure Tailwind colors (Midnight & Indigo).
     - Set up fonts (Plus Jakarta Sans & Inter).
     - Configure Dark Mode via `next-themes`.
+    - Install and configure `framer-motion` for animations.
   - [x] **3.2. Layout & Sidebar Setup**
     - Install Shadcn Sidebar (via CLI).
     - Create responsive Dashboard Layout.
