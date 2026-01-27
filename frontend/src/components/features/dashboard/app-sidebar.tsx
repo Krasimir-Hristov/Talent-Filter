@@ -75,7 +75,7 @@ export function AppSidebar() {
                 href='/dashboard'
                 className='flex items-center gap-3 px-1 py-4'
               >
-                <div className='flex aspect-square size-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand-accent to-brand-glow text-white shadow-lg shadow-brand-accent/20'>
+                <div className='flex aspect-square size-10 items-center justify-center rounded-xl bg-linear-to-br from-brand-accent to-brand-glow text-white shadow-lg shadow-brand-accent/20'>
                   <Sparkles className='size-6' />
                 </div>
                 <div className='flex flex-col gap-0.5 leading-none group-data-[collapsible=icon]:hidden'>
@@ -141,11 +141,11 @@ export function AppSidebar() {
               <DropdownMenuTrigger asChild>
                 <SidebarMenuButton
                   size='lg'
-                  className='h-14 rounded-xl border border-white/5 bg-white/[0.02] px-3 ring-brand-accent transition-all hover:bg-white/[0.05] data-[state=open]:bg-white/[0.05]'
+                  className='h-14 rounded-xl border border-white/5 bg-white/2 px-3 ring-brand-accent transition-all hover:bg-white/5 data-state-open:bg-white/5'
                 >
                   <Avatar className='h-9 w-9 border border-white/10 ring-2 ring-brand-accent/20 transition-all group-hover:ring-brand-accent/40'>
                     <AvatarImage src='' alt='User' />
-                    <AvatarFallback className='bg-gradient-to-br from-slate-800 to-slate-950 text-[10px] font-bold text-white'>
+                    <AvatarFallback className='bg-linear-to-br from-slate-800 to-slate-950 text-[10px] font-bold text-white'>
                       KH
                     </AvatarFallback>
                   </Avatar>

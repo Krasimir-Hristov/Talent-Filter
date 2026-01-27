@@ -16,14 +16,14 @@ export default function DashboardPage() {
         {[1, 2, 3, 4].map((i) => (
           <div
             key={i}
-            className='h-32 rounded-xl border border-white/5 bg-white/[0.02]'
+            className='h-32 rounded-xl border border-white/5 bg-white/2'
           />
         ))}
       </div>
 
       <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-7'>
-        <div className='col-span-4 h-[400px] rounded-xl border border-white/5 bg-white/[0.02]' />
-        <div className='col-span-3 h-[400px] rounded-xl border border-white/5 bg-white/[0.02]' />
+        <div className='col-span-4 h-[400px] rounded-xl border border-white/5 bg-white/2' />
+        <div className='col-span-3 h-[400px] rounded-xl border border-white/5 bg-white/2' />
       </div>
     </div>
   );
