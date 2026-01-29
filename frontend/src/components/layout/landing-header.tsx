@@ -1,6 +1,6 @@
 'use client';
 
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { Button } from '@/components/ui/button';
 import {
@@ -19,6 +19,14 @@ export function LandingHeader() {
   const tCommon = useTranslations('Sidebar'); // Reusing "TalentFilter" title
   const router = useRouter();
   const pathname = usePathname();
+  const locale = useLocale();
+
+  const locales = {
+    en: { name: 'English', code: 'EN' },
+    de: { name: 'Deutsch', code: 'DE' },
+  };
+
+  const currentLocale = locales[locale as keyof typeof locales];
 
   const switchLocale = (locale: 'en' | 'de') => {
     router.replace(pathname, { locale });
@@ -43,11 +51,13 @@ export function LandingHeader() {
           <DropdownMenuTrigger asChild>
             <Button
               variant='ghost'
-              size='icon'
-              className='size-9 rounded-full text-slate-400 hover:bg-white/5 hover:text-white'
+              size='sm'
+              className='h-9 px-3 gap-2 rounded-xl text-slate-400 hover:bg-white/5 hover:text-white transition-all border border-white/5'
             >
-              <Globe className='size-5' />
-              <span className='sr-only'>Switch Language</span>
+              <span className='text-xs font-bold tracking-wider'>
+                {currentLocale.code}
+              </span>
+              <Globe className='size-3.5 opacity-50' />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent
@@ -58,13 +68,13 @@ export function LandingHeader() {
               onClick={() => switchLocale('en')}
               className='cursor-pointer focus:bg-white/5 focus:text-white'
             >
-              🇺🇸 English
+              English
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => switchLocale('de')}
               className='cursor-pointer focus:bg-white/5 focus:text-white'
             >
-              🇩🇪 Deutsch
+              Deutsch
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
