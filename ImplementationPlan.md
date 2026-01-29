@@ -72,18 +72,18 @@ This document outlines the step-by-step roadmap for building the MVP.
     - Implement **Server-Side Route Protection** in `layout.tsx` to prevent Middleware bypass (CVE-2025-29927).
     - Set up Zustand Auth Store for client-side state sync.
     - Connect Login/Register to FastAPI endpoints + Cookie synchronization.
-  - [ ] **3.7. Dashboard Landing (`/dashboard`)**
+  - [ ] **3.7. Job Creation Wizard**
+    - [x] Multi-step modular UI (Setup, Manual/AI mode, Hybrid Questions).
+    - [x] Premium UX (Glassmorphism, manual question management, validations).
+    - [ ] **Tomorrow**: Full AI Integration (AI Suggest, AI Refine, Auto-generator).
+    - [ ] Final Save to Supabase via `/jobs/create`.
+  - [ ] **3.8. Dashboard Landing (`/dashboard`)**
     - Design Stats Overview section.
     - Implement Active Jobs Grid (Card View).
     - Add "New Job" primary button.
-  - [ ] **3.8. Job Details View (`/dashboard/jobs/[id]`)**
+  - [ ] **3.9. Job Details View (`/dashboard/jobs/[id]`)**
     - Design Candidate Table (sortable).
     - Job Settings & Question Overview.
-  - [ ] **3.9. Job Creation Wizard**
-    - Multi-step form for job descriptions.
-    - Integration with AI generation endpoints (`/jobs/analyze`).
-    - Review & Refine UI for generated questions.
-    - Save to Supabase via `/jobs/create`.
 
 ## Phase 4: Candidate Experience (Interview Room)
 
