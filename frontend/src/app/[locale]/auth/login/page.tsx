@@ -5,8 +5,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/routing';
+import { Link, useRouter } from '@/i18n/routing';
 import { Eye, EyeOff } from 'lucide-react';
+import { toast } from 'sonner';
+
+import { useAuthStore } from '@/store/useAuthStore';
+import { apiFetch } from '@/lib/api';
+import { AuthResponse } from '@/types/auth';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -21,7 +26,10 @@ import { Input } from '@/components/ui/input';
 
 export default function LoginPage() {
   const t = useTranslations('Auth');
+  const router = useRouter();
+  const setAuth = useAuthStore((state) => state.setAuth);
   const [showPassword, setShowPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const formSchema = z.object({
     email: z.string().email(t('validation.invalidEmail')),
@@ -36,9 +44,22 @@ export default function LoginPage() {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
-    // Logic will be added in Step 3.6
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+    try {
+      const data = await apiFetch<AuthResponse>('/auth/login', {
+        method: 'POST',
+        body: JSON.stringify(values),
+      });
+
+      setAuth(data.user, data.access_token);
+      toast.success(t('login.success') || 'Logged in successfully');
+      router.push('/dashboard');
+    } catch (error: any) {
+      toast.error(error.message || 'Login failed');
+    } finally {
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -110,9 +131,12 @@ export default function LoginPage() {
             />
             <Button
               type='submit'
-              className='w-full h-12 rounded-xl bg-linear-to-r from-brand-accent to-brand-glow hover:opacity-90 text-white font-semibold shadow-lg shadow-brand-accent/20 transition-all active:scale-[0.98]'
+              disabled={isLoading}
+              className='w-full h-12 rounded-xl bg-linear-to-r from-brand-accent to-brand-glow hover:opacity-90 text-white font-semibold shadow-lg shadow-brand-accent/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed'
             >
-              {t('login.submit')}
+              {isLoading
+                ? t('login.loading') || 'Logging in...'
+                : t('login.submit')}
             </Button>
           </form>
         </Form>

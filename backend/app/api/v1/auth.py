@@ -35,9 +35,14 @@ async def register(
 
         return {
             "access_token": access_token,
-            "user": {"id": auth_response.user.id, "email": auth_response.user.email},
+            "user": {
+                "id": auth_response.user.id,
+                "email": auth_response.user.email,
+                "full_name": auth_response.user.user_metadata.get("full_name"),
+            },
         }
     except Exception as e:
+        print(f"Registration error detailed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
 
 
@@ -55,7 +60,20 @@ async def login(
 
         return {
             "access_token": auth_response.session.access_token,
-            "user": {"id": auth_response.user.id, "email": auth_response.user.email},
+            "user": {
+                "id": auth_response.user.id,
+                "email": auth_response.user.email,
+                "full_name": auth_response.user.user_metadata.get("full_name"),
+            },
         }
     except Exception as e:
-        raise HTTPException(status_code=400, detail=str(e))
+        error_msg = str(e)
+        print(f"Login error detailed: {error_msg}")
+
+        if "Email not confirmed" in error_msg:
+            raise HTTPException(
+                status_code=403,
+                detail="Please confirm your email address before logging in.",
+            )
+
+        raise HTTPException(status_code=400, detail=error_msg)

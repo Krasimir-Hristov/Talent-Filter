@@ -67,7 +67,7 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **3.5. Authentication UI**
     - Design Login page (Glassmorphism).
     - Design Register page.
-  - [ ] **3.6. Auth Logic & Integration**
+  - [x] **3.6. Auth Logic & Integration**
     - Create `apiFetch` utility.
     - Set up Zustand Auth Store.
     - Connect Login/Register to FastAPI endpoints.
@@ -78,9 +78,11 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [ ] **3.8. Job Details View (`/dashboard/jobs/[id]`)**
     - Design Candidate Table (sortable).
     - Job Settings & Question Overview.
-  - [ ] **3.9. Job Creation Wizard**
+  - [x] **3.9. Job Creation Wizard**
     - Multi-step form for job descriptions.
-    - Integration with AI generation endpoints.
+    - Integration with AI generation endpoints (`/jobs/analyze`).
+    - Review & Refine UI for generated questions.
+    - Save to Supabase via `/jobs/create`.
 
 ## Phase 4: Candidate Experience (Interview Room)
 

@@ -19,13 +19,37 @@
   },
   "Dashboard": {
     "title": "Dashboard Overview",
-    "welcome": "Welcome back! Here is what's happening with your recruitment pipelines today."
+    "welcome": "Welcome back! Here is what's happening with your recruitment pipelines today.",
+    "newJob": "Create New Job",
+    "noJobs": "No jobs found. Start by creating your first automated interview!",
+    "activeJobs": "Active Jobs"
+  },
+  "JobWizard": {
+    "title": "Create New Automated Interview",
+    "description": "Provide a job description and our AI will generate the perfect interview questions.",
+    "step1": "Job Description",
+    "step2": "AI Generation",
+    "step3": "Review & Refine",
+    "jobTitle": "Job Title",
+    "jobDescription": "Full Job Description",
+    "placeholder": "Paste the detailed job requirements here...",
+    "btnGenerate": "Generate Questions with AI",
+    "btnSaving": "Saving Job...",
+    "btnSave": "Save & Publish Job",
+    "btnRefining": "Refining...",
+    "btnRefine": "Refine with AI",
+    "questions": "Interview Questions",
+    "idealAnswer": "Ideal Answer Guide",
+    "timeLimit": "Time Limit (seconds)",
+    "addQuestion": "Add Custom Question"
   },
   "Auth": {
     "login": {
       "title": "Welcome Back",
       "description": "Enter your credentials to access your dashboard",
       "submit": "Sign In",
+      "loading": "Signing in...",
+      "success": "Logged in successfully!",
       "noAccount": "Don't have an account?",
       "registerLink": "Create one now"
     },
@@ -33,6 +57,8 @@
       "title": "Get Started",
       "description": "Create your recruiter account to start screening",
       "submit": "Create Account",
+      "loading": "Creating account...",
+      "success": "Account created successfully!",
       "hasAccount": "Already have an account?",
       "loginLink": "Sign in instead"
     },

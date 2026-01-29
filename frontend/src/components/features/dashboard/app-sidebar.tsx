@@ -1,6 +1,6 @@
 'use client';
 
-import { Link, usePathname } from '@/i18n/routing';
+import { Link, usePathname, useRouter } from '@/i18n/routing';
 import { useTranslations } from 'next-intl';
 import {
   LayoutDashboard,
@@ -12,6 +12,7 @@ import {
   User2,
   Sparkles,
 } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 import {
   Sidebar,
@@ -33,10 +34,22 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export function AppSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const t = useTranslations('Sidebar');
+  const logout = useAuthStore((state) => state.logout);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return <Sidebar collapsible='icon' className='border-r border-white/5' />;
+  }
 
   const items = [
     {
@@ -176,9 +189,15 @@ export function AppSidebar() {
                     Account Settings
                   </span>
                 </DropdownMenuItem>
-                <DropdownMenuItem className='gap-2 rounded-lg py-2.5 text-red-400 focus:bg-red-400/10 focus:text-red-400'>
+                <DropdownMenuItem
+                  onClick={() => {
+                    logout();
+                    router.push('/auth/login');
+                  }}
+                  className='gap-2 rounded-lg py-2.5 text-red-400 focus:bg-red-400/10 focus:text-red-400 cursor-pointer'
+                >
                   <LogOut className='size-4' />
-                  <span className='font-medium'>Log out</span>
+                  <span className='font-medium'>{t('logout')}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>

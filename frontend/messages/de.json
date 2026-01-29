@@ -19,13 +19,37 @@
   },
   "Dashboard": {
     "title": "Übersicht",
-    "welcome": "Willkommen zurück! Hier ist der aktuelle Stand Ihrer Rekrutierungspipelines."
+    "welcome": "Willkommen zurück! Hier ist der aktuelle Stand Ihrer Rekrutierungspipelines.",
+    "newJob": "Neue Stelle erstellen",
+    "noJobs": "Keine Stellen gefunden. Erstellen Sie Ihr erstes automatisiertes Interview!",
+    "activeJobs": "Aktive Stellen"
+  },
+  "JobWizard": {
+    "title": "Neues automatisiertes Interview",
+    "description": "Geben Sie eine Stellenbeschreibung ein и unsere AI erstellt die perfekten Interviewfragen.",
+    "step1": "Stellenbeschreibung",
+    "step2": "AI-Generierung",
+    "step3": "Prüfen & Verfeinern",
+    "jobTitle": "Jobtitel",
+    "jobDescription": "Stellenbeschreibung",
+    "placeholder": "Fügen Sie тук die detaillierten Anforderungen ein...",
+    "btnGenerate": "Fragen mit AI generieren",
+    "btnSaving": "Wird gespeichert...",
+    "btnSave": "Speichern & Veröffentlichen",
+    "btnRefining": "Wird verfeinert...",
+    "btnRefine": "Mit AI verfeinern",
+    "questions": "Interviewfragen",
+    "idealAnswer": "Ideale Antwort (Leitfaden)",
+    "timeLimit": "Zeitlimit (Sekunden)",
+    "addQuestion": "Eigene Frage hinzufügen"
   },
   "Auth": {
     "login": {
       "title": "Willkommen zurück",
       "description": "Geben Sie Ihre Zugangsdaten ein, um fortzufahren",
       "submit": "Anmelden",
+      "loading": "Wird angemeldet...",
+      "success": "Erfolgreich angemeldet!",
       "noAccount": "Noch kein Konto?",
       "registerLink": "Jetzt erstellen"
     },
@@ -33,6 +57,8 @@
       "title": "Konto erstellen",
       "description": "Erstellen Sie Ihr Recruiter-Konto, за да стартирате",
       "submit": "Konto erstellen",
+      "loading": "Konto wird erstellt...",
+      "success": "Konto erfolgreich erstellt!",
       "hasAccount": "Bereits ein Konto?",
       "loginLink": "Hier anmelden"
     },
