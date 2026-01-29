@@ -28,6 +28,7 @@
   "JobWizard": {
     "title": "Create New Automated Interview",
     "description": "Provide a job description and our AI will generate the perfect interview questions.",
+    "validationDetails": "Please enter a Job Title and Description to unlock the AI and Manual creation modes.",
     "step1": "Job Description",
     "step2": "AI Generation",
     "step3": "Review & Refine",
@@ -35,6 +36,10 @@
     "jobDescription": "Full Job Description",
     "placeholder": "Paste the detailed job requirements here...",
     "btnGenerate": "Generate Questions with AI",
+    "createManually": "Create Manually",
+    "skipAI": "Skip AI and add questions myself",
+    "step1Detail": "Setup Job Details",
+    "step2Detail": "Configure Interview Questions",
     "btnSaving": "Saving Job...",
     "btnSave": "Save & Publish Job",
     "btnRefining": "Refining...",
@@ -42,6 +47,7 @@
     "questions": "Interview Questions",
     "idealAnswer": "Ideal Answer Guide",
     "timeLimit": "Time Limit (seconds)",
+    "secondsUnit": "sec",
     "addQuestion": "Add Custom Question"
   },
   "Auth": {

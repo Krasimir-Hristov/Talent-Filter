@@ -1,5 +1,5 @@
 import { useTranslations } from 'next-intl';
-import { JobCreationWizard } from '@/components/features/dashboard/job-creation-wizard';
+import { JobCreationWizard } from '@/components/features/builder';
 
 export default function NewJobPage() {
   const t = useTranslations('JobWizard');
