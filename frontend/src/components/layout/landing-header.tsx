@@ -9,9 +9,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Globe, LogIn } from 'lucide-react';
+import { Globe, LogIn, LayoutDashboard, LogOut } from 'lucide-react';
+import { useAuthStore } from '@/store/useAuthStore';
+import { deleteSession } from '@/lib/auth-actions';
 
 export function LandingHeader() {
+  const { isAuthenticated, logout } = useAuthStore();
   const t = useTranslations('Landing');
   const tCommon = useTranslations('Sidebar'); // Reusing "TalentFilter" title
   const router = useRouter();
@@ -68,17 +71,45 @@ export function LandingHeader() {
 
         <div className='h-6 w-px bg-white/10' />
 
-        <Button
-          asChild
-          variant='ghost'
-          size='sm'
-          className='text-slate-300 hover:bg-white/5 hover:text-white'
-        >
-          <Link href='/auth/login'>
-            <LogIn className='mr-2 size-4' />
-            {t('recruiterLogin')}
-          </Link>
-        </Button>
+        {isAuthenticated ? (
+          <div className='flex items-center gap-2'>
+            <Button
+              asChild
+              variant='ghost'
+              size='sm'
+              className='text-slate-300 hover:bg-white/5 hover:text-white'
+            >
+              <Link href='/dashboard'>
+                <LayoutDashboard className='mr-2 size-4' />
+                Dashboard
+              </Link>
+            </Button>
+            <Button
+              onClick={async () => {
+                await deleteSession();
+                logout();
+              }}
+              variant='ghost'
+              size='sm'
+              className='text-red-400 hover:bg-red-400/10 hover:text-red-400'
+            >
+              <LogOut className='mr-2 size-4' />
+              {tCommon('logout')}
+            </Button>
+          </div>
+        ) : (
+          <Button
+            asChild
+            variant='ghost'
+            size='sm'
+            className='text-slate-300 hover:bg-white/5 hover:text-white'
+          >
+            <Link href='/auth/login'>
+              <LogIn className='mr-2 size-4' />
+              {t('recruiterLogin')}
+            </Link>
+          </Button>
+        )}
       </div>
     </header>
   );

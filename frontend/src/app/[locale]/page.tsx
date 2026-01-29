@@ -6,9 +6,11 @@ import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { LandingHeader } from '@/components/layout/landing-header';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function HomePage() {
   const t = useTranslations('Landing');
+  const { isAuthenticated } = useAuthStore();
 
   return (
     <div className='relative min-h-screen w-full overflow-hidden bg-[#0f172a] text-white'>
@@ -86,18 +88,10 @@ export default function HomePage() {
             size='lg'
             className='h-14 px-8 rounded-2xl bg-linear-to-r from-brand-accent to-brand-glow text-white font-bold text-lg shadow-2xl shadow-brand-accent/20 hover:scale-105 transition-transform'
           >
-            <Link href='/auth/register'>
-              {t('getStarted')}
+            <Link href={isAuthenticated ? '/dashboard' : '/auth/register'}>
+              {isAuthenticated ? t('goToDashboard') : t('getStarted')}
               <ArrowRight className='ml-2 size-5' />
             </Link>
-          </Button>
-          <Button
-            asChild
-            variant='outline'
-            size='lg'
-            className='h-14 px-8 rounded-2xl border-white/10 bg-white/5 text-white hover:bg-white/10 transition-all font-semibold'
-          >
-            <Link href='/auth/login'>{t('recruiterLogin')}</Link>
           </Button>
         </motion.div>
 

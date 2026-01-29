@@ -78,7 +78,7 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [ ] **3.8. Job Details View (`/dashboard/jobs/[id]`)**
     - Design Candidate Table (sortable).
     - Job Settings & Question Overview.
-  - [x] **3.9. Job Creation Wizard**
+  - [ ] **3.9. Job Creation Wizard**
     - Multi-step form for job descriptions.
     - Integration with AI generation endpoints (`/jobs/analyze`).
     - Review & Refine UI for generated questions.

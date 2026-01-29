@@ -85,10 +85,7 @@ export function AppSidebar() {
               asChild
               className='hover:bg-transparent focus-visible:ring-0'
             >
-              <Link
-                href='/dashboard'
-                className='flex items-center gap-3 px-1 py-4'
-              >
+              <Link href='/' className='flex items-center gap-3 px-1 py-4'>
                 <div className='flex aspect-square size-10 items-center justify-center rounded-xl bg-linear-to-br from-brand-accent to-brand-glow text-white shadow-lg shadow-brand-accent/20'>
                   <Sparkles className='size-6' />
                 </div>
