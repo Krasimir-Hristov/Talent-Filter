@@ -35,5 +35,5 @@ This skill ensures reliable data flow and state management across the Monorepo.
 
 ## 5. Security Context
 
-- **Middleware Validation**: Ensure Next.js middleware checks for active Supabase sessions before allowing access to `/dashboard`.
+- **Server-Side Layout Validation**: Explicitly check for authenticated sessions (via HTTP-Only cookies) in Next.js Server Layouts (e.g., `dashboard/layout.tsx`) before rendering. This ensures zero-flicker protection and prevents middleware bypass.
 - **Sanitization**: On the backend, always validate that `auth.uid()` matches the `recruiter_id` of the record being modified, even if RLS is also in place (defense in depth).

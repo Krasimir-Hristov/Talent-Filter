@@ -14,7 +14,8 @@ Use this skill whenever you are generating code, planning features, or debugging
 - **Framework**: Next.js 16.1.4+ (App Router). **CRITICAL**: Versions below 16.1.4 are vulnerable to RCE and Source Code Exposure (CVE-2025-66478, CVE-2025-55183). Always verify against the latest security advisories.
 - **Styling**: Tailwind CSS + Shadcn/UI (Radix primitives). Use `clsx` and `tailwind-merge` for class manipulation.
 - **State Management**:
-  - **Zustand**: Use for client-side ephemeral state (Timer, Interview Phase, Tab Switching flags).
+  - **Auth**: Primary session stored in **HTTP-Only Cookies** (`tf_session`).
+  - **Zustand**: Sync client-side ephemeral state (Auth metadata, UI toggles).
   - **TanStack Query**: Use for **ALL** server data fetching. No distinct `useEffect` data fetching.
 - **Internationalization**: `next-intl` for EN/DE support.
 - **Animations**: `framer-motion` for premium micro-interactions.
@@ -43,7 +44,7 @@ Use this skill whenever you are generating code, planning features, or debugging
 Organize code by business feature within the internationalization wrapper.
 
 - **Routing**: Locale-based routing (`src/app/[locale]`).
-- **Proxy**: `proxy.ts` (Next.js 16) for redirects and auth checks.
+- **Redirection**: Use **Server-Side Layouts** (`layout.tsx`) with `cookies()` for authoritative auth checks and redirects. Use `proxy.ts` (Next.js 16) only for lightweight routing.
 - **State**: Zustand for client state, TanStack Query for server state.
 - **i18n**: All UI text must be in `messages/*.json`. Use `@/i18n/routing` for navigation.
 - **Landing Page**: Must use high-impact visual design (Gradients, Motion) and clear CTAs.

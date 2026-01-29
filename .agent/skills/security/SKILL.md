@@ -49,6 +49,10 @@ Protect the platform against common web vulnerabilities:
 - **Environment Integrity**:
   - Keep Next.js and FastAPI dependencies updated to the latest stable versions to mitigate known CVEs.
   - Use CORS to restrict backend access to the authorized frontend domain.
+- **Secure Routing & Bypass Prevention (Next.js 15/16)**:
+  - **The "Bypass" Risk**: Do not rely strictly on `middleware.ts` for route protection due to potential bypasses (e.g., CVE-2025-29927).
+  - **Strategy**: Implement protection in **Server-Side Layouts**. Check for authentication (via HTTP-Only cookies) directly in `layout.tsx`. If unauthorized, use `redirect()` before any HTML is sent to the client.
+  - **Session Storage**: Use `HTTP-Only` cookies for the primary authentication token (`tf_session`). This prevents XSS access to the token and allows the server to validate requests without client-side hydration.
 
 ## 4. Secure Data Access & RLS
 

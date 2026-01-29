@@ -59,7 +59,7 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **3.3. Internationalization (i18n) Setup**
     - Configure `next-intl` with locale-based routing.
     - Setup English and German translation files.
-    - Configure `proxy.ts` (Next.js 16) for routing.
+    - Configure `proxy.ts` (consistent with Next.js 15 prefix approach).
   - [x] **3.4. Landing Page Development**
     - Create a premium "Midnight & Indigo" hero section.
     - Implement CTA buttons for Login and Register.
@@ -67,10 +67,11 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **3.5. Authentication UI**
     - Design Login page (Glassmorphism).
     - Design Register page.
-  - [x] **3.6. Auth Logic & Integration**
-    - Create `apiFetch` utility.
-    - Set up Zustand Auth Store.
-    - Connect Login/Register to FastAPI endpoints.
+  - [x] **3.6. Auth Logic & Integration (The Secure Path)**
+    - Implement `tf_session` HTTP-Only cookies for secure session management.
+    - Implement **Server-Side Route Protection** in `layout.tsx` to prevent Middleware bypass (CVE-2025-29927).
+    - Set up Zustand Auth Store for client-side state sync.
+    - Connect Login/Register to FastAPI endpoints + Cookie synchronization.
   - [ ] **3.7. Dashboard Landing (`/dashboard`)**
     - Design Stats Overview section.
     - Implement Active Jobs Grid (Card View).
