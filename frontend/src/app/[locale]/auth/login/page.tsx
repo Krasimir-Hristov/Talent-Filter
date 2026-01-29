@@ -12,6 +12,7 @@ import { toast } from 'sonner';
 import { useAuthStore } from '@/store/useAuthStore';
 import { apiFetch } from '@/lib/api';
 import { AuthResponse } from '@/types/auth';
+import { setSession } from '@/lib/auth-actions';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -53,6 +54,7 @@ export default function LoginPage() {
       });
 
       setAuth(data.user, data.access_token);
+      await setSession(data.access_token, data.user);
       toast.success(t('login.success') || 'Logged in successfully');
       router.push('/dashboard');
     } catch (error: any) {

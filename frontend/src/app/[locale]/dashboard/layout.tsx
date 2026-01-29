@@ -14,12 +14,26 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation'; // Use core redirect for simple server-side jumps OR i18n redirect
 
-export default function DashboardLayout({
+const AUTH_COOKIE = 'tf_session';
+
+export default async function DashboardLayout({
   children,
+  params,
 }: {
   children: React.ReactNode;
+  params: Promise<{ locale: string }>;
 }) {
+  const { locale } = await params;
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(AUTH_COOKIE);
+
+  if (!sessionCookie) {
+    redirect(`/${locale}/auth/login`);
+  }
+
   return (
     <SidebarProvider>
       <AppSidebar />

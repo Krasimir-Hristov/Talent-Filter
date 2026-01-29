@@ -35,12 +35,13 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 import { useAuthStore } from '@/store/useAuthStore';
+import { deleteSession } from '@/lib/auth-actions';
 
 export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const t = useTranslations('Sidebar');
-  const logout = useAuthStore((state) => state.logout);
+  const { user, logout } = useAuthStore();
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -157,17 +158,17 @@ export function AppSidebar() {
                   className='h-14 rounded-xl border border-white/5 bg-white/2 px-3 ring-brand-accent transition-all hover:bg-white/5 data-state-open:bg-white/5'
                 >
                   <Avatar className='h-9 w-9 border border-white/10 ring-2 ring-brand-accent/20 transition-all group-hover:ring-brand-accent/40'>
-                    <AvatarImage src='' alt='User' />
+                    <AvatarImage src='' alt={user?.full_name || 'User'} />
                     <AvatarFallback className='bg-linear-to-br from-slate-800 to-slate-950 text-[10px] font-bold text-white'>
-                      KH
+                      {user?.full_name?.substring(0, 2).toUpperCase() || 'TF'}
                     </AvatarFallback>
                   </Avatar>
                   <div className='grid flex-1 text-left text-sm leading-tight group-data-[collapsible=icon]:hidden'>
                     <span className='truncate font-semibold text-white'>
-                      Krasimir Hristov
+                      {user?.full_name || 'Recruiter'}
                     </span>
                     <span className='truncate text-[11px] font-medium text-muted-foreground'>
-                      Admin Recruiter
+                      {user?.email}
                     </span>
                   </div>
                   <ChevronUp className='ml-auto h-4 w-4 text-muted-foreground group-data-[collapsible=icon]:hidden' />
@@ -190,7 +191,8 @@ export function AppSidebar() {
                   </span>
                 </DropdownMenuItem>
                 <DropdownMenuItem
-                  onClick={() => {
+                  onClick={async () => {
+                    await deleteSession();
                     logout();
                     router.push('/auth/login');
                   }}
