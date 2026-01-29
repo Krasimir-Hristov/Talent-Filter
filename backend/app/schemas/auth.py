@@ -5,6 +5,7 @@ class UserRegisterRequest(BaseModel):
     email: EmailStr
     password: str = Field(min_length=6)
     full_name: str
+    company_name: str
 
 
 class UserLoginRequest(BaseModel):
