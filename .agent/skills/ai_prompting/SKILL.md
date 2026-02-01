@@ -18,6 +18,8 @@ This skill governs all AI-related logic within the TalentFilter platform, specif
 - **Strict Schema**: Every AI call must use a Pydantic model to define its response structure.
 - **JSON Request**: Set the `response_mime_type` to `application/json` in the Gemini config.
 - **Validation**: Always wrap the AI parsing logic in a try-except block. If parsing fails, implement a retry mechanism or return a structured error response.
+- **Language Awareness**: Every prompt must explicitly specify the output language based on the user's `locale`.
+- **Dynamic Scope**: Avoid hardcoding question counts. Instruct the AI to determine the optimal depth (e.g., "Generate as many questions as needed to thoroughly vet this specific role").
 
 ## 3. Advanced Prompt Engineering
 

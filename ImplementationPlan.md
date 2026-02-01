@@ -80,9 +80,10 @@ This document outlines the step-by-step roadmap for building the MVP.
       - AI returns structured JSON (title, questions with text/ideal_answer/time_limit/weight).
       - Frontend dynamically renders `QuestionCard` components based on API response.
     - [ ] **3.7.3. Real-Time AI Assistance**
-      - **"Suggest Question" Button**: Calls `/jobs/suggest-question` with context (description + existing questions).
-      - **"Generate Answer" Button**: Per-question action to auto-fill `ideal_answer` field.
-      - Loading states with premium animations (skeleton cards, thinking indicators).
+      - [ ] **Suggest Question**: Context-aware generation (description + existing questions + language).
+      - [ ] **Generate Answer**: Auto-fill `ideal_answer` based on question text and job context.
+      - [ ] **Multi-Language Support**: All AI outputs must match the requested `locale` (English/German).
+      - [ ] **Smart Depth**: AI determines the optimal number of questions based on job complexity.
     - [x] **3.7.4. Hybrid Refinement**
       - [x] Full manual editing: recruiter can modify any field via Zustand actions.
       - [x] Add/remove/update questions functionality.
