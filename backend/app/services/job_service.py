@@ -16,6 +16,7 @@ class JobService:
             "recruiter_id": user_id,
             "title": job_data.title,
             "description": job_data.description,
+            "notes": job_data.notes,  # Added notes
             "status": "published",
         }
 
@@ -31,7 +32,7 @@ class JobService:
 
         # 2. Create the Questions (Bulk Insert)
         questions_payload = []
-        for q in job_data.questions:
+        for idx, q in enumerate(job_data.questions):
             questions_payload.append(
                 {
                     "job_id": job_id,
@@ -39,6 +40,8 @@ class JobService:
                     "ideal_answer": q.ideal_answer,
                     "time_limit": q.time_limit,
                     "weight": q.weight,
+                    "order_index": idx
+                    * 10,  # Store order with gaps for future insertions
                 }
             )
 

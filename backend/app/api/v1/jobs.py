@@ -10,7 +10,7 @@ from app.schemas.jobs import (
 )
 from app.services.ai import AIService
 from app.services.job_service import JobService
-from app.api.deps import get_current_user, get_supabase_client
+from app.api.deps import get_current_user, get_authenticated_client
 import os
 
 router = APIRouter()
@@ -75,6 +75,7 @@ async def generate_answer(
             job_title=request.job_title,
             job_description=request.job_description,
             question_text=request.question_text,
+            notes=request.notes if hasattr(request, "notes") else None,  # Safer Check
             locale=request.locale,
         )
         return {"ideal_answer": answer}
@@ -86,7 +87,7 @@ async def generate_answer(
 async def create_job(
     request: JobCreateRequest,
     user=Depends(get_current_user),
-    supabase: Client = Depends(get_supabase_client),
+    supabase: Client = Depends(get_authenticated_client),
 ):
     service = JobService(supabase)
     try:

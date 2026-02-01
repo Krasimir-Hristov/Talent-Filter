@@ -52,4 +52,5 @@ class JobParseResponse(BaseModel):
 class JobCreateRequest(BaseModel):
     title: str
     description: str
+    notes: Optional[str] = None
     questions: List[AIQuestionSchema]

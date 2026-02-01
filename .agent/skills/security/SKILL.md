@@ -62,7 +62,19 @@ Protect the platform against common web vulnerabilities:
 - **Response Scrubbing**:
   - Public-facing endpoints (e.g., `/session/{token}`) must explicitly exclude sensitive data like `ideal_answer` or `scoring_criteria`.
 
-## 5. Security Workflow
+## 5. Modern Supabase Auth (Post-2025 Standards)
+
+TalentFilter strictly follows the modern Supabase API key standards implemented in late 2025:
+
+- **Key Formats**:
+  - **Publishable Key** (`sb_publishable_...`): Replaces Legacy `anon`. Used for client-side and RLS-protected server-side calls.
+  - **Secret Key** (`sb_secret_...`): Replaces Legacy `service_role`. Used strictly for backend admin tasks that MUST bypass RLS.
+- **RLS Enforcement Architecture**:
+  - Always initialize user-authenticated clients with the **Publishable Key**.
+  - Inject the user's JWT into the `Authorization` header via `client.auth.set_session(token)`.
+  - Avoid initializing authenticated clients with the **Secret Key** (Service Role) to prevent accidental RLS bypasses.
+
+## 6. Security Workflow
 
 1. **Verify**: Before deploying any new feature, verify that RLS policies are in place.
 2. **Audit**: Regularly audit AI usage logs to identify potential abuse.

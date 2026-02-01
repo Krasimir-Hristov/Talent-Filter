@@ -121,8 +121,15 @@ class AIService:
     ) -> AIQuestionSchema:
         lang_instr = self._get_language_instruction(locale)
         prompt = f"""
-        Generate ONE new question object. Position: {job_title}. Description: {job_description}.
+        Generate ONE new question object.
+        Fields required: "text", "ideal_answer", "time_limit" (int sec), "weight" (int 1-10).
+        
+        Position: {job_title}. Description: {job_description}.
         Existing Questions: {json.dumps(existing_questions)}
+        
+        Additional Context/Notes:
+        {notes if notes else "No additional notes provided."}
+        
         {lang_instr}
         """
         response = await self._generate_with_retry(prompt, AIQuestionSchema)
@@ -135,11 +142,15 @@ class AIService:
         job_title: str,
         job_description: str,
         question_text: str,
+        notes: Optional[str] = None,
         locale: str = "en",
     ) -> str:
         lang_instr = self._get_language_instruction(locale)
         prompt = f"""
         Provide an ideal answer for: {question_text}. Job: {job_title}. Context: {job_description}.
+        
+        Additional Context/Notes:
+        {notes if notes else "No additional notes provided."}
         
         IMPORTANT: Keep the answer CONCISE. Maximum 2-4 sentences. It should be a bullet point summary or a short paragraph.
         {lang_instr}

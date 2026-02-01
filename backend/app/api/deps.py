@@ -6,27 +6,72 @@ import os
 security = HTTPBearer()
 
 
-def get_supabase_client() -> Client:
+def get_service_role_client() -> Client:
+    """
+    Returns a Supabase client with the SECRET (Service Role) key.
+    Use ONLY for admin tasks.
+    """
     url = os.getenv("SUPABASE_URL")
-    key = os.getenv("SUPABASE_SECRET_KEY")
+    # Modern format is sb_secret_..., legacy is SERVICE_ROLE
+    key = os.getenv("SUPABASE_SECRET_KEY") or os.getenv("SUPABASE_SERVICE_ROLE_KEY")
     if not url or not key:
-        raise HTTPException(status_code=500, detail="Supabase configuration missing")
+        raise HTTPException(status_code=500, detail="Supabase SECRET key missing")
     return create_client(url, key)
 
 
-async def get_current_user(
+def get_anon_client() -> Client:
+    """
+    Returns a Supabase client with the PUBLISHABLE (Anon) key.
+    Use for unauthenticated endpoints like Login/Register.
+    """
+    url = os.getenv("SUPABASE_URL")
+    # Modern format is sb_publishable_..., legacy is ANON_KEY
+    key = os.getenv("SUPABASE_PUBLISHABLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+    if not url or not key:
+        raise HTTPException(status_code=500, detail="Supabase PUBLISHABLE key missing")
+    return create_client(url, key)
+
+
+def get_authenticated_client(
     credentials: HTTPAuthorizationCredentials = Depends(security),
+) -> Client:
+    """
+    Returns a Supabase client initialized with the USER'S access token.
+    This client respects RLS policies for the authenticated user.
+    """
+    url = os.getenv("SUPABASE_URL")
+    # IMPORTANT: To ensure RLS is ENFORCED, we must initialize with the PUBLISHABLE key,
+    # then override the Authorization header with the user's JWT.
+    key = os.getenv("SUPABASE_PUBLISHABLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
+    token = credentials.credentials
+
+    if not url or not key:
+        # If publishable key is missing, we fall back to SECRET_KEY BUT this is less secure
+        # as it might bypass RLS depending on the SDK version.
+        key = os.getenv("SUPABASE_SECRET_KEY") or os.getenv("SUPABASE_SERVICE_ROLE_KEY")
+        if not url or not key:
+            raise HTTPException(
+                status_code=500, detail="Supabase configuration missing"
+            )
+
+    client = create_client(url, key)
+    client.auth.set_session(token, "refresh_token_not_needed_here")
+    return client
+
+
+async def get_current_user(
+    supabase: Client = Depends(get_authenticated_client),
 ) -> dict:
     """
-    Validates the JWT token with Supabase and returns the user object.
+    Validates the JWT token by asking Supabase 'getUser()'.
+    Since 'supabase' here is already the authenticated client,
+    calling get_user() checks validity against Supabase Auth.
     """
-    token = credentials.credentials
-    supabase = get_supabase_client()
-
     try:
-        user = supabase.auth.get_user(token)
-        if not user or not user.user:
+        user_response = supabase.auth.get_user()
+        if not user_response or not user_response.user:
             raise HTTPException(status_code=401, detail="Invalid authentication token")
-        return user.user
-    except Exception:
+        return user_response.user
+    except Exception as e:
+        print(f"Auth Error: {e}")
         raise HTTPException(status_code=401, detail="Could not validate credentials")

@@ -183,6 +183,7 @@ export function useJobBuilderActions() {
         body: JSON.stringify({
           title,
           description,
+          notes: notes.trim() || undefined, // Include notes in payload
           questions: questionsForBackend,
         }),
       });

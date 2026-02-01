@@ -120,11 +120,14 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                 <Input
                   type='number'
                   min='1'
-                  max='5'
+                  max='10'
                   value={question.weight}
-                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                    handleUpdate('weight', parseInt(e.target.value) || 1)
-                  }
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => {
+                    let val = parseInt(e.target.value) || 1;
+                    if (val > 10) val = 10;
+                    if (val < 1) val = 1;
+                    handleUpdate('weight', val);
+                  }}
                   className='bg-white/5 border-white/10 w-16 h-10 text-center text-base font-medium text-white rounded-lg focus-visible:ring-brand-accent/50'
                 />
               </div>

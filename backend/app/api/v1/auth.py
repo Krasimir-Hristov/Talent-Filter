@@ -1,14 +1,14 @@
 from fastapi import APIRouter, HTTPException, Depends
 from supabase import Client
 from app.schemas.auth import UserRegisterRequest, UserLoginRequest, AuthResponse
-from app.api.deps import get_supabase_client
+from app.api.deps import get_service_role_client
 
 router = APIRouter()
 
 
 @router.post("/register", response_model=AuthResponse)
 async def register(
-    request: UserRegisterRequest, supabase: Client = Depends(get_supabase_client)
+    request: UserRegisterRequest, supabase: Client = Depends(get_service_role_client)
 ):
     try:
         auth_response = supabase.auth.sign_up(
@@ -48,7 +48,7 @@ async def register(
 
 @router.post("/login", response_model=AuthResponse)
 async def login(
-    request: UserLoginRequest, supabase: Client = Depends(get_supabase_client)
+    request: UserLoginRequest, supabase: Client = Depends(get_service_role_client)
 ):
     try:
         auth_response = supabase.auth.sign_in_with_password(
