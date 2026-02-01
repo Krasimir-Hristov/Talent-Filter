@@ -25,6 +25,8 @@ This skill governs all AI-related logic within the TalentFilter platform, specif
 - **Chain-of-Thought**: For complex tasks like grading interviews, use prompts that encourage step-by-step reasoning within the JSON output (e.g., a `reasoning` field before the `final_score`).
 - **Context Injection**:
   - **Job Analysis**: Inject raw job description text + specific extraction goals.
+  - **Suggest Question**: Inject job description + existing questions (as JSON array) to avoid duplicates. Prompt must explicitly instruct: "Generate ONE new question that is NOT similar to existing ones."
+  - **Generate Answer**: Inject job description + specific question text. Prompt should ask for an "ideal answer" that reflects the company's requirements based on the description.
   - **Grading**: Inject Question context + "Ideal Answer" + "Candidate Answer" + "Scoring Rubric".
 
 ## 4. Prompt Storage (Clean Code)

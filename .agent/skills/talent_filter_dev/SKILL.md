@@ -85,4 +85,6 @@ Strictly separate concerns.
 
 - `docs/FRONTEND_ARCHITECTURE.md`: Detailed state management patterns.
 - `docs/BACKEND_ARCHITECTURE.md`: API design and AI Engine specs.
+- `docs/UNIFIED_WIZARD_STRATEGY.md`: The new AI-first, human-refined Job Creation approach.
 - `ImplementationPlan.md`: The roadmap.
+- `.agent/workflows/unified-wizard-implementation.md`: Step-by-step implementation guide for the Unified Wizard.

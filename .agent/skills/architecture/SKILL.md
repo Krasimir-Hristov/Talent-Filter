@@ -23,6 +23,18 @@ To avoid a "component junk drawer," we organize the `src` directory by feature.
 - `src/components/ui/`: Shared Shadcn primitives.
 - `src/lib/`: Shared utilities, API clients (Axios/Supabase), and global constants.
 
+### Unified Wizard Pattern (Job Creation):
+
+The Job Creation Wizard follows a **single-path, AI-first approach** with human refinement:
+
+1. **Input Stage**: Recruiter provides Title, Description, and optional Notes.
+2. **AI Generation**: Backend returns structured JSON (questions array with all fields).
+3. **Dynamic Rendering**: Frontend maps the array to question cards (no fixed count).
+4. **Real-Time Assistance**:
+   - "Suggest Question" button adds new AI-generated questions based on current context.
+   - "Generate Answer" button per question fills the `ideal_answer` field.
+5. **State Management**: Use React `useState` for the questions array. TanStack Query for AI calls. No complex state machines needed.
+
 ## 2. Backend Architecture (Layered FastAPI)
 
 The backend follows a strict separation of concerns to ensure business logic is decoupled from the API layer.
