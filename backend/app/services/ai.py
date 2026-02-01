@@ -140,6 +140,8 @@ class AIService:
         lang_instr = self._get_language_instruction(locale)
         prompt = f"""
         Provide an ideal answer for: {question_text}. Job: {job_title}. Context: {job_description}.
+        
+        IMPORTANT: Keep the answer CONCISE. Maximum 2-4 sentences. It should be a bullet point summary or a short paragraph.
         {lang_instr}
         """
 

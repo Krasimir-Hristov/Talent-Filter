@@ -47,8 +47,8 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
         <div className='flex gap-4'>
           <div className='flex-1 space-y-4'>
             {/* Question Text */}
-            <div className='space-y-2'>
-              <Label className='text-slate-400 text-xs'>
+            <div className='space-y-3'>
+              <Label className='text-slate-300 text-sm font-medium pl-1'>
                 {t('question') || 'Question'} {index + 1}
               </Label>
               <Textarea
@@ -56,7 +56,7 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                   handleUpdate('text', e.target.value)
                 }
-                className='bg-white/5 border-white/10 focus:border-brand-accent/50 text-white rounded-xl resize-none min-h-[80px]'
+                className='bg-white/5 border-white/10 focus:border-brand-accent/50 text-white text-base leading-relaxed rounded-xl resize-none min-h-[90px] p-4 placeholder:text-slate-500'
                 placeholder={
                   t('questionPlaceholder') || 'Enter your question...'
                 }
@@ -64,8 +64,8 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
             </div>
 
             {/* Ideal Answer */}
-            <div className='space-y-2'>
-              <Label className='text-slate-400 text-xs flex items-center justify-between'>
+            <div className='space-y-3 pt-2'>
+              <Label className='text-slate-300 text-sm font-medium pl-1 flex items-center justify-between'>
                 <span>
                   {t('idealAnswer') || 'Ideal Answer / Evaluation Criteria'}
                 </span>
@@ -75,12 +75,12 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                   type='button'
                   onClick={handleGenerateClick}
                   disabled={isGeneratingAnswer}
-                  className='h-6 text-xs text-brand-accent hover:bg-brand-accent/10 gap-1'
+                  className='h-7 text-xs font-medium text-brand-accent hover:bg-brand-accent/10 hover:text-brand-accent gap-1.5 px-3 rounded-full border border-brand-accent/20 transition-all'
                 >
                   {isGeneratingAnswer ? (
-                    <Loader2 className='size-3 animate-spin' />
+                    <Loader2 className='size-3.5 animate-spin' />
                   ) : (
-                    <Wand2 className='size-3' />
+                    <Wand2 className='size-3.5' />
                   )}
                   {!question.text.trim()
                     ? t('autoFill') || 'Smart Auto-Fill'
@@ -92,7 +92,7 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
                   handleUpdate('ideal_answer', e.target.value)
                 }
-                className='bg-white/5 border-white/10 focus:border-brand-accent/50 text-white/70 rounded-xl resize-none min-h-[100px]'
+                className='bg-white/5 border-white/10 focus:border-brand-accent/50 text-slate-200 text-sm leading-relaxed rounded-xl resize-none min-h-[110px] p-4 placeholder:text-slate-500'
                 placeholder={
                   t('answerPlaceholder') || 'What should a good answer include?'
                 }
@@ -100,21 +100,21 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
             </div>
 
             {/* Time & Weight */}
-            <div className='flex items-center gap-6'>
-              <div className='flex items-center gap-2 bg-white/5 px-4 py-2 rounded-lg border border-white/10'>
-                <Clock className='size-4 text-slate-500' />
+            <div className='flex items-center gap-6 pt-2'>
+              <div className='flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-lg border border-white/10 hover:border-white/20 transition-colors'>
+                <Clock className='size-4 text-slate-400' />
                 <Input
                   type='number'
                   value={question.time_limit}
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     handleUpdate('time_limit', parseInt(e.target.value) || 0)
                   }
-                  className='bg-transparent border-0 w-16 p-0 h-auto text-sm text-white focus-visible:ring-0'
+                  className='bg-transparent border-0 w-16 p-0 h-auto text-base font-medium text-white focus-visible:ring-0 text-center'
                 />
-                <span className='text-xs text-slate-500'>sec</span>
+                <span className='text-sm text-slate-400 font-medium'>sec</span>
               </div>
-              <div className='flex items-center gap-2'>
-                <Label className='text-slate-500 text-xs'>
+              <div className='flex items-center gap-3'>
+                <Label className='text-slate-400 text-sm font-medium'>
                   {t('weight') || 'Weight'}:
                 </Label>
                 <Input
@@ -125,7 +125,7 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                   onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     handleUpdate('weight', parseInt(e.target.value) || 1)
                   }
-                  className='bg-white/5 border-white/10 w-16 h-8 text-center text-white rounded-lg'
+                  className='bg-white/5 border-white/10 w-16 h-10 text-center text-base font-medium text-white rounded-lg focus-visible:ring-brand-accent/50'
                 />
               </div>
             </div>
