@@ -43,6 +43,7 @@
     "answerPlaceholder": "Was sollte eine gute Antwort beinhalten?",
     "weight": "Gewichtung",
     "addQuestion": "Frage hinzufügen",
+    "suggestQuestion": "KI-Vorschlag",
     "save": "Interview speichern",
     "saving": "Wird gespeichert...",
     "startOver": "Neu beginnen",

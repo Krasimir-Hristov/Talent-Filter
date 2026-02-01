@@ -9,8 +9,8 @@ This skill governs all AI-related logic within the TalentFilter platform, specif
 
 ## 1. Google Gemini API Integration
 
-- **Model Versioning**: Always use the most capable stable version (e.g., `gemini-1.5-flash` or `gemini-1.5-pro`) unless specific speed requirements dictate otherwise.
-- **Safety Settings**: Configure AI safety settings via the `google-generativeai` SDK to ensure the AI doesn't refuse valid recruitment/screening tasks while maintaining professional boundaries.
+- **Model Versioning**: Always use the most capable version (`gemini-2.5-flash`).
+- **Safety Settings**: Configure AI safety settings via the `google-genai` SDK to ensure the AI doesn't refuse valid recruitment/screening tasks while maintaining professional boundaries.
 - **Async Execution**: AI calls are high-latency; always use `await` and ensure they are proxied through the FastAPI backend to avoid blocking the main thread.
 
 ## 2. Structured Output (JSON Mode)

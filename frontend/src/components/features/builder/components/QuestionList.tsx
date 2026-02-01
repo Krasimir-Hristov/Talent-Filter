@@ -2,15 +2,17 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from 'next-intl';
-import { Plus, Sparkles } from 'lucide-react';
+import { Plus, Sparkles, Wand2 } from 'lucide-react';
 
 import { Button } from '@/components/ui/button';
 import { useJobBuilderStore } from '@/store/useJobBuilderStore';
 import { QuestionCard } from './QuestionCard';
+import { useJobBuilderActions } from '../hooks/useJobBuilderActions';
 
 export function QuestionList() {
   const t = useTranslations('JobWizard');
   const { questions, hasGenerated, addQuestion } = useJobBuilderStore();
+  const { suggestQuestion } = useJobBuilderActions();
 
   if (!hasGenerated || questions.length === 0) {
     return null;
@@ -32,16 +34,28 @@ export function QuestionList() {
             {questions.length}
           </span>
         </h2>
-        <Button
-          variant='ghost'
-          size='sm'
-          type='button'
-          onClick={() => addQuestion()}
-          className='text-brand-accent hover:bg-brand-accent/10 gap-2'
-        >
-          <Plus className='size-4' />
-          {t('addQuestion') || 'Add Question'}
-        </Button>
+        <div className='flex gap-2'>
+          <Button
+            variant='ghost'
+            size='sm'
+            type='button'
+            onClick={() => suggestQuestion()}
+            className='text-brand-accent hover:bg-brand-accent/10 gap-2 border border-brand-accent/20'
+          >
+            <Wand2 className='size-4' />
+            {t('suggestQuestion') || 'AI Suggestion'}
+          </Button>
+          <Button
+            variant='ghost'
+            size='sm'
+            type='button'
+            onClick={() => addQuestion()}
+            className='text-slate-400 hover:text-white hover:bg-white/5 gap-2'
+          >
+            <Plus className='size-4' />
+            {t('addQuestion') || 'Add Question'}
+          </Button>
+        </div>
       </div>
 
       {/* Question Cards */}

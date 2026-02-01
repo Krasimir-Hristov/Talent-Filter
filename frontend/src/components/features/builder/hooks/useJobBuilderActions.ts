@@ -1,6 +1,6 @@
 import { useRouter } from '@/i18n/routing';
 import { toast } from 'sonner';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 import { apiFetch } from '@/lib/api';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -14,14 +14,18 @@ interface AIResponse {
 export function useJobBuilderActions() {
   const t = useTranslations('JobWizard');
   const router = useRouter();
+  const locale = useLocale();
   const token = useAuthStore((state: any) => state.accessToken);
 
   const {
     title,
     description,
+    notes,
     questions,
     setTitle,
     setQuestions,
+    addQuestion,
+    updateQuestion,
     setIsGenerating,
     setIsSaving,
     setHasGenerated,
@@ -44,7 +48,11 @@ export function useJobBuilderActions() {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ description }),
+        body: JSON.stringify({
+          description,
+          notes: notes.trim() || undefined,
+          locale,
+        }),
       });
 
       // Add unique IDs to questions
@@ -69,6 +77,57 @@ export function useJobBuilderActions() {
       toast.error(error.message || 'Failed to generate interview');
     } finally {
       setIsGenerating(false);
+    }
+  };
+
+  const suggestQuestion = async () => {
+    try {
+      const data = await apiFetch<Omit<Question, 'id'>>(
+        '/jobs/suggest-question',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            job_title: title,
+            job_description: description,
+            current_questions: questions.map((q) => q.text),
+            notes: notes.trim() || undefined,
+            locale,
+          }),
+        },
+      );
+
+      addQuestion(data);
+      toast.success('New question suggested!');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to suggest question');
+    }
+  };
+
+  const generateAnswer = async (questionId: string, questionText: string) => {
+    try {
+      const data = await apiFetch<{ ideal_answer: string }>(
+        '/jobs/generate-answer',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            job_title: title,
+            job_description: description,
+            question_text: questionText,
+            locale,
+          }),
+        },
+      );
+
+      updateQuestion(questionId, { ideal_answer: data.ideal_answer });
+      toast.success('Answer generated!');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to generate answer');
     }
   };
 
@@ -106,6 +165,8 @@ export function useJobBuilderActions() {
 
   return {
     generateInterview,
+    suggestQuestion,
+    generateAnswer,
     saveJob,
   };
 }

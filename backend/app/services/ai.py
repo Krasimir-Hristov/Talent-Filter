@@ -1,68 +1,96 @@
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 import json
 import os
+import asyncio
 from typing import List, Optional
 from pydantic import BaseModel, Field
+from app.schemas.jobs import AIQuestionSchema
 
 # ============================================================================
-# STRUCTURED OUTPUT MODELS
+# PYDANTIC MODELS
 # ============================================================================
-
-
-class AIQuestion(BaseModel):
-    text: str = Field(description="The interview question text")
-    ideal_answer: str = Field(
-        description="A brief description of what a good answer should include"
-    )
-    time_limit: int = Field(
-        description="Suggested time limit in seconds (typically between 60 and 300)"
-    )
-    weight: int = Field(description="Importance of the question from 1-5")
 
 
 class JobAnalysis(BaseModel):
     title: str = Field(description="The refined job title")
-    questions: List[AIQuestion] = Field(
+    questions: List[AIQuestionSchema] = Field(
         description="A list of screening questions optimal for vetting the position"
     )
 
 
-class SingleQuestionSuggestion(BaseModel):
-    question: AIQuestion
+class SingleQuestionResponse(BaseModel):
+    question: AIQuestionSchema
 
 
-class IdealAnswerSuggestion(BaseModel):
+class IdealAnswerResponse(BaseModel):
     ideal_answer: str
 
 
 # ============================================================================
-# THE AI SERVICE
+# THE AI SERVICE (Using google-genai SDK)
 # ============================================================================
 
 
 class AIService:
     def __init__(self, api_key: str):
-        genai.configure(api_key=api_key)
-        # Using flash for speed/cost, pro could be used for more complex grading later
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
+        # Initialize the new GenAI client
+        self.client = genai.Client(api_key=api_key)
+        # Using the latest 2.5-flash model
+        self.model_name = "gemini-2.5-flash"
 
     def _get_language_instruction(self, locale: str) -> str:
-        """Helper to ensure output is in the correct language."""
         languages = {"en": "English", "de": "German"}
         target_lang = languages.get(locale, "English")
         return f"IMPORTANT: All responses and content MUST be written in {target_lang}."
+
+    async def _generate_with_retry(self, prompt: str, schema):
+        """
+        Executes generation with retry logic using the new google-genai SDK.
+        """
+        max_retries = 3
+        base_delay = 2
+
+        for attempt in range(max_retries):
+            try:
+                # Use the asynchronous client under self.client.aio
+                response = await self.client.aio.models.generate_content(
+                    model=self.model_name,
+                    contents=prompt,
+                    config=types.GenerateContentConfig(
+                        response_mime_type="application/json",
+                        response_schema=schema,  # Passing Pydantic class directly!
+                    ),
+                )
+
+                # The response object in the new SDK might have different structure.
+                # response.text is usually available, or response.parsed if we trust it.
+                # Let's verify what we get. The docs say print(response.parsed)works.
+                return response
+            except Exception as e:
+                error_str = str(e)
+                if (
+                    "429" in error_str or "429" in str(getattr(e, "code", ""))
+                ) and attempt < max_retries - 1:
+                    wait_time = base_delay * (2**attempt)
+                    print(
+                        f"DEBUG: 429 Rate Limit hit. Retrying in {wait_time}s... (Attempt {attempt + 1}/{max_retries})"
+                    )
+                    await asyncio.sleep(wait_time)
+                    continue
+                else:
+                    print(f"AI Generation Error (Attempt {attempt + 1}): {e}")
+                    raise
 
     async def generate_questions(
         self, job_description: str, notes: Optional[str] = None, locale: str = "en"
     ) -> JobAnalysis:
         lang_instr = self._get_language_instruction(locale)
         prompt = f"""
-        You are an expert technical recruiter and talent analyst.
-        Analyze the following job description and optional notes to extract the core competencies required.
+        You are an expert technical recruiter. Analyze the job description and extract core competencies.
         
-        GOAL: Generate an OPTIMAL number of screening questions to thoroughly vet the candidate's skills.
-        Complexity matters: A senior role might need more questions (8-10), while a junior or simple role might need fewer (3-5). 
-        Determine the coverage yourself based on the description quality.
+        GOAL: Generate an OPTIMAL number of screening questions. 
+        Determine the coverage yourself based on complexity.
         
         {lang_instr}
         
@@ -71,19 +99,17 @@ class AIService:
         
         Additional Context/Notes:
         {notes if notes else "No additional notes provided."}
-        
-        Output the result in strict JSON format.
         """
 
-        response = self.model.generate_content(
-            prompt,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                response_schema=JobAnalysis.model_json_schema(),
-            ),
-        )
-
-        return JobAnalysis.model_validate_json(response.text)
+        # New SDK supports parsing directly into Pydantic model via .parsed
+        response = await self._generate_with_retry(prompt, JobAnalysis)
+        # Handle cases where parsed might be None if JSON fails
+        if response.parsed:
+            # The SDK returns an instance of the Pydantic model directly!
+            return response.parsed
+        else:
+            # Fallback to manual parsing if needed
+            return JobAnalysis.model_validate_json(response.text)
 
     async def suggest_single_question(
         self,
@@ -92,31 +118,17 @@ class AIService:
         existing_questions: List[str],
         notes: Optional[str] = None,
         locale: str = "en",
-    ) -> AIQuestion:
+    ) -> AIQuestionSchema:
         lang_instr = self._get_language_instruction(locale)
         prompt = f"""
-        You are a recruitment assistant. The recruiter wants to add ONE additional question to their interview.
-        
-        Position: {job_title}
-        Description: {job_description}
+        Generate ONE new question object. Position: {job_title}. Description: {job_description}.
         Existing Questions: {json.dumps(existing_questions)}
-        Additional Notes: {notes if notes else "None"}
-        
-        CRITICAL: The new question must NOT be similar or redundant to existing ones. Focus on a missing aspect or specific skill.
         {lang_instr}
-        
-        Return ONLY the new question in JSON format.
         """
-
-        response = self.model.generate_content(
-            prompt,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                response_schema=AIQuestion.model_json_schema(),
-            ),
-        )
-
-        return AIQuestion.model_validate_json(response.text)
+        response = await self._generate_with_retry(prompt, AIQuestionSchema)
+        if response.parsed:
+            return response.parsed
+        return AIQuestionSchema.model_validate_json(response.text)
 
     async def generate_ideal_answer(
         self,
@@ -126,35 +138,12 @@ class AIService:
         locale: str = "en",
     ) -> str:
         lang_instr = self._get_language_instruction(locale)
-        # Since we only want a single string field, we can use a simpler schema or just extract it
         prompt = f"""
-        Task: Provide a high-quality 'Ideal Answer' or grading criteria for a specific interview question.
-        
-        Job Title: {job_title}
-        Job Context: {job_description}
-        Question: {question_text}
-        
+        Provide an ideal answer for: {question_text}. Job: {job_title}. Context: {job_description}.
         {lang_instr}
-        
-        Goal: Describe what a perfect candidate should mention in their answer to score 100%. 
-        Be concise but thorough regarding key terms or skills expected.
         """
 
-        # Define a small schema for the response to ensure consistency
-        class AnswerResponse(BaseModel):
-            ideal_answer: str
-
-        response = self.model.generate_content(
-            prompt,
-            generation_config=genai.GenerationConfig(
-                response_mime_type="application/json",
-                response_schema=AnswerResponse.model_json_schema(),
-            ),
-        )
-
-        data = AnswerResponse.model_validate_json(response.text)
-        return data.ideal_answer
-
-    async def grade_interview(self, question: str, ideal: str, answer: str) -> dict:
-        # Placeholder for Phase 5
-        pass
+        response = await self._generate_with_retry(prompt, IdealAnswerResponse)
+        if response.parsed:
+            return response.parsed.ideal_answer
+        return IdealAnswerResponse.model_validate_json(response.text).ideal_answer

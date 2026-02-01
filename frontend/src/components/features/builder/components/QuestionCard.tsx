@@ -1,7 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Trash2, Clock, Wand2 } from 'lucide-react';
+import { Trash2, Clock, Wand2, Loader2 } from 'lucide-react';
+import React, { useState } from 'react';
 import type { ChangeEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
@@ -10,6 +11,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent } from '@/components/ui/card';
 import { useJobBuilderStore, type Question } from '@/store/useJobBuilderStore';
+import { useJobBuilderActions } from '../hooks/useJobBuilderActions';
 
 interface QuestionCardProps {
   question: Question;
@@ -19,12 +21,21 @@ interface QuestionCardProps {
 export function QuestionCard({ question, index }: QuestionCardProps) {
   const t = useTranslations('JobWizard');
   const { updateQuestion, removeQuestion } = useJobBuilderStore();
+  const { generateAnswer } = useJobBuilderActions();
+  const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false);
 
   const handleUpdate = (
     field: keyof Omit<Question, 'id'>,
     value: string | number,
   ) => {
     updateQuestion(question.id, { [field]: value });
+  };
+
+  const handeGenerateAnswer = async () => {
+    if (!question.text.trim()) return;
+    setIsGeneratingAnswer(true);
+    await generateAnswer(question.id, question.text);
+    setIsGeneratingAnswer(false);
   };
 
   return (
@@ -59,9 +70,15 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                   variant='ghost'
                   size='sm'
                   type='button'
+                  onClick={handeGenerateAnswer}
+                  disabled={isGeneratingAnswer || !question.text.trim()}
                   className='h-6 text-xs text-brand-accent hover:bg-brand-accent/10 gap-1'
                 >
-                  <Wand2 className='size-3' />
+                  {isGeneratingAnswer ? (
+                    <Loader2 className='size-3 animate-spin' />
+                  ) : (
+                    <Wand2 className='size-3' />
+                  )}
                   {t('generate') || 'Generate'}
                 </Button>
               </Label>

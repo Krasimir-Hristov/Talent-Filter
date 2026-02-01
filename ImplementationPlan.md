@@ -12,7 +12,7 @@ This document outlines the step-by-step roadmap for building the MVP.
   - Set up `.gitignore` for Python and Node.
 
 - [x] **1.2. Backend (FastAPI) Setup**
-  - Initialize poetry or pip requirements (`fastapi`, `uvicorn`, `pydantic`, `google-generativeai`, `supabase`).
+  - Initialize poetry or pip requirements (`fastapi`, `uvicorn`, `pydantic`, `google-genai`, `supabase`).
   - Create `app/main.py` "Hello World".
   - Configure CORS to allow `localhost:3000`.
 
@@ -32,7 +32,7 @@ This document outlines the step-by-step roadmap for building the MVP.
 
 - [x] **2.1. AI Service Implementation**
   - Create `AIService` class in `backend/app/services/ai.py`.
-  - Implement `generate_questions(text: str)` using Gemini API.
+  - Implement `generate_questions(text: str)` using Gemini 2.5 Flash API.
   - Create Pydantic models for `Question` output to ensure strict JSON structure.
 
 - [x] **2.2. Job Management API**

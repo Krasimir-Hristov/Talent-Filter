@@ -45,6 +45,7 @@ async def analyze_job(
         )
         return result
     except Exception as e:
+        print(f"DEBUG: /analyze error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
