@@ -57,7 +57,8 @@
     },
     "info": {
       "removed": "Question removed"
-    }
+    },
+    "autoFill": "Smart Auto-Fill"
   },
   "Auth": {
     "login": {

@@ -57,7 +57,8 @@
     },
     "info": {
       "removed": "Frage entfernt"
-    }
+    },
+    "autoFill": "Intelligentes Ausfüllen"
   },
   "Auth": {
     "login": {

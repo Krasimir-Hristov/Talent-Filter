@@ -21,7 +21,7 @@ interface QuestionCardProps {
 export function QuestionCard({ question, index }: QuestionCardProps) {
   const t = useTranslations('JobWizard');
   const { updateQuestion, removeQuestion } = useJobBuilderStore();
-  const { generateAnswer } = useJobBuilderActions();
+  const { generateAnswer, fillSmartQuestion } = useJobBuilderActions();
   const [isGeneratingAnswer, setIsGeneratingAnswer] = useState(false);
 
   const handleUpdate = (
@@ -31,10 +31,13 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
     updateQuestion(question.id, { [field]: value });
   };
 
-  const handeGenerateAnswer = async () => {
-    if (!question.text.trim()) return;
+  const handleGenerateClick = async () => {
     setIsGeneratingAnswer(true);
-    await generateAnswer(question.id, question.text);
+    if (!question.text.trim()) {
+      await fillSmartQuestion(question.id);
+    } else {
+      await generateAnswer(question.id, question.text);
+    }
     setIsGeneratingAnswer(false);
   };
 
@@ -70,8 +73,8 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                   variant='ghost'
                   size='sm'
                   type='button'
-                  onClick={handeGenerateAnswer}
-                  disabled={isGeneratingAnswer || !question.text.trim()}
+                  onClick={handleGenerateClick}
+                  disabled={isGeneratingAnswer}
                   className='h-6 text-xs text-brand-accent hover:bg-brand-accent/10 gap-1'
                 >
                   {isGeneratingAnswer ? (
@@ -79,7 +82,9 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                   ) : (
                     <Wand2 className='size-3' />
                   )}
-                  {t('generate') || 'Generate'}
+                  {!question.text.trim()
+                    ? t('autoFill') || 'Smart Auto-Fill'
+                    : t('generate') || 'Generate Answer'}
                 </Button>
               </Label>
               <Textarea

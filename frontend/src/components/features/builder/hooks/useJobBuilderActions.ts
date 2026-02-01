@@ -131,6 +131,39 @@ export function useJobBuilderActions() {
     }
   };
 
+  const fillSmartQuestion = async (questionId: string) => {
+    try {
+      // Get all OTHER questions to avoid duplicates
+      const otherQuestions = questions
+        .filter((q) => q.id !== questionId)
+        .map((q) => q.text)
+        .filter(Boolean);
+
+      const data = await apiFetch<Omit<Question, 'id'>>(
+        '/jobs/suggest-question',
+        {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            job_title: title,
+            job_description: description,
+            current_questions: otherQuestions,
+            notes: notes.trim() || undefined,
+            locale,
+          }),
+        },
+      );
+
+      // Update the specific question with the AI result
+      updateQuestion(questionId, data);
+      toast.success('Question auto-filled!');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to suggest question');
+    }
+  };
+
   const saveJob = async () => {
     if (!canSave()) {
       toast.error('Please generate questions before saving');
@@ -167,6 +200,7 @@ export function useJobBuilderActions() {
     generateInterview,
     suggestQuestion,
     generateAnswer,
+    fillSmartQuestion,
     saveJob,
   };
 }

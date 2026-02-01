@@ -33,7 +33,7 @@ interface JobBuilderActions {
 
   // Questions management
   setQuestions: (questions: Question[]) => void;
-  addQuestion: (question?: Partial<Question>) => void;
+  addQuestion: (question?: Partial<Question>, index?: number) => void;
   updateQuestion: (id: string, updates: Partial<Omit<Question, 'id'>>) => void;
   removeQuestion: (id: string) => void;
 
@@ -85,7 +85,7 @@ export const useJobBuilderStore = create<JobBuilderStore>((set, get) => ({
   // --------------------------------------------------------------------------
   setQuestions: (questions) => set({ questions }),
 
-  addQuestion: (partial) => {
+  addQuestion: (partial, index) => {
     const newQuestion: Question = {
       id: `q-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
       text: partial?.text ?? '',
@@ -93,7 +93,19 @@ export const useJobBuilderStore = create<JobBuilderStore>((set, get) => ({
       time_limit: partial?.time_limit ?? 120,
       weight: partial?.weight ?? 1,
     };
-    set((state) => ({ questions: [...state.questions, newQuestion] }));
+
+    set((state) => {
+      if (
+        typeof index === 'number' &&
+        index >= 0 &&
+        index <= state.questions.length
+      ) {
+        const newQuestions = [...state.questions];
+        newQuestions.splice(index, 0, newQuestion);
+        return { questions: newQuestions };
+      }
+      return { questions: [...state.questions, newQuestion] };
+    });
   },
 
   updateQuestion: (id, updates) => {
