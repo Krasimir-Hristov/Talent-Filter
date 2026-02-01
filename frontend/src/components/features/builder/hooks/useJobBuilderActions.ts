@@ -14,7 +14,7 @@ interface AIResponse {
 export function useJobBuilderActions() {
   const t = useTranslations('JobWizard');
   const router = useRouter();
-  const token = useAuthStore((state) => state.accessToken);
+  const token = useAuthStore((state: any) => state.accessToken);
 
   const {
     title,
@@ -48,10 +48,12 @@ export function useJobBuilderActions() {
       });
 
       // Add unique IDs to questions
-      const questionsWithIds: Question[] = data.questions.map((q, idx) => ({
-        ...q,
-        id: `q-${Date.now()}-${idx}`,
-      }));
+      const questionsWithIds: Question[] = data.questions.map(
+        (q: Omit<Question, 'id'>, idx: number) => ({
+          ...q,
+          id: `q-${Date.now()}-${idx}`,
+        }),
+      );
 
       // If AI suggested a title and user didn't provide one, use it
       if (!title.trim() && data.title) {
@@ -79,7 +81,7 @@ export function useJobBuilderActions() {
     setIsSaving(true);
     try {
       // Remove IDs before sending to backend
-      const questionsForBackend = questions.map(({ id, ...q }) => q);
+      const questionsForBackend = questions.map(({ id, ...q }: Question) => q);
 
       await apiFetch('/jobs/create', {
         method: 'POST',

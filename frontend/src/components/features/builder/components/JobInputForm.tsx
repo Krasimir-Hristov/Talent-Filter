@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Sparkles, Loader2 } from 'lucide-react';
+import type { ChangeEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -29,10 +30,6 @@ export function JobInputForm({ onGenerate }: JobInputFormProps) {
     canGenerate,
   } = useJobBuilderStore();
 
-  const handleGenerateClick = async () => {
-    await onGenerate();
-  };
-
   return (
     <Card className='bg-white/5 border-white/10 backdrop-blur-xl'>
       <CardContent className='p-8 space-y-6'>
@@ -44,7 +41,9 @@ export function JobInputForm({ onGenerate }: JobInputFormProps) {
           </Label>
           <Input
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLInputElement>) =>
+              setTitle(e.target.value)
+            }
             placeholder={
               t('titlePlaceholder') || 'e.g., Senior React Developer'
             }
@@ -61,7 +60,9 @@ export function JobInputForm({ onGenerate }: JobInputFormProps) {
           </Label>
           <Textarea
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+              setDescription(e.target.value)
+            }
             placeholder={
               t('descriptionPlaceholder') ||
               'Describe the role, required skills, responsibilities...'
@@ -78,7 +79,9 @@ export function JobInputForm({ onGenerate }: JobInputFormProps) {
           </Label>
           <Textarea
             value={notes}
-            onChange={(e) => setNotes(e.target.value)}
+            onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+              setNotes(e.target.value)
+            }
             placeholder={
               t('notesPlaceholder') ||
               'Any specific instructions for the AI? (e.g., "Focus on soft skills")'
@@ -93,7 +96,7 @@ export function JobInputForm({ onGenerate }: JobInputFormProps) {
           <div className='pt-4'>
             <Button
               type='button'
-              onClick={handleGenerateClick}
+              onClick={onGenerate}
               disabled={!canGenerate()}
               className='w-full bg-linear-to-r from-brand-accent to-brand-glow text-white h-14 rounded-xl shadow-lg shadow-brand-accent/20 gap-3 text-lg font-bold group'
             >

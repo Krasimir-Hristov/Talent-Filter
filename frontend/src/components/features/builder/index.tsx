@@ -3,12 +3,13 @@
 import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { Sparkles } from 'lucide-react';
+import React from 'react';
 
 import { useJobBuilderStore } from '@/store/useJobBuilderStore';
-import { JobInputForm } from './JobInputForm';
-import { QuestionList } from './QuestionList';
-import { ActionBar } from './ActionBar';
-import { useJobBuilderActions } from './useJobBuilderActions';
+import { JobInputForm } from './components/JobInputForm';
+import { QuestionList } from './components/QuestionList';
+import { ActionBar } from './components/ActionBar';
+import { useJobBuilderActions } from './hooks/useJobBuilderActions';
 
 export function JobCreationWizard() {
   const t = useTranslations('JobWizard');
@@ -52,9 +53,3 @@ export function JobCreationWizard() {
     </form>
   );
 }
-
-// Re-export for convenience
-export { JobInputForm } from './JobInputForm';
-export { QuestionCard } from './QuestionCard';
-export { QuestionList } from './QuestionList';
-export { ActionBar } from './ActionBar';

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl';
 import { Trash2, Clock, Wand2 } from 'lucide-react';
+import type { ChangeEvent } from 'react';
 
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
@@ -38,7 +39,9 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
               </Label>
               <Textarea
                 value={question.text}
-                onChange={(e) => handleUpdate('text', e.target.value)}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                  handleUpdate('text', e.target.value)
+                }
                 className='bg-white/5 border-white/10 focus:border-brand-accent/50 text-white rounded-xl resize-none min-h-[80px]'
                 placeholder={
                   t('questionPlaceholder') || 'Enter your question...'
@@ -64,7 +67,9 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
               </Label>
               <Textarea
                 value={question.ideal_answer}
-                onChange={(e) => handleUpdate('ideal_answer', e.target.value)}
+                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                  handleUpdate('ideal_answer', e.target.value)
+                }
                 className='bg-white/5 border-white/10 focus:border-brand-accent/50 text-white/70 rounded-xl resize-none min-h-[100px]'
                 placeholder={
                   t('answerPlaceholder') || 'What should a good answer include?'
@@ -79,7 +84,7 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                 <Input
                   type='number'
                   value={question.time_limit}
-                  onChange={(e) =>
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     handleUpdate('time_limit', parseInt(e.target.value) || 0)
                   }
                   className='bg-transparent border-0 w-16 p-0 h-auto text-sm text-white focus-visible:ring-0'
@@ -95,7 +100,7 @@ export function QuestionCard({ question, index }: QuestionCardProps) {
                   min='1'
                   max='5'
                   value={question.weight}
-                  onChange={(e) =>
+                  onChange={(e: ChangeEvent<HTMLInputElement>) =>
                     handleUpdate('weight', parseInt(e.target.value) || 1)
                   }
                   className='bg-white/5 border-white/10 w-16 h-8 text-center text-white rounded-lg'
