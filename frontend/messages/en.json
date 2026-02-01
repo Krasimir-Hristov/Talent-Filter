@@ -26,29 +26,37 @@
     "activeJobs": "Active Jobs"
   },
   "JobWizard": {
-    "title": "Create New Automated Interview",
-    "description": "Provide a job description and our AI will generate the perfect interview questions.",
-    "validationDetails": "Please enter a Job Title and Description to unlock the AI and Manual creation modes.",
-    "step1": "Job Description",
-    "step2": "AI Generation",
-    "step3": "Review & Refine",
+    "title": "Create Smart Interview",
+    "subtitle": "AI will generate questions based on your job description. You can refine them afterwards.",
     "jobTitle": "Job Title",
-    "jobDescription": "Full Job Description",
-    "placeholder": "Paste the detailed job requirements here...",
-    "btnGenerate": "Generate Questions with AI",
-    "createManually": "Create Manually",
-    "skipAI": "Skip AI and add questions myself",
-    "step1Detail": "Setup Job Details",
-    "step2Detail": "Configure Interview Questions",
-    "btnSaving": "Saving Job...",
-    "btnSave": "Save & Publish Job",
-    "btnRefining": "Refining...",
-    "btnRefine": "Refine with AI",
+    "titlePlaceholder": "e.g., Senior React Developer",
+    "jobDescription": "Job Description",
+    "descriptionPlaceholder": "Describe the role, required skills, responsibilities...",
+    "additionalNotes": "Additional Notes (Optional)",
+    "notesPlaceholder": "Any specific instructions for the AI? (e.g., \"Focus on soft skills\", \"Include a coding challenge\")",
+    "generate": "Generate Smart Interview",
+    "generating": "Generating Interview...",
     "questions": "Interview Questions",
-    "idealAnswer": "Ideal Answer Guide",
-    "timeLimit": "Time Limit (seconds)",
-    "secondsUnit": "sec",
-    "addQuestion": "Add Custom Question"
+    "question": "Question",
+    "questionPlaceholder": "Enter your question...",
+    "idealAnswer": "Ideal Answer / Evaluation Criteria",
+    "answerPlaceholder": "What should a good answer include?",
+    "weight": "Weight",
+    "addQuestion": "Add Question",
+    "save": "Save Interview",
+    "saving": "Saving...",
+    "startOver": "Start Over",
+    "validation": {
+      "titleRequired": "Job Title is required",
+      "descriptionRequired": "Description is required"
+    },
+    "success": {
+      "generated": "Interview generated successfully!",
+      "saved": "Job created successfully!"
+    },
+    "info": {
+      "removed": "Question removed"
+    }
   },
   "Auth": {
     "login": {

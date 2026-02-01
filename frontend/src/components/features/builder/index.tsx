@@ -1,101 +1,60 @@
 'use client';
 
-import { AnimatePresence } from 'framer-motion';
+import { useEffect } from 'react';
 import { useTranslations } from 'next-intl';
-import { CheckCircle2 } from 'lucide-react';
-import { useJobBuilder } from './use-job-builder';
-import { SetupStep } from './steps/setup-step';
-import { QuestionsStep } from './steps/questions-step';
+import { Sparkles } from 'lucide-react';
+
+import { useJobBuilderStore } from '@/store/useJobBuilderStore';
+import { JobInputForm } from './JobInputForm';
+import { QuestionList } from './QuestionList';
+import { ActionBar } from './ActionBar';
+import { useJobBuilderActions } from './useJobBuilderActions';
 
 export function JobCreationWizard() {
   const t = useTranslations('JobWizard');
-  const {
-    step,
-    mode,
-    title,
-    description,
-    questions,
-    isGenerating,
-    isSaving,
-    setStep,
-    setTitle,
-    setDescription,
-    generateQuestionsWithAI,
-    suggestSingleQuestion,
-    addQuestion,
-    updateQuestion,
-    removeQuestion,
-    saveJob,
-    startManualMode,
-    startAIMode,
-  } = useJobBuilder();
+  const { reset } = useJobBuilderStore();
+  const { generateInterview, saveJob } = useJobBuilderActions();
+
+  // Reset store when component unmounts (user leaves page)
+  useEffect(() => {
+    return () => {
+      reset();
+    };
+  }, [reset]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    await saveJob();
+  };
 
   return (
-    <div className='max-w-4xl mx-auto'>
-      {/* Progress Stepper */}
-      <div className='mb-8 flex items-center justify-between'>
-        <div className='flex items-center gap-4'>
-          {[1, 2].map((i) => (
-            <div key={i} className='flex items-center'>
-              <div
-                className={`size-10 rounded-full flex items-center justify-center font-bold transition-all ${
-                  step >= i
-                    ? 'bg-brand-accent text-white shadow-lg shadow-brand-accent/20'
-                    : 'bg-white/5 text-slate-500 border border-white/10'
-                }`}
-              >
-                {step > i ? <CheckCircle2 className='size-6' /> : i}
-              </div>
-              {i < 2 && (
-                <div
-                  className={`w-12 h-0.5 mx-2 ${step > i ? 'bg-brand-accent' : 'bg-white/10'}`}
-                />
-              )}
-            </div>
-          ))}
-        </div>
-        <div className='text-right'>
-          <h2 className='text-white font-semibold uppercase tracking-widest text-xs opacity-50 mb-1'>
-            {step === 1 ? 'Phase 01' : 'Phase 02'}
-          </h2>
-          <p className='text-slate-300 font-bold'>
-            {step === 1 ? t('step1Detail') : t('step2Detail')}
-          </p>
-        </div>
+    <form onSubmit={handleSubmit} className='max-w-5xl mx-auto space-y-8'>
+      {/* Header */}
+      <div className='text-center space-y-2'>
+        <h1 className='text-3xl font-bold text-white flex items-center justify-center gap-3'>
+          <Sparkles className='size-8 text-brand-accent' />
+          {t('title') || 'Create Smart Interview'}
+        </h1>
+        <p className='text-slate-400'>
+          {t('subtitle') ||
+            'AI will generate questions based on your job description. You can refine them afterwards.'}
+        </p>
       </div>
 
-      {/* Step Content */}
-      <AnimatePresence mode='wait'>
-        {step === 1 ? (
-          <SetupStep
-            key='setup'
-            mode={mode}
-            title={title}
-            description={description}
-            isGenerating={isGenerating}
-            onTitleChange={setTitle}
-            onDescriptionChange={setDescription}
-            onStartAI={startAIMode}
-            onStartManual={startManualMode}
-          />
-        ) : (
-          <QuestionsStep
-            key='questions'
-            title={title}
-            description={description}
-            questions={questions}
-            isSaving={isSaving}
-            isGenerating={isGenerating}
-            onTitleChange={setTitle}
-            onUpdateQuestion={updateQuestion}
-            onRemoveQuestion={removeQuestion}
-            onAddQuestion={addQuestion}
-            onSuggestOne={suggestSingleQuestion}
-            onBack={() => setStep(1)}
-            onSave={saveJob}
-          />
-        )}
-      </AnimatePresence>
-    </div>
+      {/* Input Form */}
+      <JobInputForm onGenerate={generateInterview} />
+
+      {/* Questions */}
+      <QuestionList />
+
+      {/* Action Buttons */}
+      <ActionBar />
+    </form>
   );
 }
+
+// Re-export for convenience
+export { JobInputForm } from './JobInputForm';
+export { QuestionCard } from './QuestionCard';
+export { QuestionList } from './QuestionList';
+export { ActionBar } from './ActionBar';

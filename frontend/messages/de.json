@@ -26,29 +26,37 @@
     "activeJobs": "Aktive Stellen"
   },
   "JobWizard": {
-    "title": "Neues automatisiertes Interview",
-    "description": "Geben Sie eine Stellenbeschreibung ein und unsere AI erstellt die perfekten Interviewfragen.",
-    "validationDetails": "Bitte geben Sie einen Jobtitel und eine Beschreibung ein, um die AI- oder manuellen Erstellungsmodi freizuschalten.",
-    "step1": "Stellenbeschreibung",
-    "step2": "AI-Generierung",
-    "step3": "Prüfen & Verfeinern",
+    "title": "Intelligentes Interview erstellen",
+    "subtitle": "Die AI generiert Fragen basierend auf Ihrer Stellenbeschreibung. Sie können diese anschließend verfeinern.",
     "jobTitle": "Jobtitel",
+    "titlePlaceholder": "z.B. Senior React Developer",
     "jobDescription": "Stellenbeschreibung",
-    "placeholder": "Fügen Sie hier die detaillierten Anforderungen ein...",
-    "btnGenerate": "Fragen mit AI generieren",
-    "createManually": "Manuell erstellen",
-    "skipAI": "AI überspringen und Fragen selbst hinzufügen",
-    "step1Detail": "Jobdetails einrichten",
-    "step2Detail": "Interviewfragen konfigurieren",
-    "btnSaving": "Wird gespeichert...",
-    "btnSave": "Speichern & Veröffentlichen",
-    "btnRefining": "Wird verfeinert...",
-    "btnRefine": "Mit AI verfeinern",
+    "descriptionPlaceholder": "Beschreiben Sie die Rolle, erforderliche Fähigkeiten, Verantwortlichkeiten...",
+    "additionalNotes": "Zusätzliche Hinweise (Optional)",
+    "notesPlaceholder": "Spezielle Anweisungen für die AI? (z.B. \"Fokus auf Soft Skills\", \"Coding-Challenge einbeziehen\")",
+    "generate": "Intelligentes Interview generieren",
+    "generating": "Interview wird generiert...",
     "questions": "Interview Fragen",
-    "idealAnswer": "Ideale Antwort (Leitfaden)",
-    "timeLimit": "Zeitlimit (Sekunden)",
-    "secondsUnit": "Sek.",
-    "addQuestion": "Eigene Frage hinzufügen"
+    "question": "Frage",
+    "questionPlaceholder": "Geben Sie Ihre Frage ein...",
+    "idealAnswer": "Ideale Antwort / Bewertungskriterien",
+    "answerPlaceholder": "Was sollte eine gute Antwort beinhalten?",
+    "weight": "Gewichtung",
+    "addQuestion": "Frage hinzufügen",
+    "save": "Interview speichern",
+    "saving": "Wird gespeichert...",
+    "startOver": "Neu beginnen",
+    "validation": {
+      "titleRequired": "Jobtitel ist erforderlich",
+      "descriptionRequired": "Beschreibung ist erforderlich"
+    },
+    "success": {
+      "generated": "Interview erfolgreich generiert!",
+      "saved": "Stelle erfolgreich erstellt!"
+    },
+    "info": {
+      "removed": "Frage entfernt"
+    }
   },
   "Auth": {
     "login": {
