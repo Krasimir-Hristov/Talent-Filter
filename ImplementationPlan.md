@@ -72,28 +72,25 @@ This document outlines the step-by-step roadmap for building the MVP.
     - Implement **Server-Side Route Protection** in `layout.tsx` to prevent Middleware bypass (CVE-2025-29927).
     - Set up Zustand Auth Store for client-side state sync.
     - Connect Login/Register to FastAPI endpoints + Cookie synchronization.
-  - [ ] **3.7. Job Creation Wizard (Unified Hybrid Approach)**
-    - [x] Multi-step modular UI (Setup, Manual/AI mode, Hybrid Questions).
-    - [x] Premium UX (Glassmorphism, manual question management, validations).
-    - [ ] **3.7.1. Unified Input Interface**
-      - Single entry point: Title, Description, and optional "Notes/Context" field.
+  - [ ] **3.7. Job Creation Wizard (Unified Hybrid AI Wizard)**
+    - [x] **3.7.1. Unified Input Interface**
+      - Single entry point: Title, Description, and optional "Notes/Context" field (Implemented with Zustand).
       - Remove "Manual vs AI" fork; all jobs start with AI generation.
-    - [ ] **3.7.2. Smart Card Generation**
+    - [x] **3.7.2. Smart Card Generation**
       - AI returns structured JSON (title, questions with text/ideal_answer/time_limit/weight).
-      - Frontend dynamically renders question cards based on array length.
-      - Support for flexible question types (technical with answers, soft skills without strict answers).
+      - Frontend dynamically renders `QuestionCard` components based on API response.
     - [ ] **3.7.3. Real-Time AI Assistance**
       - **"Suggest Question" Button**: Calls `/jobs/suggest-question` with context (description + existing questions).
       - **"Generate Answer" Button**: Per-question action to auto-fill `ideal_answer` field.
       - Loading states with premium animations (skeleton cards, thinking indicators).
-    - [ ] **3.7.4. Hybrid Refinement**
-      - Full manual editing: recruiter can modify any field (question text, answer, time, weight).
-      - Add/remove questions freely.
-      - AI suggestions respect existing questions to avoid duplicates.
-    - [ ] **3.7.5. Final Save to Supabase**
-      - Validate all required fields before submission.
-      - POST to `/jobs/create` with complete job + questions payload.
-      - Redirect to Dashboard with success notification.
+    - [x] **3.7.4. Hybrid Refinement**
+      - [x] Full manual editing: recruiter can modify any field via Zustand actions.
+      - [x] Add/remove/update questions functionality.
+      - [x] Store reset on unmount to prevent stale data.
+    - [x] **3.7.5. Final Save to Supabase**
+      - [x] Validate required fields (Title, Description).
+      - [x] POST to `/jobs/create` with complete payload.
+      - [x] Success/Error toast notifications and redirection.
   - [ ] **3.8. Dashboard Landing (`/dashboard`)**
     - Design Stats Overview section.
     - Implement Active Jobs Grid (Card View).

@@ -139,11 +139,13 @@ src/
     ui/               # Shadcn primitives
     features/
       interview/      # Interview-specific components (Timer, Recorder)
-      builder/        # Job Builder components
+      builder/        # Unified Job Builder Feature
+        ├── components/ # UI (JobForm, QuestionList, Card)
+        ├── hooks/      # Feature logic (useJobBuilderActions)
+        └── index.tsx   # Feature Orchestrator
   lib/
     api/              # Axios/Fetch clients
-    hooks/            # Custom hooks
-    store/            # Zustand stores
+  store/              # Zustand stores (useAuthStore, useJobBuilderStore)
 ```
 
 ## 6. Internationalization (i18n)
