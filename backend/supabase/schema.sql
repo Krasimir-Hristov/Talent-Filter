@@ -24,6 +24,7 @@ CREATE TABLE IF NOT EXISTS jobs (
   recruiter_id UUID REFERENCES profiles(id) ON DELETE CASCADE NOT NULL,
   title TEXT NOT NULL,
   description TEXT NOT NULL,
+  notes TEXT,
   status TEXT DEFAULT 'published' CHECK (status IN ('draft', 'published', 'closed')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
@@ -36,7 +37,8 @@ CREATE TABLE IF NOT EXISTS questions (
   text TEXT NOT NULL,
   ideal_answer TEXT NOT NULL,
   time_limit INTEGER DEFAULT 180, -- Seconds
-  weight INTEGER DEFAULT 1 CHECK (weight >= 1 AND weight <= 5),
+  weight INTEGER DEFAULT 1 CHECK (weight >= 1 AND weight <= 10),
+  order_index INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );
 

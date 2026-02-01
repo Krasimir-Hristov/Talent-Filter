@@ -79,11 +79,11 @@ This document outlines the step-by-step roadmap for building the MVP.
     - [x] **3.7.2. Smart Card Generation**
       - AI returns structured JSON (title, questions with text/ideal_answer/time_limit/weight).
       - Frontend dynamically renders `QuestionCard` components based on API response.
-    - [ ] **3.7.3. Real-Time AI Assistance**
-      - [ ] **Suggest Question**: Context-aware generation (description + existing questions + language).
-      - [ ] **Generate Answer**: Auto-fill `ideal_answer` based on question text and job context.
-      - [ ] **Multi-Language Support**: All AI outputs must match the requested `locale` (English/German).
-      - [ ] **Smart Depth**: AI determines the optimal number of questions based on job complexity.
+    - [x] **3.7.3. Real-Time AI Assistance**
+      - [x] **Suggest Question**: Context-aware generation (description + existing questions + language).
+      - [x] **Generate Answer**: Auto-fill `ideal_answer` based on question text and job context.
+      - [x] **Multi-Language Support**: All AI outputs match the requested `locale`.
+      - [x] **Smart Depth**: AI determines the optimal number of questions.
     - [x] **3.7.4. Hybrid Refinement**
       - [x] Full manual editing: recruiter can modify any field via Zustand actions.
       - [x] Add/remove/update questions functionality.
@@ -92,10 +92,10 @@ This document outlines the step-by-step roadmap for building the MVP.
       - [x] Validate required fields (Title, Description).
       - [x] POST to `/jobs/create` with complete payload.
       - [x] Success/Error toast notifications and redirection.
-  - [ ] **3.8. Dashboard Landing (`/dashboard`)**
-    - Design Stats Overview section.
-    - Implement Active Jobs Grid (Card View).
-    - Add "New Job" primary button.
+  - [x] **3.8. Dashboard Landing (`/dashboard`)**
+    - [x] Design Stats Overview section.
+    - [x] Implement Active Jobs Grid (Card View).
+    - [x] Add "New Job" primary button.
   - [ ] **3.9. Job Details View (`/dashboard/jobs/[id]`)**
     - Design Candidate Table (sortable).
     - Job Settings & Question Overview.
