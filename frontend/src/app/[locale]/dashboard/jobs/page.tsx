@@ -14,7 +14,6 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { getJobs } from '@/lib/jobs-api';
-import { Badge } from '@/components/ui/badge';
 
 export default function JobsListPage() {
   const t = useTranslations('Dashboard');
@@ -84,9 +83,21 @@ export default function JobsListPage() {
                     <h3 className='font-semibold text-white group-hover:text-brand-accent transition-colors'>
                       {job.title}
                     </h3>
-                    <Badge className='bg-brand-accent/20 text-brand-accent hover:bg-brand-accent/30 border-0 text-xs'>
-                      {job.status}
-                    </Badge>
+                    <span
+                      className='inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize'
+                      style={{
+                        backgroundColor:
+                          job.status === 'active'
+                            ? 'rgba(16, 185, 129, 0.2)'
+                            : 'rgba(239, 68, 68, 0.2)',
+                        color:
+                          job.status === 'active'
+                            ? 'rgb(52, 211, 153)'
+                            : 'rgb(248, 113, 113)',
+                      }}
+                    >
+                      {t(`status.${job.status}`)}
+                    </span>
                   </div>
                   <div className='flex items-center gap-4 mt-1 text-sm text-slate-400'>
                     <span className='flex items-center gap-1.5'>

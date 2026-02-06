@@ -3,8 +3,8 @@
 import { Link } from '@/i18n/routing';
 import { Calendar, ChevronRight, Sparkles } from 'lucide-react';
 import { Job } from '@/types/job';
+import { useTranslations } from 'next-intl';
 
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -19,6 +19,11 @@ interface JobCardProps {
 }
 
 export function JobCard({ job }: JobCardProps) {
+  const t = useTranslations('Dashboard');
+
+  // Debug: Check what status we're getting
+  console.log('Job status:', job.status, 'for job:', job.title);
+
   return (
     <Card className='bg-white/5 border-white/10 hover:border-brand-accent/50 transition-all duration-300 group overflow-hidden relative'>
       <div className='absolute inset-0 bg-linear-to-tr from-brand-accent/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity' />
@@ -28,15 +33,21 @@ export function JobCard({ job }: JobCardProps) {
           <CardTitle className='text-lg font-semibold text-white group-hover:text-brand-accent transition-colors line-clamp-1'>
             {job.title}
           </CardTitle>
-          <Badge
-            className={`capitalize border-0 ${
-              job.status === 'active'
-                ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30'
-                : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
-            }`}
+          <span
+            className='inline-flex items-center justify-center rounded-full px-2.5 py-0.5 text-xs font-semibold capitalize'
+            style={{
+              backgroundColor:
+                job.status === 'active'
+                  ? 'rgba(16, 185, 129, 0.2)'
+                  : 'rgba(239, 68, 68, 0.2)',
+              color:
+                job.status === 'active'
+                  ? 'rgb(52, 211, 153)'
+                  : 'rgb(248, 113, 113)',
+            }}
           >
-            {job.status}
-          </Badge>
+            {t(`status.${job.status}`)}
+          </span>
         </div>
       </CardHeader>
 
