@@ -9,6 +9,7 @@ from app.schemas.jobs import (
     GenerateAnswerRequest,
     AIQuestionSchema,
     JobWithQuestionsResponse,
+    JobUpdateRequest,
 )
 from app.services.ai import AIService
 from app.services.job_service import JobService
@@ -163,4 +164,44 @@ async def delete_job(
         raise
     except Exception as e:
         print(f"DEBUG: DELETE /jobs/{job_id} error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.patch("/{job_id}")
+async def update_job(
+    job_id: str,
+    request: JobUpdateRequest,
+    user=Depends(get_current_user),
+    supabase: Client = Depends(get_authenticated_client),
+):
+    """
+    Update job properties (title, description, notes, status).
+    """
+    service = JobService(supabase)
+    try:
+        # First verify the job belongs to this user
+        job = await service.get_job_by_id(user.id, job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+
+        # Prepare update data (only non-None fields)
+        update_data = {k: v for k, v in request.model_dump().items() if v is not None}
+
+        if not update_data:
+            return {"message": "No changes requested"}
+
+        # Perform update
+        response = (
+            supabase.table("jobs")
+            .update(update_data)
+            .eq("id", job_id)
+            .eq("recruiter_id", user.id)
+            .execute()
+        )
+
+        return {"message": "Job updated successfully", "data": response.data}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"DEBUG: PATCH /jobs/{job_id} error: {e}")
         raise HTTPException(status_code=500, detail=str(e))

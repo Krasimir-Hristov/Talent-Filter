@@ -64,3 +64,10 @@ class JobCreateRequest(BaseModel):
     description: str
     notes: Optional[str] = None
     questions: List[AIQuestionSchema]
+
+
+class JobUpdateRequest(BaseModel):
+    title: Optional[str] = None
+    description: Optional[str] = None
+    notes: Optional[str] = None
+    status: Optional[str] = None

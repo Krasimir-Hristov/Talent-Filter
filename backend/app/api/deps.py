@@ -86,12 +86,13 @@ def get_authenticated_client(
             )
 
     client = create_client(url, key)
-    # Set the user's session using their JWT token
-    client.auth.set_session(token, "refresh_token_not_needed_here")
+    # Set the user's token for Postgrest (RLS) directly to avoid refresh token issues
+    client.postgrest.auth(token)
     return client
 
 
 async def get_current_user(
+    token: str = Depends(get_token_from_cookie),
     supabase: Client = Depends(get_authenticated_client),
 ) -> dict:
     """
@@ -100,7 +101,7 @@ async def get_current_user(
     calling get_user() checks validity against Supabase Auth.
     """
     try:
-        user_response = supabase.auth.get_user()
+        user_response = supabase.auth.get_user(token)
         if not user_response or not user_response.user:
             raise HTTPException(status_code=401, detail="Invalid authentication token")
         return user_response.user
