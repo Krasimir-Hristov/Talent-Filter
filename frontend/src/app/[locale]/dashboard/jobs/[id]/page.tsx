@@ -24,7 +24,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { getJobById, deleteJob } from '@/lib/jobs-api';
+import { getJobById, deleteJob, updateJob } from '@/lib/jobs-api';
 import { toast } from 'sonner';
 
 export default function JobDetailsPage() {
@@ -56,6 +56,18 @@ export default function JobDetailsPage() {
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to delete job');
+    },
+  });
+
+  const updateStatusMutation = useMutation({
+    mutationFn: (newStatus: string) => updateJob(jobId, { status: newStatus }),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['jobs', jobId] });
+      queryClient.invalidateQueries({ queryKey: ['jobs'] }); // Invalidate the jobs list too
+      toast.success('Status updated');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to update status');
     },
   });
 
@@ -129,9 +141,39 @@ export default function JobDetailsPage() {
                 <h1 className='text-2xl md:text-3xl font-bold tracking-tight text-white'>
                   {job.title}
                 </h1>
-                <Badge className='bg-brand-accent/20 text-brand-accent border-0 h-6 px-2.5'>
-                  {job.status}
-                </Badge>
+
+                {/* Status Toggle Pill */}
+                <div className='flex items-center bg-white/5 rounded-full p-1 border border-white/5'>
+                  {[
+                    { value: 'active', color: 'emerald' },
+                    { value: 'closed', color: 'red' },
+                  ].map(({ value, color }) => {
+                    const isActive = job.status === value;
+                    const colorClasses = {
+                      emerald: isActive
+                        ? 'bg-emerald-500 text-white shadow-sm shadow-emerald-500/50'
+                        : 'text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10',
+
+                      red: isActive
+                        ? 'bg-red-500 text-white shadow-sm shadow-red-500/50'
+                        : 'text-red-400 hover:text-red-300 hover:bg-red-500/10',
+                    };
+
+                    return (
+                      <button
+                        key={value}
+                        onClick={() => updateStatusMutation.mutate(value)}
+                        disabled={updateStatusMutation.isPending}
+                        className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all ${
+                          colorClasses[color as keyof typeof colorClasses]
+                        } ${updateStatusMutation.isPending ? 'opacity-50 cursor-not-allowed' : ''}`}
+                      >
+                        {t(`status.${value}`)}
+                      </button>
+                    );
+                  })}
+                </div>
+
                 {/* Candidates Stat Pill */}
                 <div className='flex items-center gap-2 bg-white/5 px-3 py-1 rounded-full border border-white/5'>
                   <Users className='size-3.5 text-slate-400' />

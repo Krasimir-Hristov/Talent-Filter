@@ -12,7 +12,7 @@ export interface Job {
   title: string;
   description: string;
   notes?: string;
-  status: 'draft' | 'published' | 'closed';
+  status: 'active' | 'closed';
   created_at: string;
   questions?: Question[];
 }

@@ -23,7 +23,11 @@
     "welcome": "Willkommen zurück! Hier ist der aktuelle Stand Ihrer Rekrutierungspipelines.",
     "newJob": "Neue Stelle erstellen",
     "noJobs": "Keine Stellen gefunden. Erstellen Sie Ihr erstes automatisiertes Interview!",
-    "activeJobs": "Aktive Stellen"
+    "activeJobs": "Aktive Stellen",
+    "status": {
+      "active": "Aktiv",
+      "closed": "Geschlossen"
+    }
   },
   "JobWizard": {
     "title": "Intelligentes Interview erstellen",

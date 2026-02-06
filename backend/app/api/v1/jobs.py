@@ -199,7 +199,10 @@ async def update_job(
             .execute()
         )
 
-        return {"message": "Job updated successfully", "data": response.data}
+        if response.data and len(response.data) > 0:
+            return response.data[0]
+        else:
+            raise HTTPException(status_code=404, detail="Job not found after update")
     except HTTPException:
         raise
     except Exception as e:

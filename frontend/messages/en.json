@@ -23,7 +23,11 @@
     "welcome": "Welcome back! Here is what's happening with your recruitment pipelines today.",
     "newJob": "Create New Job",
     "noJobs": "No jobs found. Start by creating your first automated interview!",
-    "activeJobs": "Active Jobs"
+    "activeJobs": "Active Jobs",
+    "status": {
+      "active": "Active",
+      "closed": "Closed"
+    }
   },
   "JobWizard": {
     "title": "Create Smart Interview",

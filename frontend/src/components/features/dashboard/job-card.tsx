@@ -29,8 +29,11 @@ export function JobCard({ job }: JobCardProps) {
             {job.title}
           </CardTitle>
           <Badge
-            variant={job.status === 'published' ? 'default' : 'secondary'}
-            className='capitalize bg-brand-accent/20 text-brand-accent-foreground hover:bg-brand-accent/30 border-0'
+            className={`capitalize border-0 ${
+              job.status === 'active'
+                ? 'bg-emerald-500/20 text-emerald-400 hover:bg-emerald-500/30'
+                : 'bg-red-500/20 text-red-400 hover:bg-red-500/30'
+            }`}
           >
             {job.status}
           </Badge>

@@ -14,3 +14,18 @@ export async function deleteJob(id: string): Promise<void> {
     method: 'DELETE',
   });
 }
+
+export async function updateJob(
+  id: string,
+  data: {
+    title?: string;
+    description?: string;
+    notes?: string;
+    status?: string;
+  },
+): Promise<Job> {
+  return apiFetch<Job>(`/jobs/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data),
+  });
+}
