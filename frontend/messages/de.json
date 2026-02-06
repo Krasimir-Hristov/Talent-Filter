@@ -19,11 +19,17 @@
     "logout": "Abmelden"
   },
   "Dashboard": {
-    "title": "Übersicht",
-    "welcome": "Willkommen zurück! Hier ist der aktuelle Stand Ihrer Rekrutierungspipelines.",
+    "title": "Dashboard-Übersicht",
+    "welcome": "Willkommen zurück! Hier ist der aktuelle Stand Ihrer Rekrutierungs-Pipelines.",
     "newJob": "Neue Stelle erstellen",
+    "errorLoadingJobs": "Stellen konnten nicht geladen werden",
     "noJobs": "Keine Stellen gefunden. Erstellen Sie Ihr erstes automatisiertes Interview!",
     "activeJobs": "Aktive Stellen",
+    "viewAllJobs": "Alle {count} Stellen anzeigen →",
+    "allJobs": "Alle Stellen",
+    "jobsDescription": "Verwalten Sie alle Ihre Stellenangebote und Interviewfragen",
+    "questionsCount": "{count} Fragen",
+    "viewDetails": "Details anzeigen",
     "status": {
       "active": "Aktiv",
       "closed": "Geschlossen"

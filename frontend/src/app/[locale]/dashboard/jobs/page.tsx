@@ -34,11 +34,9 @@ export default function JobsListPage() {
       <div className='flex flex-col md:flex-row justify-between items-start md:items-center gap-4'>
         <div>
           <h1 className='text-3xl font-bold tracking-tight text-white mb-1'>
-            All Jobs
+            {t('allJobs')}
           </h1>
-          <p className='text-muted-foreground'>
-            Manage all your job positions and interview questions
-          </p>
+          <p className='text-muted-foreground'>{t('jobsDescription')}</p>
         </div>
         <Button
           asChild
@@ -65,7 +63,7 @@ export default function JobsListPage() {
         ) : error ? (
           <div className='py-12 flex flex-col items-center justify-center border border-red-500/20 rounded-2xl bg-red-500/5 text-red-400 gap-3'>
             <AlertCircle className='size-8 opacity-50' />
-            <p>{(error as Error).message || 'Failed to load jobs'}</p>
+            <p>{(error as Error).message || t('errorLoadingJobs')}</p>
           </div>
         ) : jobs && jobs.length > 0 ? (
           jobs.map((job) => (
@@ -106,7 +104,9 @@ export default function JobsListPage() {
                     </span>
                     <span className='flex items-center gap-1.5'>
                       <Sparkles className='size-3' />
-                      {job.questions?.length ?? 0} questions
+                      {t('questionsCount', {
+                        count: job.questions?.length ?? 0,
+                      })}
                     </span>
                   </div>
                 </div>

@@ -66,7 +66,7 @@ export default function DashboardPage() {
         ) : error ? (
           <div className='py-12 flex flex-col items-center justify-center border border-red-500/20 rounded-2xl bg-red-500/5 text-red-400 gap-3'>
             <AlertCircle className='size-8 opacity-50' />
-            <p>{(error as Error).message || 'Failed to load jobs'}</p>
+            <p>{(error as Error).message || t('errorLoadingJobs')}</p>
           </div>
         ) : jobs && jobs.length > 0 ? (
           <>
@@ -83,7 +83,7 @@ export default function DashboardPage() {
                   className='border-white/10 hover:bg-white/5'
                 >
                   <Link href='/dashboard/jobs'>
-                    View All {jobs.length} Jobs →
+                    {t('viewAllJobs', { count: jobs.length })}
                   </Link>
                 </Button>
               </div>

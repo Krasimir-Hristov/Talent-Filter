@@ -22,8 +22,14 @@
     "title": "Dashboard Overview",
     "welcome": "Welcome back! Here is what's happening with your recruitment pipelines today.",
     "newJob": "Create New Job",
+    "errorLoadingJobs": "Failed to load jobs",
     "noJobs": "No jobs found. Start by creating your first automated interview!",
     "activeJobs": "Active Jobs",
+    "viewAllJobs": "View All {count} Jobs →",
+    "allJobs": "All Jobs",
+    "jobsDescription": "Manage all your job positions and interview questions",
+    "questionsCount": "{count} Questions",
+    "viewDetails": "View Details",
     "status": {
       "active": "Active",
       "closed": "Closed"

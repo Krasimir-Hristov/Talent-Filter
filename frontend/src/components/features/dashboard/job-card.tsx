@@ -65,7 +65,9 @@ export function JobCard({ job }: JobCardProps) {
           </div>
           <div className='flex items-center gap-1.5'>
             <Sparkles className='size-3.5' />
-            <span>{job.questions?.length ?? 0} Questions</span>
+            <span>
+              {t('questionsCount', { count: job.questions?.length ?? 0 })}
+            </span>
           </div>
         </div>
         <p className='mt-3 text-sm text-slate-500 line-clamp-2 min-h-10'>
@@ -80,7 +82,7 @@ export function JobCard({ job }: JobCardProps) {
           className='w-full justify-between text-white hover:text-brand-accent hover:bg-white/5 group/btn'
         >
           <Link href={`/dashboard/jobs/${job.id}`}>
-            View Details
+            {t('viewDetails')}
             <ChevronRight className='size-4 text-slate-500 group-hover/btn:text-brand-accent group-hover/btn:translate-x-1 transition-all' />
           </Link>
         </Button>
