@@ -49,6 +49,16 @@ class JobParseResponse(BaseModel):
     questions: List[AIQuestionSchema]
 
 
+class JobWithQuestionsResponse(BaseModel):
+    id: str
+    title: str
+    description: str
+    status: str
+    created_at: str
+    notes: Optional[str] = None
+    questions: List[AIQuestionSchema] = []
+
+
 class JobCreateRequest(BaseModel):
     title: str
     description: str

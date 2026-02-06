@@ -1,7 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/routing';
-import { Calendar, Users, ChevronRight } from 'lucide-react';
+import { Calendar, ChevronRight, Sparkles } from 'lucide-react';
 import { Job } from '@/types/job';
 
 import { Badge } from '@/components/ui/badge';
@@ -50,8 +50,8 @@ export function JobCard({ job }: JobCardProps) {
             </span>
           </div>
           <div className='flex items-center gap-1.5'>
-            <Users className='size-3.5' />
-            <span>0 Candidates</span>
+            <Sparkles className='size-3.5' />
+            <span>{job.questions?.length ?? 0} Questions</span>
           </div>
         </div>
         <p className='mt-3 text-sm text-slate-500 line-clamp-2 min-h-10'>

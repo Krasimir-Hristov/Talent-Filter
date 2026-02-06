@@ -1,7 +1,7 @@
+from typing import List, Dict, Any, Optional
+import uuid
 from supabase import Client
 from app.schemas.jobs import JobCreateRequest
-from typing import List, Dict, Any
-import uuid
 
 
 class JobService:
@@ -49,3 +49,32 @@ class JobService:
             self.supabase.table("questions").insert(questions_payload).execute()
 
         return new_job
+
+    async def get_recruiter_jobs(self, user_id: str) -> List[Dict[str, Any]]:
+        """
+        Fetches all jobs for a recruiter, including their associated questions.
+        """
+        response = (
+            self.supabase.table("jobs")
+            .select("*, questions(*)")
+            .eq("recruiter_id", user_id)
+            .order("created_at", desc=True)
+            .execute()
+        )
+        return response.data
+
+    async def get_job_by_id(
+        self, user_id: str, job_id: str
+    ) -> Optional[Dict[str, Any]]:
+        """
+        Fetches a single job by ID, including its associated questions.
+        Ensures the job belongs to the requesting recruiter.
+        """
+        response = (
+            self.supabase.table("jobs")
+            .select("*, questions(*)")
+            .eq("id", job_id)
+            .eq("recruiter_id", user_id)
+            .execute()
+        )
+        return response.data[0] if response.data else None

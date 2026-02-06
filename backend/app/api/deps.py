@@ -1,9 +1,8 @@
-from fastapi import Depends, HTTPException, status
-from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from fastapi import Depends, HTTPException, status, Request
 from supabase import Client, create_client
 import os
 
-security = HTTPBearer()
+COOKIE_NAME = "tf_session"
 
 
 def get_service_role_client() -> Client:
@@ -32,8 +31,53 @@ def get_anon_client() -> Client:
     return create_client(url, key)
 
 
+def get_token_from_cookie(request: Request) -> str:
+    """
+    Extracts the JWT access token from the tf_session HTTP-only cookie.
+    The cookie contains a JSON object: { "token": "...", "user": {...} }
+    """
+    import json
+
+    # DEBUG: See what cookies are coming in
+    print(f"DEBUG: All cookies received: {request.cookies}")
+
+    cookie_value = request.cookies.get(COOKIE_NAME)
+    print(
+        f"DEBUG: tf_session cookie value: {cookie_value[:50] if cookie_value else 'None'}..."
+    )
+
+    if not cookie_value:
+        raise HTTPException(
+            status_code=401,
+            detail="Not authenticated. Session cookie missing.",
+        )
+
+    try:
+        # The cookie is URL-encoded JSON, decode it first
+        from urllib.parse import unquote
+
+        decoded_value = unquote(cookie_value)
+        print(f"DEBUG: Decoded cookie (first 100 chars): {decoded_value[:100]}...")
+
+        session_data = json.loads(decoded_value)
+        token = session_data.get("token")
+        if not token:
+            raise HTTPException(
+                status_code=401,
+                detail="Invalid session format. Token missing.",
+            )
+        print(f"DEBUG: Token extracted successfully!")
+        return token
+    except json.JSONDecodeError as e:
+        print(f"DEBUG: JSON decode error: {e}")
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid session cookie format.",
+        )
+
+
 def get_authenticated_client(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
+    token: str = Depends(get_token_from_cookie),
 ) -> Client:
     """
     Returns a Supabase client initialized with the USER'S access token.
@@ -43,7 +87,6 @@ def get_authenticated_client(
     # IMPORTANT: To ensure RLS is ENFORCED, we must initialize with the PUBLISHABLE key,
     # then override the Authorization header with the user's JWT.
     key = os.getenv("SUPABASE_PUBLISHABLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
-    token = credentials.credentials
 
     if not url or not key:
         # If publishable key is missing, we fall back to SECRET_KEY BUT this is less secure
@@ -55,6 +98,7 @@ def get_authenticated_client(
             )
 
     client = create_client(url, key)
+    # Set the user's session using their JWT token
     client.auth.set_session(token, "refresh_token_not_needed_here")
     return client
 

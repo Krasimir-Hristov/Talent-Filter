@@ -26,7 +26,7 @@ export function LandingHeader() {
     de: { name: 'Deutsch', code: 'DE' },
   };
 
-  const currentLocale = locales[locale as keyof typeof locales];
+  const currentLocale = locales[locale as keyof typeof locales] || locales.en;
 
   const switchLocale = (locale: 'en' | 'de') => {
     router.replace(pathname, { locale });

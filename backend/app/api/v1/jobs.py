@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
+from typing import List, Optional
 from supabase import Client
 from app.schemas.jobs import (
     JobParseRequest,
@@ -7,6 +8,7 @@ from app.schemas.jobs import (
     SuggestQuestionRequest,
     GenerateAnswerRequest,
     AIQuestionSchema,
+    JobWithQuestionsResponse,
 )
 from app.services.ai import AIService
 from app.services.job_service import JobService
@@ -30,6 +32,39 @@ def get_ai_service():
 # ============================================================================
 # ENDPOINTS
 # ============================================================================
+
+
+@router.get("/", response_model=List[JobWithQuestionsResponse])
+async def list_jobs(
+    user=Depends(get_current_user),
+    supabase: Client = Depends(get_authenticated_client),
+):
+    service = JobService(supabase)
+    try:
+        jobs = await service.get_recruiter_jobs(user.id)
+        return jobs
+    except Exception as e:
+        print(f"DEBUG: /jobs list error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{job_id}", response_model=JobWithQuestionsResponse)
+async def get_job(
+    job_id: str,
+    user=Depends(get_current_user),
+    supabase: Client = Depends(get_authenticated_client),
+):
+    service = JobService(supabase)
+    try:
+        job = await service.get_job_by_id(user.id, job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+        return job
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"DEBUG: /jobs/{job_id} error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.post("/analyze", response_model=JobParseResponse)

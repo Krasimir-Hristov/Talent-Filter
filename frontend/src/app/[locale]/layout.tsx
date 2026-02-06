@@ -1,4 +1,5 @@
 import { ThemeProvider } from '@/components/theme-provider';
+import { QueryProvider } from '@/providers/QueryProvider';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages } from 'next-intl/server';
 
@@ -14,14 +15,16 @@ export default async function LocaleLayout({
 
   return (
     <NextIntlClientProvider messages={messages} locale={locale}>
-      <ThemeProvider
-        attribute='class'
-        defaultTheme='dark'
-        enableSystem
-        disableTransitionOnChange
-      >
-        {children}
-      </ThemeProvider>
+      <QueryProvider>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme='dark'
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
+      </QueryProvider>
     </NextIntlClientProvider>
   );
 }
