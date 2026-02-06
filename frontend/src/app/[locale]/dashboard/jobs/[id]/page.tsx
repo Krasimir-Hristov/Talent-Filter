@@ -1,8 +1,8 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { useQuery } from '@tanstack/react-query';
-import { useParams } from 'next/navigation';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useParams, useRouter } from 'next/navigation';
 import {
   Calendar,
   Clock,
@@ -13,6 +13,8 @@ import {
   FileText,
   Sparkles,
   Link as LinkIcon,
+  Trash2,
+  Loader2,
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -22,15 +24,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { getJobById } from '@/lib/jobs-api';
+import { getJobById, deleteJob } from '@/lib/jobs-api';
 import { toast } from 'sonner';
 
 export default function JobDetailsPage() {
   const t = useTranslations('Dashboard');
   const wizardT = useTranslations('JobWizard');
   const params = useParams();
+  const router = useRouter();
+  const queryClient = useQueryClient();
   const jobId = params.id as string;
   const [copied, setCopied] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const {
     data: job,
@@ -42,12 +47,34 @@ export default function JobDetailsPage() {
     staleTime: 5 * 60 * 1000,
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: () => deleteJob(jobId),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
+      toast.success('Job deleted successfully');
+      router.push('/dashboard');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to delete job');
+    },
+  });
+
   const copyInterviewLink = () => {
     const link = `${window.location.origin}/interview/${jobId}`;
     navigator.clipboard.writeText(link);
     setCopied(true);
     toast.success('Interview link copied to clipboard!');
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const handleDelete = () => {
+    if (showDeleteConfirm) {
+      deleteMutation.mutate();
+    } else {
+      setShowDeleteConfirm(true);
+      // Reset after 3 seconds
+      setTimeout(() => setShowDeleteConfirm(false), 3000);
+    }
   };
 
   if (isLoading) {
@@ -89,7 +116,7 @@ export default function JobDetailsPage() {
             asChild
             variant='ghost'
             size='icon'
-            className='text-slate-400 hover:text-white hover:bg-white/5'
+            className='text-slate-400 hover:text-white hover:bg-white/5 h-10 w-10 shrink-0'
           >
             <Link href='/dashboard'>
               <ArrowLeft className='size-5' />
@@ -97,14 +124,14 @@ export default function JobDetailsPage() {
           </Button>
           <div>
             <div className='flex items-center gap-3'>
-              <h1 className='text-3xl font-bold tracking-tight text-white mb-1'>
+              <h1 className='text-3xl font-bold tracking-tight text-white'>
                 {job.title}
               </h1>
-              <Badge className='bg-brand-accent/20 text-brand-accent hover:bg-brand-accent/30 border-0'>
+              <Badge className='bg-brand-accent/20 text-brand-accent hover:bg-brand-accent/30 border-0 h-6 px-2.5'>
                 {job.status}
               </Badge>
             </div>
-            <div className='flex items-center gap-4 text-sm text-slate-400'>
+            <div className='flex items-center gap-4 text-sm text-slate-400 mt-1'>
               <div className='flex items-center gap-1.5'>
                 <Calendar className='size-3.5' />
                 <span>
@@ -117,7 +144,7 @@ export default function JobDetailsPage() {
 
         <Button
           onClick={copyInterviewLink}
-          className='bg-brand-accent hover:bg-brand-accent/90 text-white gap-2 shadow-lg shadow-brand-accent/20 h-11 px-6 rounded-xl'
+          className='bg-brand-accent hover:bg-brand-accent/90 text-white gap-2 shadow-lg shadow-brand-accent/20 h-10 px-6 rounded-xl'
         >
           {copied ? (
             <CheckCircle2 className='size-4' />
@@ -172,7 +199,7 @@ export default function JobDetailsPage() {
             <div className='space-y-4'>
               {job.questions?.map((question, index) => (
                 <motion.div
-                  key={question.id}
+                  key={question.id || `question-${index}`}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -254,16 +281,29 @@ export default function JobDetailsPage() {
               <Button
                 variant='ghost'
                 className='w-full justify-start text-slate-400 hover:text-white hover:bg-white/5 rounded-lg h-10 gap-2'
-                disabled
+                asChild
               >
-                Edit Position Details
+                <Link href='#'>Edit Position Details</Link>
               </Button>
+
+              <Separator className='my-2 bg-white/5' />
+
               <Button
                 variant='ghost'
-                className='w-full justify-start text-slate-400 hover:text-white hover:bg-white/5 rounded-lg h-10 gap-2 font-medium'
-                disabled
+                onClick={handleDelete}
+                disabled={deleteMutation.isPending}
+                className={`w-full justify-start rounded-lg h-10 gap-2 font-medium transition-colors ${
+                  showDeleteConfirm
+                    ? 'bg-red-500 text-white hover:bg-red-600'
+                    : 'text-red-500 hover:bg-red-500/10'
+                }`}
               >
-                Archive Position
+                {deleteMutation.isPending ? (
+                  <Loader2 className='size-4 animate-spin' />
+                ) : (
+                  <Trash2 className='size-4' />
+                )}
+                {showDeleteConfirm ? 'Confirm Delete?' : 'Delete Job'}
               </Button>
             </CardContent>
           </Card>

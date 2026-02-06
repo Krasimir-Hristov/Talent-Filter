@@ -37,15 +37,9 @@ def get_token_from_cookie(request: Request) -> str:
     The cookie contains a JSON object: { "token": "...", "user": {...} }
     """
     import json
-
-    # DEBUG: See what cookies are coming in
-    print(f"DEBUG: All cookies received: {request.cookies}")
+    from urllib.parse import unquote
 
     cookie_value = request.cookies.get(COOKIE_NAME)
-    print(
-        f"DEBUG: tf_session cookie value: {cookie_value[:50] if cookie_value else 'None'}..."
-    )
-
     if not cookie_value:
         raise HTTPException(
             status_code=401,
@@ -54,11 +48,7 @@ def get_token_from_cookie(request: Request) -> str:
 
     try:
         # The cookie is URL-encoded JSON, decode it first
-        from urllib.parse import unquote
-
         decoded_value = unquote(cookie_value)
-        print(f"DEBUG: Decoded cookie (first 100 chars): {decoded_value[:100]}...")
-
         session_data = json.loads(decoded_value)
         token = session_data.get("token")
         if not token:
@@ -66,10 +56,8 @@ def get_token_from_cookie(request: Request) -> str:
                 status_code=401,
                 detail="Invalid session format. Token missing.",
             )
-        print(f"DEBUG: Token extracted successfully!")
         return token
-    except json.JSONDecodeError as e:
-        print(f"DEBUG: JSON decode error: {e}")
+    except json.JSONDecodeError:
         raise HTTPException(
             status_code=401,
             detail="Invalid session cookie format.",

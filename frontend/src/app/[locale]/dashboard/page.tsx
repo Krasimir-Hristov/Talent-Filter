@@ -69,11 +69,26 @@ export default function DashboardPage() {
             <p>{(error as Error).message || 'Failed to load jobs'}</p>
           </div>
         ) : jobs && jobs.length > 0 ? (
-          <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-            {jobs.map((job) => (
-              <JobCard key={job.id} job={job} />
-            ))}
-          </div>
+          <>
+            <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+              {jobs.slice(0, 3).map((job) => (
+                <JobCard key={job.id} job={job} />
+              ))}
+            </div>
+            {jobs.length > 3 && (
+              <div className='flex justify-center mt-4'>
+                <Button
+                  asChild
+                  variant='outline'
+                  className='border-white/10 hover:bg-white/5'
+                >
+                  <Link href='/dashboard/jobs'>
+                    View All {jobs.length} Jobs →
+                  </Link>
+                </Button>
+              </div>
+            )}
+          </>
         ) : (
           <div className='py-12 flex flex-col items-center justify-center border border-dashed border-white/10 rounded-2xl bg-white/2'>
             <p className='text-slate-400 mb-4'>{t('noJobs')}</p>

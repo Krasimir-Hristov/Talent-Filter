@@ -131,3 +131,36 @@ async def create_job(
         return {"message": "Job created successfully", "job_id": new_job["id"]}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/{job_id}")
+async def delete_job(
+    job_id: str,
+    user=Depends(get_current_user),
+    supabase: Client = Depends(get_authenticated_client),
+):
+    """
+    Delete a job position. First verifies the job belongs to the user,
+    then deletes associated questions and the job itself.
+    """
+    service = JobService(supabase)
+    try:
+        # First verify the job belongs to this user
+        job = await service.get_job_by_id(user.id, job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found")
+
+        # Delete associated questions first (foreign key constraint)
+        supabase.table("questions").delete().eq("job_id", job_id).execute()
+
+        # Delete the job
+        supabase.table("jobs").delete().eq("id", job_id).eq(
+            "recruiter_id", user.id
+        ).execute()
+
+        return {"message": "Job deleted successfully"}
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"DEBUG: DELETE /jobs/{job_id} error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
