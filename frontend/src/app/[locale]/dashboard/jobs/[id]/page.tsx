@@ -31,6 +31,7 @@ import { EditJobSheet } from '@/components/features/dashboard/edit-job-sheet';
 
 export default function JobDetailsPage() {
   const t = useTranslations('Dashboard');
+  const tCommon = useTranslations('Common');
   const wizardT = useTranslations('JobWizard');
   const params = useParams();
   const router = useRouter();
@@ -75,7 +76,8 @@ export default function JobDetailsPage() {
   });
 
   const copyInterviewLink = () => {
-    const link = `${window.location.origin}/interview/${jobId}`;
+    const locale = (params.locale as string) || 'en';
+    const link = `${window.location.origin}/${locale}/interview/${jobId}`;
     navigator.clipboard.writeText(link);
     setCopied(true);
     toast.success('Interview link copied to clipboard!');
@@ -203,7 +205,7 @@ export default function JobDetailsPage() {
               className='h-10 px-4 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-colors'
             >
               <Edit className='size-4 mr-2' />
-              Edit
+              {tCommon('edit')}
             </Button>
 
             <Button
@@ -221,7 +223,7 @@ export default function JobDetailsPage() {
               ) : (
                 <Trash2 className='size-4 mr-2' />
               )}
-              {showDeleteConfirm ? 'Confirm?' : 'Delete'}
+              {showDeleteConfirm ? tCommon('confirm') : tCommon('delete')}
             </Button>
 
             <Button
@@ -233,7 +235,7 @@ export default function JobDetailsPage() {
               ) : (
                 <LinkIcon className='size-4' />
               )}
-              {copied ? 'Copied!' : 'Copy Link'}
+              {copied ? tCommon('copied') : tCommon('copyLink')}
             </Button>
           </div>
         </div>

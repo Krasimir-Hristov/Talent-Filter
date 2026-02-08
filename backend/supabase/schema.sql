@@ -25,7 +25,7 @@ CREATE TABLE IF NOT EXISTS jobs (
   title TEXT NOT NULL,
   description TEXT NOT NULL,
   notes TEXT,
-  status TEXT DEFAULT 'published' CHECK (status IN ('draft', 'published', 'closed')),
+  status TEXT DEFAULT 'active' CHECK (status IN ('active', 'closed')),
   created_at TIMESTAMPTZ DEFAULT NOW(),
   updated_at TIMESTAMPTZ DEFAULT NOW()
 );
@@ -109,7 +109,7 @@ CREATE POLICY "Recruiters access own interviews" ON interviews FOR SELECT TO aut
 CREATE POLICY "Recruiters access own answers" ON interview_answers FOR SELECT TO authenticated USING (interview_id IN (SELECT id FROM interviews WHERE job_id IN (SELECT id FROM jobs WHERE recruiter_id = auth.uid())));
 
 -- CANDIDATE POLICIES (Public access to published items)
-CREATE POLICY "Public view published jobs" ON jobs FOR SELECT TO anon USING (status = 'published');
+CREATE POLICY "Public view published jobs" ON jobs FOR SELECT TO anon USING (status = 'active');
 CREATE POLICY "Public view questions" ON questions FOR SELECT TO anon USING (true);
 CREATE POLICY "Public apply to job" ON candidates FOR INSERT TO anon WITH CHECK (true);
 CREATE POLICY "Public manage own interview" ON interviews FOR ALL TO anon USING (true) WITH CHECK (true);

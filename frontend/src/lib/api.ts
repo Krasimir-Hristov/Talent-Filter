@@ -1,6 +1,10 @@
 // Use relative path so requests go through Next.js proxy (same-origin for cookies)
 import { unauthorized } from 'next/navigation';
-export const API_BASE_URL = '/api/v1';
+
+export const API_BASE_URL =
+  typeof window === 'undefined'
+    ? process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1'
+    : '/api/v1';
 
 interface FetchOptions extends RequestInit {
   headers?: Record<string, string>;
@@ -28,7 +32,11 @@ export async function apiFetch<T>(
       unauthorized();
     }
     const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.detail || `API Error: ${response.statusText}`);
+    const error: any = new Error(
+      errorData.detail || `API Error: ${response.statusText}`,
+    );
+    error.status = response.status;
+    throw error;
   }
 
   return response.json();

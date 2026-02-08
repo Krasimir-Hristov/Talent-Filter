@@ -9,6 +9,10 @@ export async function getJobById(id: string): Promise<Job> {
   return apiFetch<Job>(`/jobs/${id}/`);
 }
 
+export async function getPublicJobDetails(id: string): Promise<Job> {
+  return apiFetch<Job>(`/jobs/public/${id}`);
+}
+
 export async function deleteJob(id: string): Promise<void> {
   return apiFetch<void>(`/jobs/${id}/`, {
     method: 'DELETE',

@@ -15,7 +15,13 @@ from app.schemas.jobs import (
 )
 from app.services.ai import AIService
 from app.services.job_service import JobService
-from app.api.deps import get_current_user, get_authenticated_client
+from app.api.deps import (
+    get_current_user,
+    get_authenticated_client,
+    get_anon_client,
+    get_service_role_client,
+    rate_limit,
+)
 import os
 
 router = APIRouter()
@@ -67,6 +73,28 @@ async def get_job(
         raise
     except Exception as e:
         print(f"DEBUG: /jobs/{job_id} error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/public/{job_id}", dependencies=[Depends(rate_limit)])
+async def get_public_job(
+    job_id: str,
+    supabase: Client = Depends(get_service_role_client),
+):
+    """
+    Publicly accessible job details (Title, Description).
+    Rate limited to prevent scraping/spam.
+    """
+    service = JobService(supabase)
+    try:
+        job = await service.get_public_job_details(job_id)
+        if not job:
+            raise HTTPException(status_code=404, detail="Job not found or not active")
+        return job
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"DEBUG: /jobs/public/{job_id} error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

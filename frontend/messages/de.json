@@ -16,7 +16,10 @@
     "mainMenu": "Hauptmenü",
     "profile": "Profil",
     "accountSettings": "Kontoeinstellungen",
-    "logout": "Abmelden"
+    "logout": "Abmelden",
+    "info": {
+      "jobDetails": "Stellendetails"
+    }
   },
   "Dashboard": {
     "title": "Dashboard-Übersicht",
@@ -74,7 +77,7 @@
     "weightRange": "Gewichtung (1-10)",
     "addQuestion": "Frage hinzufügen",
     "addManual": "Manuell hinzufügen",
-    "suggestQuestion": "KI-Vorschlag",
+    "aiSuggest": "KI-Vorschlag",
     "aiRefine": "KI-Verfeinerung",
     "refining": "Verfeinerung...",
     "regenerate": "Neu generieren",
@@ -129,5 +132,17 @@
       "passwordLength": "Passwort muss mindestens 8 Zeichen lang sein",
       "passwordMismatch": "Passwörter stimmen nicht überein"
     }
+  },
+  "Interview": {
+    "welcome": "Willkommen zum Interview",
+    "ready": "Sind Sie bereit?",
+    "start": "Interview starten",
+    "jobDetails": "Stellenbeschreibung",
+    "notFound": "Interview nicht gefunden",
+    "notFoundDesc": "Der Link ist ungültig oder die Stelle wurde bereits geschlossen.",
+    "tooManyRequests": "Zu viele Anfragen",
+    "tooManyRequestsDesc": "Bitte versuchen Sie es in ein paar Minuten erneut.",
+    "terms": "Mit dem Starten akzeptieren Sie unsere Nutzungsbedingungen und bestätigen, dass Anti-Betrugs-Maßnahmen aktiv sind.",
+    "loading": "Sitzung wird vorbereitet..."
   }
 }

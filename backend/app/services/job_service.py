@@ -17,7 +17,7 @@ class JobService:
             "title": job_data.title,
             "description": job_data.description,
             "notes": job_data.notes,  # Added notes
-            "status": "published",
+            "status": "active",
         }
 
         # Using .execute() directly as supabase-py handles async differently depending on version,
@@ -75,6 +75,19 @@ class JobService:
             .select("*, questions(*)")
             .eq("id", job_id)
             .eq("recruiter_id", user_id)
+            .execute()
+        )
+        return response.data[0] if response.data else None
+
+    async def get_public_job_details(self, job_id: str) -> Optional[Dict[str, Any]]:
+        """
+        Fetches job title and description for anyone (public).
+        """
+        response = (
+            self.supabase.table("jobs")
+            .select("id, title, description, status")
+            .eq("id", job_id)
+            .eq("status", "active")
             .execute()
         )
         return response.data[0] if response.data else None

@@ -116,17 +116,16 @@ This document outlines the step-by-step roadmap for building the MVP.
     - Fields: `interview_id`, `question_id`, `answer_text`, `time_spent_seconds`.
     - **Integrity Flags**: `paste_count` (integer), `tab_switches` (integer), `off_screen_seconds` (integer).
 
-- [ ] **4.2. Public Interview Access (The Link)**
-  - [ ] **4.2.1. Route Setup**: create `/interview/[jobId]` (Public, no login required).
-  - [ ] **4.2.2. Landing Screen**: Fetch Job Title/Description from DB. Show "Start Interview" button.
-  - [ ] **4.2.3. Rate Limiting**: Implement basic middleware to limit requests per IP to this route (prevent spam).
+- [x] **4.2. Public Interview Access (The Link)**
+  - [x] **4.2.1. Route Setup**: create `/interview/[jobId]` (Public, no login required).
+  - [x] **4.2.2. Landing Screen**: Fetch Job Title/Description from DB. Show "Start Interview" button.
+  - [x] **4.2.3. Rate Limiting**: Implement backend-level rate limiting (IP-based) to protect the public route and data fetching.
 
 - [ ] **4.3. Registration & Uniqueness Check**
   - [ ] **4.3.1. Registration Form**: Name, Email, Phone.
-  - [ ] **4.3.2. Server-Side Validation**: Before creating a candidate, check if (Email + JobID) OR (Phone + JobID) exists.
-    - If yes -> Show error "You have already applied".
-    - If no -> Create record and proceed.
-  - [ ] **4.3.3. Session Initialization**: Create an `interview` record with `start_time = NOW()`.
+  - [ ] **4.3.2. Uniqueness Check**: Verify if `email` or `phone` already exists for this `job_id`.
+  - [ ] **4.3.3. Create Candidate & Interview**: Insert records and redirect to the first question.
+  - [ ] **4.3.4. Closed Status Handling**: If job status is `closed`, redirect to a "Position Filled" page.
 
 - [ ] **4.4. The Interview Flow (One-Way Ticket)**
   - [ ] **4.4.1. "Lobby" / Instructions**: "3 Questions. 60s each. Cannot go back."

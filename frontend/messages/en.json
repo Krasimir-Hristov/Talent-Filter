@@ -16,7 +16,10 @@
     "mainMenu": "Main Menu",
     "profile": "Profile",
     "accountSettings": "Account Settings",
-    "logout": "Log out"
+    "logout": "Log out",
+    "info": {
+      "jobDetails": "Job Details"
+    }
   },
   "Dashboard": {
     "title": "Dashboard Overview",
@@ -74,7 +77,7 @@
     "weightRange": "Weight (1-10)",
     "addQuestion": "Add Question",
     "addManual": "Add Manual",
-    "suggestQuestion": "AI Suggest",
+    "aiSuggest": "AI Suggest",
     "aiRefine": "AI Refine",
     "refining": "Refining...",
     "regenerate": "Regenerate",
@@ -129,5 +132,17 @@
       "passwordLength": "Password must be at least 8 characters",
       "passwordMismatch": "Passwords do not match"
     }
+  },
+  "Interview": {
+    "welcome": "Welcome to the Interview",
+    "ready": "Are you ready?",
+    "start": "Start Interview",
+    "jobDetails": "Job Details",
+    "notFound": "Interview not found",
+    "notFoundDesc": "The interview link is invalid or the position has been closed.",
+    "tooManyRequests": "Too many requests",
+    "tooManyRequestsDesc": "Please slow down and try again in a few minutes.",
+    "terms": "By starting, you agree to our terms of service and recognize that anti-cheating measures are in place.",
+    "loading": "Preparing your session..."
   }
 }

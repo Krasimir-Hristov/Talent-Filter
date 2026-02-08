@@ -1,8 +1,73 @@
+import os
+import time
+import json
+from collections import defaultdict
+from urllib.parse import unquote
 from fastapi import Depends, HTTPException, status, Request
 from supabase import Client, create_client
-import os
+from supabase.lib.client_options import SyncClientOptions as ClientOptions
 
 COOKIE_NAME = "tf_session"
+
+
+def _is_opaque_key(key: str) -> bool:
+    """Check if the key is a new opaque format (sb_secret_ or sb_publishable_)."""
+    return key.startswith("sb_secret_") or key.startswith("sb_publishable_")
+
+
+def _create_supabase_client(url: str, key: str) -> Client:
+    """
+    Create a Supabase client that works with both legacy JWT keys and new opaque keys.
+
+    For new opaque keys (sb_secret_/sb_publishable_), we must NOT send the key
+    in the Authorization header - only in apikey header. The Supabase API Gateway
+    will mint a temporary JWT from the opaque key.
+    """
+    import logging
+
+    logger = logging.getLogger("uvicorn")
+
+    if _is_opaque_key(key):
+        logger.info(f"DEBUG: Initializing client with opaque key prefix: {key[:15]}...")
+        # For opaque keys, we need to override the Authorization header
+        # to prevent SDK from sending "Bearer sb_secret_..." which is invalid
+        options = ClientOptions(
+            headers={
+                "Authorization": "",  # Send empty string to override default, prevents httpx crash with None
+            }
+        )
+        return create_client(url, key, options)
+    else:
+        # Legacy JWT keys work normally
+        logger.info(f"DEBUG: Initializing client with legacy key")
+        return create_client(url, key)
+
+
+# Simple memory-based rate limiter
+class SimpleRateLimiter:
+    def __init__(self, requests_per_minute: int = 30):
+        self.limits = defaultdict(list)
+        self.requests_per_minute = requests_per_minute
+
+    def is_allowed(self, key: str) -> bool:
+        now = time.time()
+        self.limits[key] = [t for t in self.limits[key] if now - t < 60]
+        if len(self.limits[key]) >= self.requests_per_minute:
+            return False
+        self.limits[key].append(now)
+        return True
+
+
+_rate_limiter = SimpleRateLimiter(30)  # 30 requests per minute per IP
+
+
+async def rate_limit(request: Request):
+    client_ip = request.headers.get("x-forwarded-for") or request.client.host
+    if not _rate_limiter.is_allowed(client_ip):
+        raise HTTPException(
+            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+            detail="Too many requests. Please try again later.",
+        )
 
 
 def get_service_role_client() -> Client:
@@ -15,7 +80,7 @@ def get_service_role_client() -> Client:
     key = os.getenv("SUPABASE_SECRET_KEY") or os.getenv("SUPABASE_SERVICE_ROLE_KEY")
     if not url or not key:
         raise HTTPException(status_code=500, detail="Supabase SECRET key missing")
-    return create_client(url, key)
+    return _create_supabase_client(url, key)
 
 
 def get_anon_client() -> Client:
@@ -28,7 +93,7 @@ def get_anon_client() -> Client:
     key = os.getenv("SUPABASE_PUBLISHABLE_KEY") or os.getenv("SUPABASE_ANON_KEY")
     if not url or not key:
         raise HTTPException(status_code=500, detail="Supabase PUBLISHABLE key missing")
-    return create_client(url, key)
+    return _create_supabase_client(url, key)
 
 
 def get_token_from_cookie(request: Request) -> str:
@@ -36,8 +101,7 @@ def get_token_from_cookie(request: Request) -> str:
     Extracts the JWT access token from the tf_session HTTP-only cookie.
     The cookie contains a JSON object: { "token": "...", "user": {...} }
     """
-    import json
-    from urllib.parse import unquote
+    # imports are at top level
 
     cookie_value = request.cookies.get(COOKIE_NAME)
     if not cookie_value:
@@ -85,10 +149,14 @@ def get_authenticated_client(
                 status_code=500, detail="Supabase configuration missing"
             )
 
-    client = create_client(url, key)
-    # Set the user's token for Postgrest (RLS) directly to avoid refresh token issues
-    client.postgrest.auth(token)
-    return client
+    # For authenticated clients, we always use the user's JWT token
+    # This works with both legacy and opaque keys
+    options = ClientOptions(
+        headers={
+            "Authorization": f"Bearer {token}",
+        }
+    )
+    return create_client(url, key, options)
 
 
 async def get_current_user(
