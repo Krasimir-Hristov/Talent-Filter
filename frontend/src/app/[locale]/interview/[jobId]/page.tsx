@@ -3,6 +3,7 @@ import { getTranslations, getLocale } from 'next-intl/server';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
+import { LanguageSwitcher } from '@/components/features/language-switcher';
 import {
   Card,
   CardContent,
@@ -88,6 +89,11 @@ export default async function InterviewLandingPage({
       <div className='absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden'>
         <div className='absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]' />
         <div className='absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]' />
+      </div>
+
+      {/* Language Switcher */}
+      <div className='absolute top-4 right-4 z-50 animate-in fade-in slide-in-from-top-4 duration-700 delay-300'>
+        <LanguageSwitcher />
       </div>
 
       <div className='max-w-4xl w-full relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-700'>
