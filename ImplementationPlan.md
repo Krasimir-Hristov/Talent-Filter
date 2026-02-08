@@ -92,13 +92,18 @@ This document outlines the step-by-step roadmap for building the MVP.
       - [x] Validate required fields (Title, Description).
       - [x] POST to `/jobs/create` with complete payload.
       - [x] Success/Error toast notifications and redirection.
-  - [x] **3.8. Dashboard Landing (`/dashboard`)**
-    - [x] Design Stats Overview section.
-    - [x] Implement Active Jobs Grid (Card View).
-    - [x] Add "New Job" primary button.
-  - [ ] **3.9. Job Details View (`/dashboard/jobs/[id]`)**
-    - Design Candidate Table (sortable).
-    - Job Settings & Question Overview.
+  - [x] **3.9. Job Details View (`/dashboard/jobs/[id]`)**
+    - [x] Status Toggle Pill (Active vs Closed).
+    - [x] Real-time cache invalidation for immediate UI updates.
+    - [ ] Candidate Table (sortable) - _Pending Implementation_.
+    - [ ] Job Settings & Question Overview.
+    - [x] Full Localization (EN/DE).
+
+- [x] **3.10. Robust Authentication & Session Management**
+  - [x] Implemented native Next.js `unauthorized()` pattern with `authInterrupts` for secure token expiration handling.
+  - [x] Created `unauthorized.tsx` custom handler for clean session reset and redirection to Login.
+  - [x] Simplified Job Status system (Active / Closed) for better UX and data integrity.
+  - [x] Migrated existing Supabase data to the new status schema with updated CHECK constraints.
 
 ## Phase 4: Candidate Experience (Interview Room)
 
