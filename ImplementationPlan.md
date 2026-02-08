@@ -106,30 +106,48 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] Simplified Job Status system (Active / Closed) for better UX and data integrity.
   - [x] Migrated existing Supabase data to the new status schema with updated CHECK constraints.
 
-## Phase 4: Candidate Experience (Interview Room)
+## Phase 4: Candidate Experience (The Automated Interview)
 
-**Goal**: The core value proposition - the automated interview.
+**Goal**: A secure, "one-way" interview process that handles interruptions gracefully but prevents cheating.
 
-- [ ] **4.1. Public Access & Registration Flow**
-  - Public route `/interview/[jobId]`.
-  - Step 1: **Candidate Registration** (Name, Email, Phone).
-  - Step 2: **Identity Verification** (Optional for MVP, but placeholder included).
-  - Step 3: **Lobby/Instructions** (Rules, Time Limits, Preparation).
+- [ ] **4.1. Database Schema & Security Foundation**
+  - [ ] **4.1.1. Create `candidates` Table**
+    - Fields: `id`, `job_id`, `first_name`, `last_name`, `email`, `phone` (optional), `created_at`.
+    - **Constraint**: Unique constraint on (`job_id`, `email`) AND (`job_id`, `phone`) to prevent duplicate applications.
+  - [ ] **4.1.2. Create `interviews` Table (Session Tracking)**
+    - Fields: `id`, `candidate_id`, `job_id`, `status` (in_progress, completed, abandoned), `start_time`, `end_time`.
+    - **Logic**: Tracks the _actual_ start time to calculate the "running clock" regardless of browser restarts.
+  - [ ] **4.1.3. Create `interview_answers` Table**
+    - Fields: `interview_id`, `question_id`, `answer_text`, `time_spent_seconds`.
+    - **Integrity Flags**: `paste_count` (integer), `tab_switches` (integer), `off_screen_seconds` (integer).
 
-- [ ] **4.2. Secure Interview Environment**
-  - Persistent Zustand store for interview progress.
-  - One-way flow: Cannot go back to previous questions.
-  - Server-side validation of question duration and timestamps.
+- [ ] **4.2. Public Interview Access (The Link)**
+  - [ ] **4.2.1. Route Setup**: create `/interview/[jobId]` (Public, no login required).
+  - [ ] **4.2.2. Landing Screen**: Fetch Job Title/Description from DB. Show "Start Interview" button.
+  - [ ] **4.2.3. Rate Limiting**: Implement basic middleware to limit requests per IP to this route (prevent spam).
 
-- [ ] **4.3. Anti-Cheat & Integrity System**
-  - `usePageVisibility` to log tab switches/minimization.
-  - Disable right-click, copy, and paste on the input area.
-  - Integrity flags sent with the final submission.
+- [ ] **4.3. Registration & Uniqueness Check**
+  - [ ] **4.3.1. Registration Form**: Name, Email, Phone.
+  - [ ] **4.3.2. Server-Side Validation**: Before creating a candidate, check if (Email + JobID) OR (Phone + JobID) exists.
+    - If yes -> Show error "You have already applied".
+    - If no -> Create record and proceed.
+  - [ ] **4.3.3. Session Initialization**: Create an `interview` record with `start_time = NOW()`.
 
-- [ ] **4.4. The Interview Room (UX)**
-  - Clean, distraction-free UI.
-  - Large countdown timer with visual urgency (color change in final 20s).
-  - Auto-submission on timer expiration.
+- [ ] **4.4. The Interview Flow (One-Way Ticket)**
+  - [ ] **4.4.1. "Lobby" / Instructions**: "3 Questions. 60s each. Cannot go back."
+  - [ ] **4.4.2. Question View & Timer**:
+    - Fetch ONLY the current question (not all at once).
+    - **Grace Period Logic**: Calculate remaining time based on `server_start_time` vs `now()`. If user refreshed, time kept ticking.
+    - If time < 0, auto-skip to next question.
+  - [ ] **4.4.3. Answer Submission**:
+    - Save text to `interview_answers`.
+    - Save integrity data (paste counts etc.).
+    - Mark question as "completed" locally or in DB state.
+
+- [ ] **4.5. Anti-Cheat & Integrity Mechanisms**
+  - [ ] **4.5.1. Massive Insert Detection**: JavaScript listener on input to detect >10 chars appearing instantly (0.1s). Flag as `POSSIBLE_PASTE`.
+  - [ ] **4.5.2. Focus Tracking**: Use `Page Visibility API`. Increment `tab_switches` counter when user leaves tab.
+  - [ ] **4.5.3. UI Blocking**: Disable Right-Click and Copy/Paste context menu on the question text (deterrent).
 
 ## Phase 5: AI Grading & Recruiter Insights
 
