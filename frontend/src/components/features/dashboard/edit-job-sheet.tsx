@@ -3,15 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import {
-  Sparkles,
-  Loader2,
-  Save,
-  X,
-  Trash2,
-  Plus,
-  RotateCcw,
-} from 'lucide-react';
+import { Sparkles, Loader2, Save, X, Plus } from 'lucide-react';
 import { toast } from 'sonner';
 
 import {
@@ -23,13 +15,17 @@ import {
   SheetFooter,
 } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import { updateJob, refineJob, suggestQuestion } from '@/lib/jobs-api';
+import {
+  updateJob,
+  refineJob,
+  suggestQuestion,
+  generateAnswer,
+} from '@/lib/jobs-api';
 import { Job, Question } from '@/types/job';
 import { useParams } from 'next/navigation';
+import { QuestionCard } from './question-card';
+import { JobFormFields } from './job-form-sections';
 
 interface EditJobSheetProps {
   job: Job;
@@ -40,22 +36,17 @@ interface EditJobSheetProps {
 type PartialQuestion = Omit<Question, 'id'> & { id?: string };
 
 export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
-  const t = useTranslations('Dashboard');
-  const wizardT = useTranslations('JobWizard');
-  const queryClient = useQueryClient();
   const { locale } = useParams();
-
+  const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
     title: job.title,
     description: job.description,
     notes: job.notes || '',
   });
-
   const [questions, setQuestions] = useState<PartialQuestion[]>(
     job.questions || [],
   );
 
-  // Sync state if job changes
   useEffect(() => {
     setFormData({
       title: job.title,
@@ -118,13 +109,29 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
     },
   });
 
+  const generateAnswerMutation = useMutation({
+    mutationFn: ({ index, text }: { index: number; text: string }) =>
+      generateAnswer({
+        job_title: formData.title,
+        job_description: formData.description,
+        question_text: text,
+        locale: (locale as string) || 'en',
+      }),
+    onSuccess: (data, variables) => {
+      handleUpdateQuestion(variables.index, 'ideal_answer', data.ideal_answer);
+      toast.success('Ideal answer generated');
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || 'Failed to generate answer');
+    },
+  });
+
   const handleSave = () => {
     if (!formData.title.trim()) {
       toast.error('Title is required');
       return;
     }
 
-    // Validate questions
     const hasEmptyQuestion = questions.some((q) => !q.text.trim());
     if (hasEmptyQuestion) {
       toast.error('All questions must have text');
@@ -132,10 +139,6 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
     }
 
     updateMutation.mutate({ ...formData, questions });
-  };
-
-  const handleRemoveQuestion = (index: number) => {
-    setQuestions(questions.filter((_, i) => i !== index));
   };
 
   const handleUpdateQuestion = (
@@ -150,266 +153,136 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
 
   const handleAddQuestion = () => {
     setQuestions([
-      {
-        text: '',
-        ideal_answer: '',
-        time_limit: 120,
-        weight: 5,
-      },
+      { text: '', ideal_answer: '', time_limit: 120, weight: 5 },
       ...questions,
     ]);
   };
 
   return (
-    <Sheet open={isOpen} onOpenChange={onClose}>
-      <SheetContent
-        className='sm:max-w-xl bg-[#0a0a0a] border-white/10 text-white overflow-y-auto'
-        side='right'
-      >
-        <SheetHeader className='space-y-4 mb-8'>
-          <SheetTitle className='text-2xl font-bold flex items-center gap-2 text-white'>
-            <div className='size-10 rounded-xl bg-brand-accent/10 flex items-center justify-center text-brand-accent'>
-              <Save className='size-5' />
+    <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <SheetContent className='w-full sm:max-w-2xl bg-[#09090b] border-white/5 p-0 overflow-hidden flex flex-col'>
+        <SheetHeader className='p-6 border-b border-white/5 bg-[#09090b]/80 backdrop-blur-xl z-10'>
+          <div className='flex items-center justify-between'>
+            <div className='space-y-1'>
+              <SheetTitle className='text-xl font-bold tracking-tight text-white flex items-center gap-2'>
+                Edit Job Details
+                <span className='px-2 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent text-[10px] uppercase tracking-wider font-bold'>
+                  Draft
+                </span>
+              </SheetTitle>
+              <SheetDescription className='text-slate-500 text-sm'>
+                Adjust the job description and interview criteria.
+              </SheetDescription>
             </div>
-            Edit Job Position
-          </SheetTitle>
-          <SheetDescription className='text-slate-400'>
-            Update the title, description, and internal notes for this position.
-          </SheetDescription>
+          </div>
         </SheetHeader>
 
-        <div className='space-y-6 py-4'>
-          {/* Title */}
-          <div className='space-y-2'>
-            <Label htmlFor='title' className='text-sm font-semibold'>
-              Job Title
-            </Label>
-            <Input
-              id='title'
-              value={formData.title}
-              onChange={(e) =>
-                setFormData({ ...formData, title: e.target.value })
+        <div className='flex-1 overflow-y-auto p-6 custom-scrollbar'>
+          <div className='space-y-8'>
+            <JobFormFields
+              formData={formData}
+              onChange={(field, value) =>
+                setFormData((prev) => ({ ...prev, [field]: value }))
               }
-              placeholder='e.g. Senior Frontend Engineer'
-              className='bg-white/5 border-white/10 text-white focus:border-brand-accent/50 focus:ring-brand-accent/20'
+              onRefine={() => refineMutation.mutate()}
+              isRefining={refineMutation.isPending}
             />
-          </div>
 
-          {/* Description */}
-          <div className='space-y-2'>
-            <div className='flex justify-between items-end'>
-              <Label htmlFor='description' className='text-sm font-semibold'>
-                Job Description
-              </Label>
-              <Button
-                variant='ghost'
-                size='sm'
-                onClick={() => refineMutation.mutate()}
-                disabled={refineMutation.isPending || !formData.description}
-                className={`h-8 text-[10px] font-bold uppercase tracking-wider gap-1.5 transition-all
-                  ${
-                    refineMutation.isPending
-                      ? 'text-slate-500 bg-white/5'
-                      : 'text-brand-accent hover:text-brand-accent hover:bg-brand-accent/10'
-                  }`}
-              >
-                {refineMutation.isPending ? (
-                  <Loader2 className='size-3 animate-spin' />
-                ) : (
-                  <Sparkles className='size-3' />
-                )}
-                {refineMutation.isPending ? 'Refining...' : 'AI Refine'}
-              </Button>
-            </div>
-            <Textarea
-              id='description'
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              placeholder='Describe the role...'
-              className='bg-white/5 border-white/10 text-white focus:border-brand-accent/50 focus:ring-brand-accent/20 min-h-[200px] leading-relaxed'
-            />
-          </div>
+            <Separator className='bg-white/5' />
 
-          {/* Notes */}
-          <div className='space-y-2'>
-            <Label htmlFor='notes' className='text-sm font-semibold'>
-              Internal Notes
-            </Label>
-            <Textarea
-              id='notes'
-              value={formData.notes}
-              onChange={(e) =>
-                setFormData({ ...formData, notes: e.target.value })
-              }
-              placeholder='Internal context, team specifics...'
-              className='bg-white/5 border-white/10 text-white focus:border-brand-accent/50 focus:ring-brand-accent/20 min-h-[100px]'
-            />
-          </div>
-
-          <Separator className='bg-white/5' />
-
-          {/* Questions Section */}
-          <div className='space-y-4'>
-            <div className='flex justify-between items-center'>
-              <Label className='text-sm font-semibold flex items-center gap-2'>
-                Interview Questions
-                <span className='size-5 rounded-full bg-white/5 flex items-center justify-center text-[10px] border border-white/5'>
-                  {questions.length}
-                </span>
-              </Label>
-              <div className='flex gap-2'>
-                <Button
-                  variant='ghost'
-                  size='sm'
-                  onClick={() => suggestQuestionMutation.mutate()}
-                  disabled={
-                    suggestQuestionMutation.isPending || !formData.description
-                  }
-                  className='h-8 text-[10px] font-bold uppercase tracking-wider text-brand-accent hover:text-white hover:bg-brand-accent/20 gap-1.5'
-                >
-                  {suggestQuestionMutation.isPending ? (
-                    <Loader2 className='size-3 animate-spin' />
-                  ) : (
-                    <Sparkles className='size-3' />
-                  )}
-                  AI Suggest
-                </Button>
-                <Button
-                  variant='outline'
-                  size='sm'
-                  onClick={handleAddQuestion}
-                  className='h-8 text-[10px] font-bold uppercase tracking-wider bg-white/5 border-white/10 hover:bg-white/10 text-white gap-1.5'
-                >
-                  <Plus className='size-3' />
-                  Add Manual
-                </Button>
-              </div>
-            </div>
-
-            <div className='space-y-4 pb-10'>
-              {questions.map((q, idx) => (
-                <div
-                  key={idx}
-                  className='p-4 rounded-xl border border-white/10 bg-white/2 space-y-4 group relative'
-                >
-                  <div className='flex justify-between gap-4'>
-                    <div className='flex-none size-6 rounded-full bg-white/5 flex items-center justify-center text-[10px] text-slate-500 font-bold border border-white/5'>
-                      {idx + 1}
-                    </div>
-                    <div className='flex-1 space-y-1'>
-                      <div className='flex items-center gap-1 mb-1'>
-                        <span className='text-[10px] font-bold uppercase tracking-widest text-[#666]'>
-                          Question Text
-                        </span>
-                        <span className='text-red-500 text-[10px]'>*</span>
-                      </div>
-                      <Textarea
-                        value={q.text}
-                        onChange={(e) =>
-                          handleUpdateQuestion(idx, 'text', e.target.value)
-                        }
-                        placeholder='Type your question here...'
-                        className={`bg-transparent border-none p-0 focus-visible:ring-0 text-sm h-auto min-h-[40px] resize-none transition-colors
-                        ${!q.text.trim() ? 'text-red-400 placeholder:text-red-900/50' : 'text-white'}`}
-                      />
-                    </div>
-                    <Button
-                      variant='ghost'
-                      size='icon'
-                      onClick={() => handleRemoveQuestion(idx)}
-                      className='size-8 text-slate-500 hover:text-red-400 opacity-0 group-hover:opacity-100 transition-opacity shrink-0'
-                    >
-                      <Trash2 className='size-4' />
-                    </Button>
-                  </div>
-
-                  <div className='space-y-2'>
-                    <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-                      Ideal Answer
-                    </Label>
-                    <Textarea
-                      value={q.ideal_answer}
-                      onChange={(e) =>
-                        handleUpdateQuestion(
-                          idx,
-                          'ideal_answer',
-                          e.target.value,
-                        )
-                      }
-                      className='bg-white/5 border-white/5 text-xs min-h-[60px] focus:border-brand-accent/30 focus:ring-brand-accent/10 transition-all'
-                    />
-                  </div>
-
-                  <div className='flex gap-4'>
-                    <div className='flex-1 space-y-1.5'>
-                      <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-                        Time Limit (s)
-                      </Label>
-                      <Input
-                        type='number'
-                        value={
-                          isNaN(q.time_limit as number) ? '' : q.time_limit
-                        }
-                        onChange={(e) => {
-                          const val = parseInt(e.target.value);
-                          handleUpdateQuestion(
-                            idx,
-                            'time_limit',
-                            isNaN(val) ? 0 : val,
-                          );
-                        }}
-                        className='bg-white/5 border-white/5 h-8 text-xs'
-                      />
-                    </div>
-                    <div className='flex-1 space-y-1.5'>
-                      <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-                        Weight (1-10)
-                      </Label>
-                      <Input
-                        type='number'
-                        min={1}
-                        max={10}
-                        value={isNaN(q.weight as number) ? '' : q.weight}
-                        onChange={(e) => {
-                          const val = parseInt(e.target.value);
-                          handleUpdateQuestion(
-                            idx,
-                            'weight',
-                            isNaN(val) ? 0 : val,
-                          );
-                        }}
-                        className='bg-white/5 border-white/5 h-8 text-xs'
-                      />
-                    </div>
-                  </div>
+            <div className='space-y-4'>
+              <div className='flex items-center justify-between'>
+                <div className='space-y-0.5'>
+                  <h3 className='text-sm font-semibold text-white'>
+                    Interview Questions
+                  </h3>
+                  <p className='text-[10px] text-slate-500 uppercase tracking-widest'>
+                    {questions.length} Questions Defined
+                  </p>
                 </div>
-              ))}
+                <div className='flex gap-2'>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={() => suggestQuestionMutation.mutate()}
+                    disabled={
+                      suggestQuestionMutation.isPending || !formData.description
+                    }
+                    className='h-8 bg-white/5 border-white/5 hover:bg-white/10 text-xs gap-1.5'
+                  >
+                    {suggestQuestionMutation.isPending ? (
+                      <Loader2 className='size-3 animate-spin' />
+                    ) : (
+                      <Sparkles className='size-3 text-brand-accent' />
+                    )}
+                    AI Suggest
+                  </Button>
+                  <Button
+                    variant='outline'
+                    size='sm'
+                    onClick={handleAddQuestion}
+                    className='h-8 bg-white/5 border-white/5 hover:bg-white/10 text-xs gap-1.5'
+                  >
+                    <Plus className='size-3' />
+                    Add Manual
+                  </Button>
+                </div>
+              </div>
+
+              <div className='space-y-4'>
+                {questions.map((q, idx) => (
+                  <QuestionCard
+                    key={q.id || `new-${idx}`}
+                    question={q}
+                    index={idx}
+                    onUpdate={handleUpdateQuestion}
+                    onRemove={(i) =>
+                      setQuestions(questions.filter((_, idx) => idx !== i))
+                    }
+                    onSuggestAnswer={(i) =>
+                      generateAnswerMutation.mutate({
+                        index: i,
+                        text: questions[i].text,
+                      })
+                    }
+                    isSuggestingAnswer={
+                      generateAnswerMutation.isPending &&
+                      generateAnswerMutation.variables?.index === idx
+                    }
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
 
-        <SheetFooter className='mt-8 pt-6 border-t border-white/5 gap-3'>
-          <Button
-            variant='ghost'
-            onClick={onClose}
-            className='text-slate-400 hover:text-white hover:bg-white/5'
-          >
-            Cancel
-          </Button>
-          <Button
-            onClick={handleSave}
-            disabled={updateMutation.isPending}
-            className='bg-brand-accent hover:bg-brand-accent/90 text-white gap-2 shadow-lg shadow-brand-accent/20 px-8'
-          >
-            {updateMutation.isPending ? (
-              <Loader2 className='size-4 animate-spin' />
-            ) : (
-              <Save className='size-4' />
-            )}
-            Save Changes
-          </Button>
+        <SheetFooter className='p-6 border-t border-white/5 bg-[#09090b]/80 backdrop-blur-xl shrink-0'>
+          <div className='flex items-center justify-between w-full gap-4'>
+            <Button
+              variant='ghost'
+              onClick={onClose}
+              className='text-slate-400 hover:text-white hover:bg-white/5 px-6'
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSave}
+              disabled={updateMutation.isPending}
+              className='bg-brand-accent hover:bg-brand-accent/90 text-black font-bold px-8 shadow-[0_0_20px_rgba(var(--brand-accent-rgb),0.3)]'
+            >
+              {updateMutation.isPending ? (
+                <>
+                  <Loader2 className='mr-2 size-4 animate-spin' />
+                  Saving...
+                </>
+              ) : (
+                <>
+                  <Save className='mr-2 size-4' />
+                  Save Changes
+                </>
+              )}
+            </Button>
+          </div>
         </SheetFooter>
       </SheetContent>
     </Sheet>

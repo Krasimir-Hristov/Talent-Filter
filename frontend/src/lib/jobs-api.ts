@@ -57,3 +57,15 @@ export async function suggestQuestion(data: {
     body: JSON.stringify(data),
   });
 }
+
+export async function generateAnswer(data: {
+  job_title: string;
+  job_description: string;
+  question_text: string;
+  locale?: string;
+}): Promise<{ ideal_answer: string }> {
+  return apiFetch<{ ideal_answer: string }>('/jobs/generate-answer/', {
+    method: 'POST',
+    body: JSON.stringify(data),
+  });
+}
