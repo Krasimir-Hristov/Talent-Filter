@@ -14,6 +14,7 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { Separator } from '@/components/ui/separator';
+import { DashboardBreadcrumb } from '@/components/features/dashboard/dashboard-breadcrumb';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation'; // Use core redirect for simple server-side jumps OR i18n redirect
 
@@ -45,26 +46,7 @@ export default async function DashboardLayout({
               orientation='vertical'
               className='mr-2 h-4 bg-white/10'
             />
-            <Breadcrumb>
-              <BreadcrumbList>
-                <BreadcrumbItem className='hidden md:block'>
-                  <BreadcrumbLink asChild>
-                    <Link
-                      href='/dashboard'
-                      className='text-muted-foreground hover:text-white'
-                    >
-                      Dashboard
-                    </Link>
-                  </BreadcrumbLink>
-                </BreadcrumbItem>
-                <BreadcrumbSeparator className='hidden md:block text-muted-foreground/50' />
-                <BreadcrumbItem>
-                  <BreadcrumbPage className='font-medium text-white'>
-                    Overview
-                  </BreadcrumbPage>
-                </BreadcrumbItem>
-              </BreadcrumbList>
-            </Breadcrumb>
+            <DashboardBreadcrumb />
           </div>
         </header>
         <div className='flex flex-1 flex-col gap-4 p-6 pt-6'>{children}</div>

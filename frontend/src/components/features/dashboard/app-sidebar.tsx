@@ -111,7 +111,12 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu className='gap-1 px-2'>
               {items.map((item) => {
-                const isActive = pathname === item.url;
+                // Fix: Active logic for nested routes
+                const isActive =
+                  item.url === '/dashboard'
+                    ? pathname === '/dashboard'
+                    : pathname === item.url ||
+                      pathname.startsWith(`${item.url}/`);
                 return (
                   <SidebarMenuItem key={item.title}>
                     <SidebarMenuButton
