@@ -27,7 +27,7 @@ export function QuestionCard({
   isSuggestingAnswer,
 }: QuestionCardProps) {
   return (
-    <div className='group relative p-4 rounded-xl bg-white/[0.03] border border-white/5 hover:bg-white/[0.05] hover:border-brand-accent/20 transition-all space-y-4'>
+    <div className='group relative p-4 rounded-xl bg-white/3 border border-white/5 hover:bg-white/5 hover:border-brand-accent/20 transition-all space-y-4'>
       <div className='flex items-start justify-between'>
         <div className='flex-none size-6 rounded-full bg-white/5 flex items-center justify-center text-[10px] text-slate-500 font-bold border border-white/5'>
           {index + 1}

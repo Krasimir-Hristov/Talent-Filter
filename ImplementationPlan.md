@@ -96,7 +96,8 @@ This document outlines the step-by-step roadmap for building the MVP.
     - [x] Status Toggle Pill (Active vs Closed).
     - [x] Real-time cache invalidation for immediate UI updates.
     - [ ] Candidate Table (sortable) - _Pending Implementation_.
-    - [ ] Job Settings & Question Overview.
+    - [x] Job Settings & Question Overview (Implemented via `EditJobSheet`).
+    - [ ] Candidate Table (sortable) - _Pending Implementation_.
     - [x] Full Localization (EN/DE).
 
 - [x] **3.10. Robust Authentication & Session Management**
@@ -109,40 +110,48 @@ This document outlines the step-by-step roadmap for building the MVP.
 
 **Goal**: The core value proposition - the automated interview.
 
-- [ ] **4.1. Access Control**
+- [ ] **4.1. Public Access & Registration Flow**
   - Public route `/interview/[jobId]`.
-  - Step 1: Candidate Registration (Name, Email, Phone).
-  - Step 2: On submission, Backend creates `candidate` and `interview` records.
-  - Step 3: Show "Welcome" screen.
+  - Step 1: **Candidate Registration** (Name, Email, Phone).
+  - Step 2: **Identity Verification** (Optional for MVP, but placeholder included).
+  - Step 3: **Lobby/Instructions** (Rules, Time Limits, Preparation).
 
-- [ ] **4.2. Interview State Machine (Zustand)**
-  - Store: `currentStep`, `timer`, `answers`.
-  - Logic: Auto-advance when timer hits 0.
+- [ ] **4.2. Secure Interview Environment**
+  - Persistent Zustand store for interview progress.
+  - One-way flow: Cannot go back to previous questions.
+  - Server-side validation of question duration and timestamps.
 
-- [ ] **4.3. Anti-Cheat Hooks**
-  - Implement `usePageVisibility` to detect tab switching.
-  - Implement copy-paste blocker on `Textarea` components.
+- [ ] **4.3. Anti-Cheat & Integrity System**
+  - `usePageVisibility` to log tab switches/minimization.
+  - Disable right-click, copy, and paste on the input area.
+  - Integrity flags sent with the final submission.
 
-- [ ] **4.4. Submission**
-  - `POST /interviews/submit` on completion.
-  - Show "Thank you" screen.
+- [ ] **4.4. The Interview Room (UX)**
+  - Clean, distraction-free UI.
+  - Large countdown timer with visual urgency (color change in final 20s).
+  - Auto-submission on timer expiration.
 
-## Phase 5: Analysis & Reporting
+## Phase 5: AI Grading & Recruiter Insights
 
-**Goal**: Show the results to the recruiter.
+**Goal**: Transform raw answers into actionable hiring data.
 
-- [ ] **5.1. Auto-Grading Trigger**
-  - On submission, Backend triggers `AIService.grade_interview()`.
-  - Updates database record with `score` and `summary`.
+- [ ] **5.1. Automated Grading Engine**
+  - `POST /interviews/submit` triggers `AIService.grade_interview()`.
+  - Compare candidate answer against `ideal_answer` using semantic similarity.
+  - Output: Score (0-100), Summary of strengths/gaps.
 
-- [ ] **5.2. Dashboard Results View**
-  - List candidates who have completed an interview for a specific Job.
-  - Detail View: Show parsed strengths/weaknesses, score, and contact info (Email, Phone).
+- [ ] **5.2. Recruiter Intelligence View**
+  - Candidate table with status (Pending, Completed, Flagged).
+  - PDF/Summary Export for sharing with hiring managers.
+  - Localized feedback for global teams.
 
-## Phase 6: Polish & Deployment (MVP Release)
+## Phase 6: Polish, Performance & Deployment
 
-- [ ] **6.1. Deployment**
-  - Frontend -> Vercel.
-  - Backend -> Render (Dockerized or Python Environment).
-- [ ] **6.2. Final Testing**
-  - End-to-end flow test.
+- [ ] **6.1. Deployment Strategy**
+  - Frontend -> Vercel (Production environment).
+  - Backend -> Dockerized deployment on Fly.io or Render.
+  - Supabase Database Migrations verification.
+
+- [ ] **6.2. Quality Assurance**
+  - End-to-end testing of the Candidate -> AI -> Recruiter loop.
+  - Stress test for concurrent interview sessions.
