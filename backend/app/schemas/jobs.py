@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import List, Optional
 
 # ============================================================================
@@ -6,10 +6,21 @@ from typing import List, Optional
 # ============================================================================
 
 
+class JobRefineRequest(BaseModel):
+    description: str
+    notes: Optional[str] = None
+    locale: str = "en"
+
+
 class JobParseRequest(BaseModel):
     description: str
     notes: Optional[str] = None
-    locale: str = "en"  # Default to English
+    locale: str = "en"
+
+
+class JobRefineResponse(BaseModel):
+    refined_description: str
+    refined_title: Optional[str] = None
 
 
 class SuggestQuestionRequest(BaseModel):
@@ -33,10 +44,15 @@ class GenerateAnswerRequest(BaseModel):
 
 
 class AIQuestionSchema(BaseModel):
-    text: str
+    text: str = Field(..., min_length=1)
     ideal_answer: str
     time_limit: int = 120
-    weight: int = 1
+    weight: int = Field(1, ge=0, le=10)
+
+
+class QuestionResponseSchema(AIQuestionSchema):
+    id: str
+    job_id: str
 
 
 # ============================================================================
@@ -56,7 +72,7 @@ class JobWithQuestionsResponse(BaseModel):
     status: str
     created_at: str
     notes: Optional[str] = None
-    questions: List[AIQuestionSchema] = []
+    questions: List[QuestionResponseSchema] = []
 
 
 class JobCreateRequest(BaseModel):
@@ -71,3 +87,4 @@ class JobUpdateRequest(BaseModel):
     description: Optional[str] = None
     notes: Optional[str] = None
     status: Optional[str] = None
+    questions: Optional[List[AIQuestionSchema]] = None

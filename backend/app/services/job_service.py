@@ -78,3 +78,64 @@ class JobService:
             .execute()
         )
         return response.data[0] if response.data else None
+
+    async def update_job(
+        self, user_id: str, job_id: str, update_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """
+        Updates job info and replaces questions if provided.
+        """
+        try:
+            # 1. Update Job basic info
+            questions = update_data.pop("questions", None)
+
+            if update_data:
+                print(f"DEBUG: Updating job {job_id} with {update_data}")
+                self.supabase.table("jobs").update(update_data).eq("id", job_id).eq(
+                    "recruiter_id", user_id
+                ).execute()
+
+            # 2. Handle Questions if provided (Full Replace Pattern)
+            if questions is not None:
+                print(
+                    f"DEBUG: Replacing questions for job {job_id}. Count: {len(questions)}"
+                )
+                # Delete old questions
+                self.supabase.table("questions").delete().eq("job_id", job_id).execute()
+
+                # Insert new ones
+                if questions:
+                    questions_payload = []
+                    for idx, q in enumerate(questions):
+                        is_dict = isinstance(q, dict)
+                        raw_weight = (
+                            q.get("weight", 1) if is_dict else getattr(q, "weight", 1)
+                        )
+                        # CLAMP WEIGHT: Ensure it's between 0 and 10 to satisfy DB constraint
+                        safe_weight = max(
+                            0, min(10, int(raw_weight if raw_weight is not None else 1))
+                        )
+
+                        questions_payload.append(
+                            {
+                                "job_id": job_id,
+                                "text": q["text"] if is_dict else q.text,
+                                "ideal_answer": (
+                                    q["ideal_answer"] if is_dict else q.ideal_answer
+                                ),
+                                "time_limit": (
+                                    q.get("time_limit", 120)
+                                    if is_dict
+                                    else getattr(q, "time_limit", 120)
+                                ),
+                                "weight": safe_weight,
+                                "order_index": idx * 10,
+                            }
+                        )
+                    print(f"DEBUG: Inserting {len(questions_payload)} new questions")
+                    self.supabase.table("questions").insert(questions_payload).execute()
+
+            return await self.get_job_by_id(user_id, job_id)
+        except Exception as e:
+            print(f"ERROR: JobService.update_job failed: {e}")
+            raise e

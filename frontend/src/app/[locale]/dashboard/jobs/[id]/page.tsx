@@ -15,6 +15,7 @@ import {
   Link as LinkIcon,
   Trash2,
   Loader2,
+  Edit,
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -26,6 +27,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { getJobById, deleteJob, updateJob } from '@/lib/jobs-api';
 import { toast } from 'sonner';
+import { EditJobSheet } from '@/components/features/dashboard/edit-job-sheet';
 
 export default function JobDetailsPage() {
   const t = useTranslations('Dashboard');
@@ -36,6 +38,7 @@ export default function JobDetailsPage() {
   const jobId = params.id as string;
   const [copied, setCopied] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const {
     data: job,
@@ -196,6 +199,15 @@ export default function JobDetailsPage() {
           <div className='flex items-center gap-3 w-full md:w-auto mt-2 md:mt-0'>
             <Button
               variant='ghost'
+              onClick={() => setIsEditing(true)}
+              className='h-10 px-4 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-colors'
+            >
+              <Edit className='size-4 mr-2' />
+              Edit
+            </Button>
+
+            <Button
+              variant='ghost'
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
               className={`h-10 px-4 rounded-xl transition-colors ${
@@ -323,6 +335,12 @@ export default function JobDetailsPage() {
           </div>
         </section>
       </div>
+
+      <EditJobSheet
+        job={job}
+        isOpen={isEditing}
+        onClose={() => setIsEditing(false)}
+      />
     </div>
   );
 }

@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS questions (
   text TEXT NOT NULL,
   ideal_answer TEXT NOT NULL,
   time_limit INTEGER DEFAULT 180, -- Seconds
-  weight INTEGER DEFAULT 1 CHECK (weight >= 1 AND weight <= 10),
+  weight INTEGER DEFAULT 1 CHECK (weight >= 0 AND weight <= 10),
   order_index INTEGER DEFAULT 0,
   created_at TIMESTAMPTZ DEFAULT NOW()
 );

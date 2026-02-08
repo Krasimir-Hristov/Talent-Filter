@@ -10,6 +10,8 @@ from app.schemas.jobs import (
     AIQuestionSchema,
     JobWithQuestionsResponse,
     JobUpdateRequest,
+    JobRefineRequest,
+    JobRefineResponse,
 )
 from app.services.ai import AIService
 from app.services.job_service import JobService
@@ -82,6 +84,25 @@ async def analyze_job(
         return result
     except Exception as e:
         print(f"DEBUG: /analyze error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/refine", response_model=JobRefineResponse)
+async def refine_job(
+    request: JobRefineRequest, ai_service: AIService = Depends(get_ai_service)
+):
+    try:
+        result = await ai_service.refine_job_description(
+            description=request.description,
+            notes=request.notes,
+            locale=request.locale,
+        )
+        return {
+            "refined_description": result.refined_description,
+            "refined_title": result.refined_title,
+        }
+    except Exception as e:
+        print(f"DEBUG: /refine error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -184,25 +205,19 @@ async def update_job(
         if not job:
             raise HTTPException(status_code=404, detail="Job not found")
 
-        # Prepare update data (only non-None fields)
+        # Prepare update data
         update_data = {k: v for k, v in request.model_dump().items() if v is not None}
 
         if not update_data:
             return {"message": "No changes requested"}
 
-        # Perform update
-        response = (
-            supabase.table("jobs")
-            .update(update_data)
-            .eq("id", job_id)
-            .eq("recruiter_id", user.id)
-            .execute()
-        )
+        # Perform update via service (handles questions too)
+        updated_job = await service.update_job(user.id, job_id, update_data)
 
-        if response.data and len(response.data) > 0:
-            return response.data[0]
-        else:
+        if not updated_job:
             raise HTTPException(status_code=404, detail="Job not found after update")
+
+        return updated_job
     except HTTPException:
         raise
     except Exception as e:

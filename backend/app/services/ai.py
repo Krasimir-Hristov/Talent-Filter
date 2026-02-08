@@ -27,6 +27,11 @@ class IdealAnswerResponse(BaseModel):
     ideal_answer: str
 
 
+class RefinementResult(BaseModel):
+    refined_title: str
+    refined_description: str
+
+
 # ============================================================================
 # THE AI SERVICE (Using google-genai SDK)
 # ============================================================================
@@ -122,7 +127,7 @@ class AIService:
         lang_instr = self._get_language_instruction(locale)
         prompt = f"""
         Generate ONE new question object.
-        Fields required: "text", "ideal_answer", "time_limit" (int sec), "weight" (int 1-10).
+        Fields required: "text", "ideal_answer", "time_limit" (int sec), "weight" (int 0-10).
         
         Position: {job_title}. Description: {job_description}.
         Existing Questions: {json.dumps(existing_questions)}
@@ -160,3 +165,26 @@ class AIService:
         if response.parsed:
             return response.parsed.ideal_answer
         return IdealAnswerResponse.model_validate_json(response.text).ideal_answer
+
+    async def refine_job_description(
+        self, description: str, notes: Optional[str] = None, locale: str = "en"
+    ) -> RefinementResult:
+        lang_instr = self._get_language_instruction(locale)
+        prompt = f"""
+        Role: Expert Technical HR. 
+        Task: Refine the provided job description to be more professional, clear, and engaging. 
+        Also, provide a better/refined Job Title if possible.
+        
+        {lang_instr}
+        
+        Description:
+        {description}
+        
+        Additional Context/Notes:
+        {notes if notes else "No additional notes provided."}
+        """
+
+        response = await self._generate_with_retry(prompt, RefinementResult)
+        if response.parsed:
+            return response.parsed
+        return RefinementResult.model_validate_json(response.text)

@@ -21,5 +21,5 @@ BEGIN
   END IF;
   
   -- Add the new constraint (if not exists logic handled by dropping above)
-  ALTER TABLE questions ADD CONSTRAINT questions_weight_check CHECK (weight >= 1 AND weight <= 10);
+  ALTER TABLE questions ADD CONSTRAINT questions_weight_check CHECK (weight >= 0 AND weight <= 10);
 END $$;
