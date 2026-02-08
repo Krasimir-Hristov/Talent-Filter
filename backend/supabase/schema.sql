@@ -43,13 +43,20 @@ CREATE TABLE IF NOT EXISTS questions (
 );
 
 -- CANDIDATES: People applying via public link
+-- ENUMS
+CREATE TYPE interview_status AS ENUM ('in_progress', 'completed', 'abandoned');
+
+-- CANDIDATES: People applying via public link
 CREATE TABLE IF NOT EXISTS candidates (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  job_id UUID REFERENCES jobs(id) ON DELETE CASCADE NOT NULL,
+  first_name TEXT NOT NULL,
+  last_name TEXT NOT NULL,
   email TEXT NOT NULL,
-  full_name TEXT NOT NULL,
-  phone_number TEXT,
-  metadata JSONB DEFAULT '{}'::jsonb,
-  created_at TIMESTAMPTZ DEFAULT NOW()
+  phone TEXT,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  CONSTRAINT unique_candidate_email_per_job UNIQUE (job_id, email),
+  CONSTRAINT unique_candidate_phone_per_job UNIQUE (job_id, phone)
 );
 
 -- INTERVIEWS: Results and AI analysis
@@ -57,12 +64,26 @@ CREATE TABLE IF NOT EXISTS interviews (
   id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
   candidate_id UUID REFERENCES candidates(id) ON DELETE CASCADE NOT NULL,
   job_id UUID REFERENCES jobs(id) ON DELETE CASCADE NOT NULL,
-  score INTEGER CHECK (score >= 0 AND score <= 100),
-  ai_summary TEXT,
-  flags JSONB DEFAULT '{"tab_switches": 0, "copy_paste_attempts": 0}'::jsonb,
-  status TEXT DEFAULT 'started' CHECK (status IN ('started', 'completed')),
-  started_at TIMESTAMPTZ DEFAULT NOW(),
-  completed_at TIMESTAMPTZ
+  status interview_status DEFAULT 'in_progress',
+  start_time TIMESTAMPTZ DEFAULT NOW(),
+  end_time TIMESTAMPTZ,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(candidate_id, job_id)
+);
+
+-- INTERVIEW ANSWERS: Candidate responses
+CREATE TABLE IF NOT EXISTS interview_answers (
+  id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+  interview_id UUID REFERENCES interviews(id) ON DELETE CASCADE NOT NULL,
+  question_id UUID NOT NULL, 
+  answer_text TEXT NOT NULL,
+  time_spent_seconds INTEGER DEFAULT 0,
+  paste_count INTEGER DEFAULT 0,
+  tab_switches INTEGER DEFAULT 0,
+  off_screen_seconds INTEGER DEFAULT 0,
+  created_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(interview_id, question_id)
 );
 
 -- 3. ROW LEVEL SECURITY (RLS)
@@ -82,16 +103,17 @@ CREATE POLICY "Recruiters manage own questions" ON questions FOR ALL TO authenti
   USING (job_id IN (SELECT id FROM jobs WHERE recruiter_id = auth.uid()));
 
 -- RECRUITER VIEWING RESULTS (Isolation: Can only see candidates for their own jobs)
-CREATE POLICY "Recruiters view own candidates" ON candidates FOR SELECT TO authenticated 
-  USING (id IN (SELECT candidate_id FROM interviews WHERE job_id IN (SELECT id FROM jobs WHERE recruiter_id = auth.uid())));
-CREATE POLICY "Recruiters view own interviews" ON interviews FOR SELECT TO authenticated 
-  USING (job_id IN (SELECT id FROM jobs WHERE recruiter_id = auth.uid()));
+-- RECRUITER VIEWING RESULTS (Isolation: Can only see candidates for their own jobs)
+CREATE POLICY "Recruiters access own candidates" ON candidates FOR SELECT TO authenticated USING (job_id IN (SELECT id FROM jobs WHERE recruiter_id = auth.uid()));
+CREATE POLICY "Recruiters access own interviews" ON interviews FOR SELECT TO authenticated USING (job_id IN (SELECT id FROM jobs WHERE recruiter_id = auth.uid()));
+CREATE POLICY "Recruiters access own answers" ON interview_answers FOR SELECT TO authenticated USING (interview_id IN (SELECT id FROM interviews WHERE job_id IN (SELECT id FROM jobs WHERE recruiter_id = auth.uid())));
 
 -- CANDIDATE POLICIES (Public access to published items)
 CREATE POLICY "Public view published jobs" ON jobs FOR SELECT TO anon USING (status = 'published');
 CREATE POLICY "Public view questions" ON questions FOR SELECT TO anon USING (true);
-CREATE POLICY "Public submit candidate data" ON candidates FOR INSERT TO anon WITH CHECK (true);
-CREATE POLICY "Public start/update interview" ON interviews FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Public apply to job" ON candidates FOR INSERT TO anon WITH CHECK (true);
+CREATE POLICY "Public manage own interview" ON interviews FOR ALL TO anon USING (true) WITH CHECK (true);
+CREATE POLICY "Public submit answer" ON interview_answers FOR INSERT TO anon WITH CHECK (true);
 
 -- 4. AUTOMATION (Trigger for new users)
 -- ==========================================

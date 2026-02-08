@@ -105,14 +105,14 @@ This document outlines the step-by-step roadmap for building the MVP.
 
 **Goal**: A secure, "one-way" interview process that handles interruptions gracefully but prevents cheating.
 
-- [ ] **4.1. Database Schema & Security Foundation**
-  - [ ] **4.1.1. Create `candidates` Table**
+- [x] **4.1. Database Schema & Security Foundation**
+  - [x] **4.1.1. Create `candidates` Table**
     - Fields: `id`, `job_id`, `first_name`, `last_name`, `email`, `phone` (optional), `created_at`.
     - **Constraint**: Unique constraint on (`job_id`, `email`) AND (`job_id`, `phone`) to prevent duplicate applications.
-  - [ ] **4.1.2. Create `interviews` Table (Session Tracking)**
+  - [x] **4.1.2. Create `interviews` Table (Session Tracking)**
     - Fields: `id`, `candidate_id`, `job_id`, `status` (in_progress, completed, abandoned), `start_time`, `end_time`.
     - **Logic**: Tracks the _actual_ start time to calculate the "running clock" regardless of browser restarts.
-  - [ ] **4.1.3. Create `interview_answers` Table**
+  - [x] **4.1.3. Create `interview_answers` Table**
     - Fields: `interview_id`, `question_id`, `answer_text`, `time_spent_seconds`.
     - **Integrity Flags**: `paste_count` (integer), `tab_switches` (integer), `off_screen_seconds` (integer).
 
