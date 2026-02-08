@@ -124,9 +124,11 @@ export default async function InterviewLandingPage({
                     <Clock size={16} />
                   </div>
                   <div>
-                    <p className='font-medium text-foreground'>~15-20 min</p>
+                    <p className='font-medium text-foreground'>
+                      {t('estimatedTime')}
+                    </p>
                     <p className='text-xs text-muted-foreground font-light'>
-                      Estimated time
+                      {t('estimatedTimeLabel')}
                     </p>
                   </div>
                 </div>
@@ -135,9 +137,11 @@ export default async function InterviewLandingPage({
                     <UserCheck size={16} />
                   </div>
                   <div>
-                    <p className='font-medium text-foreground'>AI Guided</p>
+                    <p className='font-medium text-foreground'>
+                      {t('aiGuided')}
+                    </p>
                     <p className='text-xs text-muted-foreground font-light'>
-                      Self-paced flow
+                      {t('selfPaced')}
                     </p>
                   </div>
                 </div>
@@ -146,9 +150,9 @@ export default async function InterviewLandingPage({
                     <ShieldCheck size={16} />
                   </div>
                   <div>
-                    <p className='font-medium text-foreground'>Secure</p>
+                    <p className='font-medium text-foreground'>{t('secure')}</p>
                     <p className='text-xs text-muted-foreground font-light'>
-                      Anti-cheat active
+                      {t('antiCheat')}
                     </p>
                   </div>
                 </div>
@@ -178,37 +182,30 @@ export default async function InterviewLandingPage({
           {/* Side Highlights (Hidden on small screens) */}
           <div className='hidden lg:flex flex-col gap-4 w-72'>
             <div className='p-6 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col gap-4'>
-              <h3 className='font-semibold text-primary'>How it works</h3>
+              <h3 className='font-semibold text-primary'>{t('howItWorks')}</h3>
               <ul className='space-y-4'>
                 <li className='flex gap-3 text-sm'>
                   <span className='shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs'>
                     1
                   </span>
-                  <span className='text-muted-foreground'>
-                    Register your basic information
-                  </span>
+                  <span className='text-muted-foreground'>{t('step1')}</span>
                 </li>
                 <li className='flex gap-3 text-sm'>
                   <span className='shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs'>
                     2
                   </span>
-                  <span className='text-muted-foreground'>
-                    Answer 5-10 technical questions
-                  </span>
+                  <span className='text-muted-foreground'>{t('step2')}</span>
                 </li>
                 <li className='flex gap-3 text-sm'>
                   <span className='shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs'>
                     3
                   </span>
-                  <span className='text-muted-foreground'>
-                    Receive feedback and next steps
-                  </span>
+                  <span className='text-muted-foreground'>{t('step3')}</span>
                 </li>
               </ul>
             </div>
             <div className='p-6 rounded-2xl border border-border bg-background/50 text-sm italic text-muted-foreground'>
-              "Simple, fair, and fast. No more waiting weeks for a first
-              screening."
+              {t('quote')}
             </div>
           </div>
         </div>

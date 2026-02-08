@@ -143,6 +143,17 @@
     "tooManyRequests": "Too many requests",
     "tooManyRequestsDesc": "Please slow down and try again in a few minutes.",
     "terms": "By starting, you agree to our terms of service and recognize that anti-cheating measures are in place.",
-    "loading": "Preparing your session..."
+    "loading": "Preparing your session...",
+    "estimatedTime": "~15-20 min",
+    "estimatedTimeLabel": "Estimated time",
+    "aiGuided": "AI Guided",
+    "selfPaced": "Self-paced flow",
+    "secure": "Secure",
+    "antiCheat": "Anti-cheat active",
+    "howItWorks": "How it works",
+    "step1": "Register your basic information",
+    "step2": "Answer 5-10 technical questions",
+    "step3": "Receive feedback and next steps",
+    "quote": "\"Simple, fair, and fast. No more waiting weeks for a first screening.\""
   }
 }
