@@ -46,7 +46,7 @@ This document outlines the step-by-step roadmap for building the MVP.
 
 **Goal**: Allow a recruiter to log in and create an automated interview.
 
-- [ ] **Phase 3: Frontend Development (Next.js)**
+- [x] **Phase 3: Frontend Development (Next.js)**
   - [x] **3.1. Branding & Global Styling**
     - Configure Tailwind colors (Midnight & Indigo).
     - Set up fonts (Plus Jakarta Sans & Inter).
@@ -93,11 +93,6 @@ This document outlines the step-by-step roadmap for building the MVP.
       - [x] POST to `/jobs/create` with complete payload.
       - [x] Success/Error toast notifications and redirection.
   - [x] **3.9. Job Details View (`/dashboard/jobs/[id]`)**
-    - [x] Status Toggle Pill (Active vs Closed).
-    - [x] Real-time cache invalidation for immediate UI updates.
-    - [ ] Candidate Table (sortable) - _Pending Implementation_.
-    - [x] Job Settings & Question Overview (Implemented via `EditJobSheet`).
-    - [ ] Candidate Table (sortable) - _Pending Implementation_.
     - [x] Full Localization (EN/DE).
 
 - [x] **3.10. Robust Authentication & Session Management**
@@ -148,6 +143,9 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [ ] **4.5.1. Massive Insert Detection**: JavaScript listener on input to detect >10 chars appearing instantly (0.1s). Flag as `POSSIBLE_PASTE`.
   - [ ] **4.5.2. Focus Tracking**: Use `Page Visibility API`. Increment `tab_switches` counter when user leaves tab.
   - [ ] **4.5.3. UI Blocking**: Disable Right-Click and Copy/Paste context menu on the question text (deterrent).
+
+- [ ] **4.6. Recruitment Intelligence (Prep)**
+  - [ ] Candidate Table (sortable) - _Pending Implementation_. (Moved from Phase 3)
 
 ## Phase 5: AI Grading & Recruiter Insights
 
