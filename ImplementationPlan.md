@@ -120,6 +120,7 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **4.2.1. Route Setup**: create `/interview/[jobId]` (Public, no login required).
   - [x] **4.2.2. Landing Screen**: Fetch Job Title/Description from DB. Show "Start Interview" button.
   - [x] **4.2.3. Rate Limiting**: Implement backend-level rate limiting (IP-based) to protect the public route and data fetching.
+  - [x] **4.2.4. Internationalization**: Added Language Switcher (EN/DE) for candidates.
 
 - [ ] **4.3. Registration & Uniqueness Check**
   - [ ] **4.3.1. Registration Form**: Name, Email, Phone.
