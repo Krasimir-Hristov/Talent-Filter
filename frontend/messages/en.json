@@ -35,9 +35,25 @@
       "closed": "Closed"
     }
   },
+  "Common": {
+    "dashboard": "Dashboard",
+    "overview": "Overview",
+    "cancel": "Cancel",
+    "confirm": "Confirm?",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "copyLink": "Copy Link",
+    "copied": "Copied!",
+    "loading": "Loading...",
+    "draft": "Draft",
+    "saveChanges": "Save Changes"
+  },
   "JobWizard": {
     "title": "Create Smart Interview",
     "subtitle": "AI will generate questions based on your job description. You can refine them afterwards.",
+    "editTitle": "Edit Job Details",
+    "editDescription": "Adjust the job description and interview criteria.",
     "jobTitle": "Job Title",
     "titlePlaceholder": "e.g., Senior React Developer",
     "jobDescription": "Job Description",
@@ -47,13 +63,21 @@
     "generate": "Generate Smart Interview",
     "generating": "Generating Interview...",
     "questions": "Interview Questions",
+    "questionsDefined": "{count} Questions Defined",
     "question": "Question",
+    "questionText": "Question Text",
     "questionPlaceholder": "Enter your question...",
     "idealAnswer": "Ideal Answer / Evaluation Criteria",
     "answerPlaceholder": "What should a good answer include?",
+    "timeLimit": "Time Limit (s)",
     "weight": "Weight",
+    "weightRange": "Weight (1-10)",
     "addQuestion": "Add Question",
-    "suggestQuestion": "AI Suggestion",
+    "addManual": "Add Manual",
+    "suggestQuestion": "AI Suggest",
+    "aiRefine": "AI Refine",
+    "refining": "Refining...",
+    "regenerate": "Regenerate",
     "save": "Save Interview",
     "saving": "Saving...",
     "startOver": "Start Over",
@@ -63,10 +87,13 @@
     },
     "success": {
       "generated": "Interview generated successfully!",
-      "saved": "Job created successfully!"
+      "saved": "Job created successfully!",
+      "allQuestionsRequired": "All questions must have text",
+      "answerGenerated": "Ideal answer generated"
     },
     "info": {
-      "removed": "Question removed"
+      "removed": "Question removed",
+      "jobDetails": "Job Details"
     },
     "autoFill": "Smart Auto-Fill"
   },

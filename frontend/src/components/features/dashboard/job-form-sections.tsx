@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import { useTranslations } from 'next-intl';
 
 interface JobFormFieldsProps {
   formData: {
@@ -23,16 +24,18 @@ export function JobFormFields({
   onRefine,
   isRefining,
 }: JobFormFieldsProps) {
+  const t = useTranslations('JobWizard');
+
   return (
     <div className='space-y-6'>
       <div className='space-y-2'>
         <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-          Job Title
+          {t('jobTitle')}
         </Label>
         <Input
           value={formData.title}
           onChange={(e) => onChange('title', e.target.value)}
-          placeholder='e.g. Senior Frontend Developer'
+          placeholder={t('titlePlaceholder')}
           className='bg-white/5 border-white/5 h-10 focus:border-brand-accent/30 focus:ring-brand-accent/10 transition-all'
         />
       </div>
@@ -40,7 +43,7 @@ export function JobFormFields({
       <div className='space-y-3'>
         <div className='flex items-center justify-between'>
           <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-            Job Description
+            {t('jobDescription')}
           </Label>
           <Button
             variant='ghost'
@@ -52,25 +55,25 @@ export function JobFormFields({
             <Sparkles
               className={`size-3 ${isRefining ? 'animate-pulse text-brand-accent/50' : ''}`}
             />
-            {isRefining ? 'Refining...' : 'AI Refine'}
+            {isRefining ? t('refining') : t('aiRefine')}
           </Button>
         </div>
         <Textarea
           value={formData.description}
           onChange={(e) => onChange('description', e.target.value)}
-          placeholder='Enter detailed job description...'
+          placeholder={t('descriptionPlaceholder')}
           className='bg-white/5 border-white/5 min-h-[160px] text-sm leading-relaxed focus:border-brand-accent/30 focus:ring-brand-accent/10 transition-all resize-none'
         />
       </div>
 
       <div className='space-y-2'>
         <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-          Internal Notes (Optional)
+          {t('additionalNotes')}
         </Label>
         <Textarea
           value={formData.notes}
           onChange={(e) => onChange('notes', e.target.value)}
-          placeholder='Add any internal context or requirements...'
+          placeholder={t('notesPlaceholder')}
           className='bg-white/5 border-white/5 min-h-[80px] text-xs focus:border-brand-accent/30 focus:ring-brand-accent/10 transition-all'
         />
       </div>

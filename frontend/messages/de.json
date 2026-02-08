@@ -35,9 +35,25 @@
       "closed": "Geschlossen"
     }
   },
+  "Common": {
+    "dashboard": "Dashboard",
+    "overview": "Übersicht",
+    "cancel": "Abbrechen",
+    "confirm": "Bestätigen?",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "back": "Zurück",
+    "copyLink": "Link kopieren",
+    "copied": "Kopiert!",
+    "loading": "Wird geladen...",
+    "draft": "Entwurf",
+    "saveChanges": "Änderungen speichern"
+  },
   "JobWizard": {
     "title": "Intelligentes Interview erstellen",
     "subtitle": "Die AI generiert Fragen basierend auf Ihrer Stellenbeschreibung. Sie können diese anschließend verfeinern.",
+    "editTitle": "Job-Details bearbeiten",
+    "editDescription": "Passen Sie die Jobbeschreibung und Interview-Kriterien an.",
     "jobTitle": "Jobtitel",
     "titlePlaceholder": "z.B. Senior React Developer",
     "jobDescription": "Stellenbeschreibung",
@@ -47,13 +63,21 @@
     "generate": "Intelligentes Interview generieren",
     "generating": "Interview wird generiert...",
     "questions": "Interview Fragen",
+    "questionsDefined": "{count} Fragen definiert",
     "question": "Frage",
+    "questionText": "Fragentext",
     "questionPlaceholder": "Geben Sie Ihre Frage ein...",
     "idealAnswer": "Ideale Antwort / Bewertungskriterien",
     "answerPlaceholder": "Was sollte eine gute Antwort beinhalten?",
+    "timeLimit": "Zeitlimit (s)",
     "weight": "Gewichtung",
+    "weightRange": "Gewichtung (1-10)",
     "addQuestion": "Frage hinzufügen",
+    "addManual": "Manuell hinzufügen",
     "suggestQuestion": "KI-Vorschlag",
+    "aiRefine": "KI-Verfeinerung",
+    "refining": "Verfeinerung...",
+    "regenerate": "Neu generieren",
     "save": "Interview speichern",
     "saving": "Wird gespeichert...",
     "startOver": "Neu beginnen",
@@ -63,10 +87,13 @@
     },
     "success": {
       "generated": "Interview erfolgreich generiert!",
-      "saved": "Stelle erfolgreich erstellt!"
+      "saved": "Stelle erfolgreich erstellt!",
+      "allQuestionsRequired": "Alle Fragen müssen einen Text haben",
+      "answerGenerated": "Ideale Antwort generiert"
     },
     "info": {
-      "removed": "Frage entfernt"
+      "removed": "Frage entfernt",
+      "jobDetails": "Job-Details"
     },
     "autoFill": "Intelligentes Ausfüllen"
   },

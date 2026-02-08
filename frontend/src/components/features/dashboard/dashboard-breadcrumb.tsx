@@ -3,6 +3,7 @@
 import { usePathname } from '@/i18n/routing';
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
+import { useTranslations } from 'next-intl';
 import { getJobById } from '@/lib/jobs-api';
 import {
   Breadcrumb,
@@ -16,6 +17,8 @@ import { Link } from '@/i18n/routing';
 import { Loader2 } from 'lucide-react';
 
 export function DashboardBreadcrumb() {
+  const t = useTranslations('Sidebar');
+  const commonT = useTranslations('Common');
   const pathname = usePathname();
   const params = useParams();
   const jobId = params.id as string | undefined;
@@ -39,7 +42,7 @@ export function DashboardBreadcrumb() {
               href='/dashboard'
               className='text-muted-foreground hover:text-white'
             >
-              Dashboard
+              {commonT('dashboard')}
             </Link>
           </BreadcrumbLink>
         </BreadcrumbItem>
@@ -48,7 +51,7 @@ export function DashboardBreadcrumb() {
         {isOverview && (
           <BreadcrumbItem>
             <BreadcrumbPage className='font-medium text-white'>
-              Overview
+              {t('overview')}
             </BreadcrumbPage>
           </BreadcrumbItem>
         )}
@@ -62,12 +65,12 @@ export function DashboardBreadcrumb() {
                     href='/dashboard/jobs'
                     className='text-muted-foreground hover:text-white'
                   >
-                    Jobs
+                    {t('jobs')}
                   </Link>
                 </BreadcrumbLink>
               ) : (
                 <BreadcrumbPage className='font-medium text-white'>
-                  Jobs
+                  {t('jobs')}
                 </BreadcrumbPage>
               )}
             </BreadcrumbItem>
@@ -82,7 +85,7 @@ export function DashboardBreadcrumb() {
                         <Loader2 className='h-3 w-3 animate-spin' />
                       </span>
                     ) : (
-                      job?.title || 'Job Details'
+                      job?.title || t('info.jobDetails')
                     )}
                   </BreadcrumbPage>
                 </BreadcrumbItem>

@@ -36,6 +36,8 @@ interface EditJobSheetProps {
 type PartialQuestion = Omit<Question, 'id'> & { id?: string };
 
 export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
+  const t = useTranslations('JobWizard');
+  const commonT = useTranslations('Common');
   const { locale } = useParams();
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
@@ -63,7 +65,7 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['jobs', job.id] });
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
-      toast.success('Job updated successfully');
+      toast.success(t('success.saved'));
       onClose();
     },
     onError: (error: Error) => {
@@ -84,7 +86,7 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
         title: data.refined_title || prev.title,
         description: data.refined_description,
       }));
-      toast.success('Description refined by AI');
+      toast.success(t('success.generated'));
     },
     onError: (error: Error) => {
       toast.error(error.message || 'AI refinement failed');
@@ -102,7 +104,7 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
       }),
     onSuccess: (newQuestion) => {
       setQuestions([newQuestion, ...questions]);
-      toast.success('New question suggested by AI');
+      toast.success(t('success.generated'));
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to suggest question');
@@ -119,7 +121,7 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
       }),
     onSuccess: (data, variables) => {
       handleUpdateQuestion(variables.index, 'ideal_answer', data.ideal_answer);
-      toast.success('Ideal answer generated');
+      toast.success(t('success.answerGenerated'));
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to generate answer');
@@ -128,13 +130,13 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
 
   const handleSave = () => {
     if (!formData.title.trim()) {
-      toast.error('Title is required');
+      toast.error(t('validation.titleRequired'));
       return;
     }
 
     const hasEmptyQuestion = questions.some((q) => !q.text.trim());
     if (hasEmptyQuestion) {
-      toast.error('All questions must have text');
+      toast.error(t('success.allQuestionsRequired'));
       return;
     }
 
@@ -165,13 +167,13 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
           <div className='flex items-center justify-between'>
             <div className='space-y-1'>
               <SheetTitle className='text-xl font-bold tracking-tight text-white flex items-center gap-2'>
-                Edit Job Details
+                {t('editTitle')}
                 <span className='px-2 py-0.5 rounded-full bg-brand-accent/10 text-brand-accent text-[10px] uppercase tracking-wider font-bold'>
-                  Draft
+                  {commonT('draft')}
                 </span>
               </SheetTitle>
               <SheetDescription className='text-slate-500 text-sm'>
-                Adjust the job description and interview criteria.
+                {t('editDescription')}
               </SheetDescription>
             </div>
           </div>
@@ -194,10 +196,10 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
               <div className='flex items-center justify-between'>
                 <div className='space-y-0.5'>
                   <h3 className='text-sm font-semibold text-white'>
-                    Interview Questions
+                    {t('questions')}
                   </h3>
                   <p className='text-[10px] text-slate-500 uppercase tracking-widest'>
-                    {questions.length} Questions Defined
+                    {t('questionsDefined', { count: questions.length })}
                   </p>
                 </div>
                 <div className='flex gap-2'>
@@ -215,7 +217,7 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
                     ) : (
                       <Sparkles className='size-3 text-brand-accent' />
                     )}
-                    AI Suggest
+                    {t('aiSuggest')}
                   </Button>
                   <Button
                     variant='outline'
@@ -224,7 +226,7 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
                     className='h-8 bg-white/5 border-white/5 hover:bg-white/10 text-xs gap-1.5'
                   >
                     <Plus className='size-3' />
-                    Add Manual
+                    {t('addManual')}
                   </Button>
                 </div>
               </div>
@@ -263,7 +265,7 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
               onClick={onClose}
               className='text-slate-400 hover:text-white hover:bg-white/5 px-6'
             >
-              Cancel
+              {commonT('cancel')}
             </Button>
             <Button
               onClick={handleSave}
@@ -273,12 +275,12 @@ export function EditJobSheet({ job, isOpen, onClose }: EditJobSheetProps) {
               {updateMutation.isPending ? (
                 <>
                   <Loader2 className='mr-2 size-4 animate-spin' />
-                  Saving...
+                  {commonT('loading')}
                 </>
               ) : (
                 <>
                   <Save className='mr-2 size-4' />
-                  Save Changes
+                  {commonT('saveChanges')}
                 </>
               )}
             </Button>

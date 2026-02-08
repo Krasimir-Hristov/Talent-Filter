@@ -1,6 +1,7 @@
 'use client';
 
 import { Trash2, RotateCcw } from 'lucide-react';
+import { useTranslations } from 'next-intl';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -26,6 +27,8 @@ export function QuestionCard({
   onSuggestAnswer,
   isSuggestingAnswer,
 }: QuestionCardProps) {
+  const t = useTranslations('JobWizard');
+
   return (
     <div className='group relative p-4 rounded-xl bg-white/3 border border-white/5 hover:bg-white/5 hover:border-brand-accent/20 transition-all space-y-4'>
       <div className='flex items-start justify-between'>
@@ -35,14 +38,14 @@ export function QuestionCard({
         <div className='flex-1 ml-3 space-y-1'>
           <div className='flex items-center gap-1 mb-1'>
             <span className='text-[10px] font-bold uppercase tracking-widest text-[#666]'>
-              Question Text
+              {t('questionText')}
             </span>
             <span className='text-red-500 text-[10px]'>*</span>
           </div>
           <Textarea
             value={question.text}
             onChange={(e) => onUpdate(index, 'text', e.target.value)}
-            placeholder='Type your question here...'
+            placeholder={t('questionPlaceholder')}
             className={`bg-transparent border-none p-0 focus-visible:ring-0 text-sm h-auto min-h-[40px] resize-none transition-colors
             ${!question.text.trim() ? 'text-red-400 placeholder:text-red-900/50' : 'text-white'}`}
           />
@@ -60,7 +63,7 @@ export function QuestionCard({
       <div className='space-y-2'>
         <div className='flex items-center justify-between'>
           <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-            Ideal Answer
+            {t('idealAnswer')}
           </Label>
           <Button
             variant='ghost'
@@ -72,12 +75,13 @@ export function QuestionCard({
             <RotateCcw
               className={`size-3 ${isSuggestingAnswer ? 'animate-spin' : ''}`}
             />
-            {isSuggestingAnswer ? 'Generating...' : 'Regenerate'}
+            {isSuggestingAnswer ? t('generating') : t('regenerate')}
           </Button>
         </div>
         <Textarea
           value={question.ideal_answer}
           onChange={(e) => onUpdate(index, 'ideal_answer', e.target.value)}
+          placeholder={t('answerPlaceholder')}
           className='bg-white/5 border-white/5 text-xs min-h-[60px] focus:border-brand-accent/30 focus:ring-brand-accent/10 transition-all'
         />
       </div>
@@ -85,7 +89,7 @@ export function QuestionCard({
       <div className='flex gap-4'>
         <div className='flex-1 space-y-1.5'>
           <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-            Time Limit (s)
+            {t('timeLimit')}
           </Label>
           <Input
             type='number'
@@ -101,7 +105,7 @@ export function QuestionCard({
         </div>
         <div className='flex-1 space-y-1.5'>
           <Label className='text-[10px] font-bold uppercase tracking-widest text-slate-500'>
-            Weight (1-10)
+            {t('weightRange')}
           </Label>
           <Input
             type='number'
