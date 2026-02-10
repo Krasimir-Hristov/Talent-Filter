@@ -128,18 +128,21 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **4.3.3. Create Candidate & Interview**: Insert records and redirect to the interview session.
   - [x] **4.3.4. Closed Status Handling**: If job status is `closed`, show "Position Filled" banner.
 
-- [ ] **4.4. The Interview Flow (One-Way Ticket)**
-  - [ ] **4.4.1. "Lobby" / Instructions**: Clear rules before start:
-    - Individual timers per question.
-    - Auto-submission on timeout.
-    - No going back (one-way flow).
-  - [ ] **4.4.2. Question View & Timer**:
-    - Fetch current question with its specific `time_limit`.
-    - **Server-Sync Timer**: Calculate remaining time based on `server_start_time`.
-    - Auto-forward logic when timer hits zero.
-  - [ ] **4.4.3. Answer Submission**:
-    - Silent integrity tracking (paste detection, tab switching) — _No UI indicators_.
-    - Mark question as "completed" in DB.
+- [ ] **4.4. The Interview Session Interface (UI Focus)**
+  - [ ] **4.4.1. Session Layout Structure**:
+    - Focused, distraction-free environment using the "Midnight & Indigo" theme.
+    - Persistent Header + Main Content + Navigation Footer.
+  - [ ] **4.4.2. `InterviewHeader` Component**:
+    - [ ] Real-time Progress Indicator (e.g., "Step 1 of 8").
+    - [ ] Dynamic Timer Bar (Visual state only, no countdown yet).
+    - [ ] Job title and "Candidate Session" branding.
+  - [ ] **4.4.3. `QuestionDisplay` & `AnswerArea`**:
+    - [ ] High-impact question typography (large and readable).
+    - [ ] Premium `Textarea` for answers with glassmorphism and rounded-3xl corners.
+    - [ ] Placeholder and subtle instructions for the candidate.
+  - [ ] **4.4.4. Navigation & Interaction Mocks**:
+    - [ ] "Submit and Continue" button with the new `rounded-full` styling.
+    - [ ] Subtle loading and transition states between questions (simulated).
 
 - [ ] **4.5. Anti-Cheat & Integrity Mechanisms (Stealth Mode)**
   - [ ] **4.5.1. Massive Insert Detection**: Silent flag in `interview_answers`.
