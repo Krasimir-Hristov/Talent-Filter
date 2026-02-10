@@ -200,6 +200,15 @@
         "tooManyRequests": "Zu viele Versuche. Bitte versuchen Sie es in ein paar Minuten erneut.",
         "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
       }
+    },
+    "session": {
+      "liveSession": "Live-Sitzung",
+      "question": "Frage",
+      "answerPlaceholder": "Schreiben Sie Ihre Antwort hier... Seien Sie spezifisch und geben Sie Beispiele an.",
+      "submitting": "Senden...",
+      "submitAnswer": "Antwort senden",
+      "autoSave": "Auto-Speichern aktiviert",
+      "noGoingBack": "Sobald die Antwort gesendet wurde, kann sie nicht mehr bearbeitet werden."
     }
   }
 }

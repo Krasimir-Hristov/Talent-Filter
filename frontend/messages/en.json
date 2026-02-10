@@ -200,6 +200,15 @@
         "tooManyRequests": "Too many attempts. Please try again in a few minutes.",
         "generic": "Something went wrong. Please try again."
       }
+    },
+    "session": {
+      "liveSession": "Live Session",
+      "question": "Question",
+      "answerPlaceholder": "Write your answer here... Be specific and provide examples where possible.",
+      "submitting": "Submitting...",
+      "submitAnswer": "Submit Answer",
+      "autoSave": "Auto-saving enabled",
+      "noGoingBack": "Once submitted, you cannot edit this answer."
     }
   }
 }
