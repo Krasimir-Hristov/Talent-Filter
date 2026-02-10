@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv()
 
-from app.api.v1 import health, jobs, auth
+from app.api.v1 import health, jobs, auth, interviews
 
 app = FastAPI(title="TalentFilter API")
 
@@ -13,6 +13,7 @@ app = FastAPI(title="TalentFilter API")
 app.include_router(health.router, prefix="/api/v1", tags=["Health"])
 app.include_router(auth.router, prefix="/api/v1/auth", tags=["Auth"])
 app.include_router(jobs.router, prefix="/api/v1/jobs", tags=["Jobs"])
+app.include_router(interviews.router, prefix="/api/v1/interviews", tags=["Interviews"])
 
 # Configure CORS
 app.add_middleware(

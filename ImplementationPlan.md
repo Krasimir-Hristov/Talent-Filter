@@ -122,11 +122,11 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **4.2.3. Rate Limiting**: Implement backend-level rate limiting (IP-based) to protect the public route and data fetching.
   - [x] **4.2.4. Internationalization**: Added Language Switcher (EN/DE) for candidates.
 
-- [ ] **4.3. Registration & Uniqueness Check**
-  - [ ] **4.3.1. Registration Form**: Name, Email, Phone.
-  - [ ] **4.3.2. Uniqueness Check**: Verify if `email` or `phone` already exists for this `job_id`.
-  - [ ] **4.3.3. Create Candidate & Interview**: Insert records and redirect to the first question.
-  - [ ] **4.3.4. Closed Status Handling**: If job status is `closed`, redirect to a "Position Filled" page.
+- [x] **4.3. Registration & Uniqueness Check**
+  - [x] **4.3.1. Registration Form**: Name, Email, Phone (**Required**).
+  - [x] **4.3.2. Uniqueness Check**: Verify if `email` or `phone` already exists for this `job_id` (409 Conflict).
+  - [x] **4.3.3. Create Candidate & Interview**: Insert records and redirect to the interview session.
+  - [x] **4.3.4. Closed Status Handling**: If job status is `closed`, redirect to a "Position Filled" page / banner.
 
 - [ ] **4.4. The Interview Flow (One-Way Ticket)**
   - [ ] **4.4.1. "Lobby" / Instructions**: "3 Questions. 60s each. Cannot go back."

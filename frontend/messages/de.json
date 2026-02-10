@@ -142,6 +142,7 @@
     "notFoundDesc": "Der Link ist ungültig oder die Stelle wurde bereits geschlossen.",
     "tooManyRequests": "Zu viele Anfragen",
     "tooManyRequestsDesc": "Bitte versuchen Sie es in ein paar Minuten erneut.",
+    "backToHome": "Zurück zur Startseite",
     "terms": "Mit dem Starten akzeptieren Sie unsere Nutzungsbedingungen und bestätigen, dass Anti-Betrugs-Maßnahmen aktiv sind.",
     "loading": "Sitzung wird vorbereitet...",
     "estimatedTime": "~15-20 Min.",
@@ -154,6 +155,38 @@
     "step1": "Registrieren Sie Ihre Daten",
     "step2": "Beantworten Sie 5-10 technische Fragen",
     "step3": "Erhalten Sie Feedback und nächste Schritte",
-    "quote": "\"Einfach, fair und schnell. Kein wochenlanges Warten mehr auf ein erstes Screening.\""
+    "quote": "\"Einfach, fair und schnell. Kein wochenlanges Warten mehr auf ein erstes Screening.\"",
+    "apply": {
+      "badge": "Bewerbung",
+      "description": "Bitte geben Sie Ihre Daten ein, um den Interview-Prozess zu starten.",
+      "firstName": "Vorname",
+      "firstNamePlaceholder": "Max",
+      "lastName": "Nachname",
+      "lastNamePlaceholder": "Mustermann",
+      "email": "E-Mail-Adresse",
+      "emailPlaceholder": "max.mustermann@beispiel.de",
+      "phone": "Telefonnummer",
+      "phonePlaceholder": "+49 123 456 789",
+      "optional": "optional",
+      "consent": "Ihre Daten werden nur für diesen Bewerbungsprozess verwendet und mit dem Recruiting-Team geteilt.",
+      "submit": "Interview starten",
+      "submitting": "Registrierung läuft...",
+      "backToDetails": "Zurück",
+      "positionClosed": "Stelle geschlossen",
+      "positionClosedDesc": "Diese Stelle nimmt keine Bewerbungen mehr an. Vielen Dank für Ihr Interesse.",
+      "validation": {
+        "firstNameRequired": "Vorname ist erforderlich",
+        "lastNameRequired": "Nachname ist erforderlich",
+        "emailRequired": "E-Mail ist erforderlich",
+        "invalidEmail": "Bitte geben Sie eine gültige E-Mail-Adresse ein",
+        "phoneRequired": "Telefonnummer ist erforderlich"
+      },
+      "errors": {
+        "alreadyApplied": "Sie haben sich bereits mit dieser E-Mail-Adresse für diese Stelle beworben.",
+        "jobClosed": "Diese Stelle nimmt keine Bewerbungen mehr an.",
+        "tooManyRequests": "Zu viele Versuche. Bitte versuchen Sie es in ein paar Minuten erneut.",
+        "generic": "Etwas ist schiefgelaufen. Bitte versuchen Sie es erneut."
+      }
+    }
   }
 }

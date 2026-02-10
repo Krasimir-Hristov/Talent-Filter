@@ -142,6 +142,7 @@
     "notFoundDesc": "The interview link is invalid or the position has been closed.",
     "tooManyRequests": "Too many requests",
     "tooManyRequestsDesc": "Please slow down and try again in a few minutes.",
+    "backToHome": "Back to Home",
     "terms": "By starting, you agree to our terms of service and recognize that anti-cheating measures are in place.",
     "loading": "Preparing your session...",
     "estimatedTime": "~15-20 min",
@@ -154,6 +155,38 @@
     "step1": "Register your basic information",
     "step2": "Answer 5-10 technical questions",
     "step3": "Receive feedback and next steps",
-    "quote": "\"Simple, fair, and fast. No more waiting weeks for a first screening.\""
+    "quote": "\"Simple, fair, and fast. No more waiting weeks for a first screening.\"",
+    "apply": {
+      "badge": "Application",
+      "description": "Please enter your details to begin the interview process.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "John",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Doe",
+      "email": "Email Address",
+      "emailPlaceholder": "john.doe@example.com",
+      "phone": "Phone Number",
+      "phonePlaceholder": "+49 123 456 789",
+      "optional": "optional",
+      "consent": "Your data will only be used for this application process and shared with the hiring team.",
+      "submit": "Start Interview",
+      "submitting": "Registering...",
+      "backToDetails": "Back",
+      "positionClosed": "Position Closed",
+      "positionClosedDesc": "This position is no longer accepting applications. Thank you for your interest.",
+      "validation": {
+        "firstNameRequired": "First name is required",
+        "lastNameRequired": "Last name is required",
+        "emailRequired": "Email is required",
+        "invalidEmail": "Please enter a valid email address",
+        "phoneRequired": "Phone number is required"
+      },
+      "errors": {
+        "alreadyApplied": "You have already applied for this position with this email address.",
+        "jobClosed": "This position is no longer accepting applications.",
+        "tooManyRequests": "Too many attempts. Please try again in a few minutes.",
+        "generic": "Something went wrong. Please try again."
+      }
+    }
   }
 }
