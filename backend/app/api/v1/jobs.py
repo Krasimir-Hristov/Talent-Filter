@@ -13,8 +13,10 @@ from app.schemas.jobs import (
     JobRefineRequest,
     JobRefineResponse,
 )
+from app.schemas.interview import CandidateResult
 from app.services.ai import AIService
 from app.services.job_service import JobService
+from app.services.interview_service import InterviewService
 from app.api.deps import (
     get_current_user,
     get_authenticated_client,
@@ -73,6 +75,36 @@ async def get_job(
         raise
     except Exception as e:
         print(f"DEBUG: /jobs/{job_id} error: {e}")
+        print(f"DEBUG: /jobs/{job_id} error: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/{job_id}/candidates", response_model=List[CandidateResult])
+async def get_job_candidates(
+    job_id: str,
+    user=Depends(get_current_user),
+    supabase_auth: Client = Depends(get_authenticated_client),
+    supabase_service: Client = Depends(get_service_role_client),
+):
+    """
+    Fetch all completed candidates for a specific job.
+    Securely verifies job ownership first, then uses service role to fetch
+    aggregated candidate data (bypassing complex RLS on join tables).
+    """
+    # 1. Verify ownership using authenticated client (RLS enforced)
+    job_service = JobService(supabase_auth)
+    job = await job_service.get_job_by_id(user.id, job_id)
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    # 2. Fetch candidates using service role client (safe because we verified ownership)
+    # We use InterviewService with the privileged client to ensure we can read all candidate data
+    interview_service = InterviewService(supabase_service)
+    try:
+        results = await interview_service.get_completed_candidates(job_id)
+        return results
+    except Exception as e:
+        print(f"DEBUG: /jobs/{job_id}/candidates error: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

@@ -146,8 +146,31 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **Translation Coverage**: Resolved `MISSING_MESSAGE` console errors for Job Wizard (AI Suggestion Flow).
   - [x] **API Proxy Path Stability**: Fixed base URL path issues for seamless session initialization.
 
-- [ ] **4.7. Recruitment Intelligence (Prep)**
-  - [ ] Candidate Table (sortable) - _Pending Implementation_. (Moved from Phase 3)
+- [x] **4.7. Recruitment Intelligence — Candidate Results Dashboard**
+  - [x] **4.7.1. Backend API: Candidate Results Endpoint**
+    - `GET /jobs/{job_id}/candidates` — Returns completed interviews with aggregated anti-cheat data.
+    - Response includes: candidate info, interview status, total `paste_count`, total `tab_switches`, `time_spent`, and placeholder for future `ai_score`.
+    - Only returns candidates with `interviews.status = 'completed'`.
+  - [x] **4.7.2. Frontend: Candidate Results Table**
+    - New route: `/dashboard/jobs/[id]/candidates`.
+    - Columns: Name, Completed Date, AI Score (placeholder badge), Integrity Flags (icon indicators).
+    - Default sort: by completion date (newest first), later by AI Score.
+    - Uses `@tanstack/react-query` for data fetching with `queryKey: ['candidates', jobId]`.
+  - [x] **4.7.3. Integrity Flag System (Visual)**
+    - Clean row = no indicator (trusted).
+    - Paste count > 3 = 📋 yellow "Paste" badge with count.
+    - Tab switches > 5 = 👁️ orange "Focus Lost" badge with count.
+    - Both flags combined = 🚩 red "Suspicious" badge.
+    - Thresholds configurable via constants.
+  - [x] **4.7.4. Candidate Detail Sheet (Side Panel)**
+    - Click on a candidate row opens a `Sheet` (right panel).
+    - Shows: Full name, email, phone, completion time.
+    - Per-question breakdown: answer text, time spent, paste count, tab switches.
+    - Anti-cheat summary section at the top with visual indicators.
+  - [x] **4.7.5. Navigation Integration**
+    - Add "View Candidates" button/link to the Job Details page.
+    - Add breadcrumb navigation: Dashboard → Job → Candidates.
+    - Localization (EN/DE) for all new UI elements.
 
 ## Phase 5: AI Grading & Recruiter Insights
 

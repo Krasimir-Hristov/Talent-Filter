@@ -331,3 +331,50 @@ class InterviewService:
             "answer_id": answer["id"],
             "next_question_index": next_question_index,
         }
+
+    async def get_completed_candidates(self, job_id: str) -> List[Dict[str, Any]]:
+        """
+        Fetch all completed interviews for a job, including aggregated scores
+        and anti-cheat metrics.
+        """
+        # Fetch interviews + candidate details + answers (for aggregation)
+        # Note: We filter by job_id and 'completed' status
+        response = (
+            self.supabase.table("interviews")
+            .select(
+                "*, candidates!inner(*), interview_answers(time_spent_seconds, paste_count, tab_switches)"
+            )
+            .eq("job_id", job_id)
+            .eq("status", "completed")
+            .order("end_time", desc=True)
+            .execute()
+        )
+
+        results = []
+        for interview in response.data or []:
+            candidate = interview.get("candidates", {})
+            answers = interview.get("interview_answers", [])
+
+            # Aggregate metrics in Python (simple sum)
+            total_time = sum((a.get("time_spent_seconds") or 0) for a in answers)
+            total_paste = sum((a.get("paste_count") or 0) for a in answers)
+            total_switches = sum((a.get("tab_switches") or 0) for a in answers)
+
+            results.append(
+                {
+                    "candidate_id": candidate.get("id"),
+                    "interview_id": interview.get("id"),
+                    "first_name": candidate.get("first_name"),
+                    "last_name": candidate.get("last_name"),
+                    "email": candidate.get("email"),
+                    "phone": candidate.get("phone"),
+                    "status": interview.get("status"),
+                    "end_time": interview.get("end_time"),
+                    "total_time_spent": total_time,
+                    "paste_count": total_paste,
+                    "tab_switches": total_switches,
+                    "ai_score": None,  # Placeholder
+                }
+            )
+
+        return results

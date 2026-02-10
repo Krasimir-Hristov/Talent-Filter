@@ -71,4 +71,23 @@ class SubmitAnswerResponse(BaseModel):
 
     success: bool
     answer_id: str
-    next_question_index: int | None = None  # None = interview complete
+    next_question_index: int | None = None
+
+
+class CandidateResult(BaseModel):
+    """
+    aggregated interview data for the recruiter dashboard.
+    """
+
+    candidate_id: str
+    interview_id: str
+    first_name: str
+    last_name: str
+    email: EmailStr
+    phone: str
+    status: str
+    end_time: datetime | None
+    total_time_spent: int  # seconds
+    paste_count: int
+    tab_switches: int
+    ai_score: int | None = None  # Placeholder for future AI grading

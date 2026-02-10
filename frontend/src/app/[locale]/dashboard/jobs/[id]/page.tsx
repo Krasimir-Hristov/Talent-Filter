@@ -209,6 +209,17 @@ export default function JobDetailsPage() {
             </Button>
 
             <Button
+              asChild
+              variant='ghost'
+              className='h-10 px-4 rounded-xl text-slate-400 hover:text-white hover:bg-white/5 transition-colors'
+            >
+              <Link href={`/dashboard/jobs/${jobId}/candidates`}>
+                <Users className='size-4 mr-2' />
+                Candidates
+              </Link>
+            </Button>
+
+            <Button
               variant='ghost'
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
