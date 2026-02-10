@@ -117,32 +117,34 @@ This document outlines the step-by-step roadmap for building the MVP.
     - **Integrity Flags**: `paste_count` (integer), `tab_switches` (integer), `off_screen_seconds` (integer).
 
 - [x] **4.2. Public Interview Access (The Link)**
-  - [x] **4.2.1. Route Setup**: create `/interview/[jobId]` (Public, no login required).
-  - [x] **4.2.2. Landing Screen**: Fetch Job Title/Description from DB. Show "Start Interview" button.
-  - [x] **4.2.3. Rate Limiting**: Implement backend-level rate limiting (IP-based) to protect the public route and data fetching.
-  - [x] **4.2.4. Internationalization**: Added Language Switcher (EN/DE) for candidates.
+  - [x] **4.2.1. Route Setup**: create `/interview/[jobId]` (Public).
+  - [x] **4.2.2. Landing Screen**: Fetch Job Title/Description. Show **Interview Rules** (Timers, Auto-submit, No-back).
+  - [x] **4.2.3. Rate Limiting**: Implement backend-level rate limiting (IP-based).
+  - [x] **4.2.4. Internationalization**: Added Language Switcher (EN/DE).
 
-- [x] **4.3. Registration & Uniqueness Check**
-  - [x] **4.3.1. Registration Form**: Name, Email, Phone (**Required**).
-  - [x] **4.3.2. Uniqueness Check**: Verify if `email` or `phone` already exists for this `job_id` (409 Conflict).
+- [x] **4.3. Registration & Immediate Start**
+  - [x] **4.3.1. Registration Form**: Name, Email, Phone (Required). Shown immediately after landing CTA.
+  - [x] **4.3.2. Uniqueness Check**: Verify if `email` or `phone` exists for this `job_id`.
   - [x] **4.3.3. Create Candidate & Interview**: Insert records and redirect to the interview session.
-  - [x] **4.3.4. Closed Status Handling**: If job status is `closed`, redirect to a "Position Filled" page / banner.
+  - [x] **4.3.4. Closed Status Handling**: If job status is `closed`, show "Position Filled" banner.
 
 - [ ] **4.4. The Interview Flow (One-Way Ticket)**
-  - [ ] **4.4.1. "Lobby" / Instructions**: "3 Questions. 60s each. Cannot go back."
+  - [ ] **4.4.1. "Lobby" / Instructions**: Clear rules before start:
+    - Individual timers per question.
+    - Auto-submission on timeout.
+    - No going back (one-way flow).
   - [ ] **4.4.2. Question View & Timer**:
-    - Fetch ONLY the current question (not all at once).
-    - **Grace Period Logic**: Calculate remaining time based on `server_start_time` vs `now()`. If user refreshed, time kept ticking.
-    - If time < 0, auto-skip to next question.
+    - Fetch current question with its specific `time_limit`.
+    - **Server-Sync Timer**: Calculate remaining time based on `server_start_time`.
+    - Auto-forward logic when timer hits zero.
   - [ ] **4.4.3. Answer Submission**:
-    - Save text to `interview_answers`.
-    - Save integrity data (paste counts etc.).
-    - Mark question as "completed" locally or in DB state.
+    - Silent integrity tracking (paste detection, tab switching) — _No UI indicators_.
+    - Mark question as "completed" in DB.
 
-- [ ] **4.5. Anti-Cheat & Integrity Mechanisms**
-  - [ ] **4.5.1. Massive Insert Detection**: JavaScript listener on input to detect >10 chars appearing instantly (0.1s). Flag as `POSSIBLE_PASTE`.
-  - [ ] **4.5.2. Focus Tracking**: Use `Page Visibility API`. Increment `tab_switches` counter when user leaves tab.
-  - [ ] **4.5.3. UI Blocking**: Disable Right-Click and Copy/Paste context menu on the question text (deterrent).
+- [ ] **4.5. Anti-Cheat & Integrity Mechanisms (Stealth Mode)**
+  - [ ] **4.5.1. Massive Insert Detection**: Silent flag in `interview_answers`.
+  - [ ] **4.5.2. Focus Tracking**: Silent `tab_switches` increment.
+  - [ ] **4.5.3. UI Hardening**: Disable context menu/copy-paste on question text.
 
 - [ ] **4.6. Recruitment Intelligence (Prep)**
   - [ ] Candidate Table (sortable) - _Pending Implementation_. (Moved from Phase 3)

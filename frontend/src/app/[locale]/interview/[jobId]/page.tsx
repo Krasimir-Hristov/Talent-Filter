@@ -1,19 +1,17 @@
 import { getPublicJobDetails } from '@/lib/jobs-api';
-import { getTranslations, getLocale } from 'next-intl/server';
+import { getTranslations } from 'next-intl/server';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { LanguageSwitcher } from '@/components/features/language-switcher';
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowRight, Clock, ShieldCheck, UserCheck } from 'lucide-react';
+import {
+  ArrowRight,
+  Timer,
+  Undo2,
+  MonitorOff,
+  ShieldAlert,
+} from 'lucide-react';
 import Link from 'next/link';
 
 interface InterviewLandingPageProps {
@@ -47,168 +45,121 @@ export default async function InterviewLandingPage({
   const t = await getTranslations('Interview');
 
   let job;
-  let isRateLimited = false;
-
   try {
     job = await getPublicJobDetails(jobId);
   } catch (error: any) {
-    if (error.status === 429) {
-      isRateLimited = true;
-    } else {
-      notFound();
-    }
+    notFound();
   }
 
-  if (isRateLimited) {
-    return (
-      <div className='min-h-screen bg-background flex items-center justify-center p-4'>
-        <Card className='max-w-md w-full border-destructive/50 bg-destructive/5'>
-          <CardHeader>
-            <CardTitle className='text-destructive'>
-              {t('tooManyRequests')}
-            </CardTitle>
-            <CardDescription>{t('tooManyRequestsDesc')}</CardDescription>
-          </CardHeader>
-          <CardFooter>
-            <Link href='/' className='w-full'>
-              <Button variant='outline' className='w-full'>
-                {t('backToHome') || 'Home'}
-              </Button>
-            </Link>
-          </CardFooter>
-        </Card>
-      </div>
-    );
-  }
-
-  if (!job) notFound();
+  const rules = [
+    {
+      icon: <Timer className='w-6 h-6 text-primary' />,
+      title: t('apply.rules.timer'),
+      description: t('apply.rules.timerDesc'),
+    },
+    {
+      icon: <MonitorOff className='w-6 h-6 text-primary' />,
+      title: t('apply.rules.autoSubmit'),
+      description: t('apply.rules.autoSubmitDesc'),
+    },
+    {
+      icon: <Undo2 className='w-6 h-6 text-primary' />,
+      title: t('apply.rules.noBack'),
+      description: t('apply.rules.noBackDesc'),
+    },
+    {
+      icon: <ShieldAlert className='w-6 h-6 text-primary' />,
+      title: t('apply.rules.environment'),
+      description: t('apply.rules.environmentDesc'),
+    },
+  ];
 
   return (
-    <div className='min-h-screen bg-background relative overflow-hidden flex items-center justify-center p-4 md:p-8'>
-      {/* Background decoration */}
-      <div className='absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden'>
-        <div className='absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]' />
-        <div className='absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]' />
-      </div>
+    <div className='min-h-screen bg-[#020617] text-slate-50 relative font-sans selection:bg-primary/30'>
+      {/* Background gradients */}
+      <div className='fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-slate-900 via-[#020617] to-[#020617]' />
 
-      {/* Language Switcher */}
-      <div className='absolute top-4 right-4 z-50 animate-in fade-in slide-in-from-top-4 duration-700 delay-300'>
+      {/* Language Switcher - FORCE RIGHT with inline styles to override any framework quirks */}
+      <div className='fixed z-[100]' style={{ top: '2rem', right: '2rem' }}>
         <LanguageSwitcher />
       </div>
 
-      <div className='max-w-4xl w-full relative z-10 animate-in fade-in slide-in-from-bottom-4 duration-700'>
-        <div className='flex flex-col md:flex-row gap-8 items-stretch'>
-          {/* Main Info Card */}
-          <Card className='flex-1 border-primary/20 bg-background/60 backdrop-blur-xl shadow-2xl flex flex-col'>
-            <CardHeader className='pb-4'>
-              <div className='flex items-center gap-2 mb-2'>
-                <Badge
-                  variant='outline'
-                  className='text-primary border-primary/30 uppercase tracking-widest text-[10px]'
-                >
-                  {t('jobDetails')}
-                </Badge>
-              </div>
-              <CardTitle className='text-3xl md:text-4xl font-bold bg-clip-text text-transparent bg-linear-to-r from-foreground to-foreground/70'>
+      <div className='flex flex-col items-center justify-center min-h-screen py-20 px-6 animate-in fade-in duration-700'>
+        {/* Main Content Width Wrapper - Matches both description and cards */}
+        <main className='w-full max-w-5xl space-y-16'>
+          {/* Header Section - EXPANDED WIDTH (Red Box fix) */}
+          <header className='text-center space-y-8 flex flex-col items-center w-full'>
+            <Badge
+              variant='outline'
+              className='px-4 py-1.5 border-primary/20 bg-primary/5 text-primary text-xs uppercase tracking-[0.2em] font-medium rounded-full'
+            >
+              {t('jobDetails')}
+            </Badge>
+
+            {/* Title & Description now take full width of container */}
+            <div className='w-full space-y-6'>
+              <h1 className='text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight w-full'>
                 {job.title}
-              </CardTitle>
-            </CardHeader>
-            <CardContent className='flex-1 space-y-6'>
-              <div className='prose prose-sm dark:prose-invert max-w-none text-muted-foreground line-clamp-10 md:line-clamp-none'>
+              </h1>
+
+              <p className='text-lg md:text-2xl text-slate-300 font-medium leading-relaxed w-full max-w-none px-4 md:px-0'>
                 {job.description}
-              </div>
+              </p>
+            </div>
+          </header>
 
-              <div className='pt-6 border-t border-border/50 grid grid-cols-1 sm:grid-cols-3 gap-4'>
-                <div className='flex items-center gap-3 text-sm'>
-                  <div className='p-2 rounded-full bg-primary/10 text-primary'>
-                    <Clock size={16} />
-                  </div>
-                  <div>
-                    <p className='font-medium text-foreground'>
-                      {t('estimatedTime')}
-                    </p>
-                    <p className='text-xs text-muted-foreground font-light'>
-                      {t('estimatedTimeLabel')}
-                    </p>
-                  </div>
-                </div>
-                <div className='flex items-center gap-3 text-sm'>
-                  <div className='p-2 rounded-full bg-primary/10 text-primary'>
-                    <UserCheck size={16} />
-                  </div>
-                  <div>
-                    <p className='font-medium text-foreground'>
-                      {t('aiGuided')}
-                    </p>
-                    <p className='text-xs text-muted-foreground font-light'>
-                      {t('selfPaced')}
-                    </p>
-                  </div>
-                </div>
-                <div className='flex items-center gap-3 text-sm'>
-                  <div className='p-2 rounded-full bg-primary/10 text-primary'>
-                    <ShieldCheck size={16} />
-                  </div>
-                  <div>
-                    <p className='font-medium text-foreground'>{t('secure')}</p>
-                    <p className='text-xs text-muted-foreground font-light'>
-                      {t('antiCheat')}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-            <CardFooter className='pt-6 border-t border-border/50 bg-muted/30'>
-              <div className='w-full flex flex-col gap-4'>
-                <p className='text-[10px] text-muted-foreground text-center italic'>
-                  {t('terms')}
-                </p>
-                <Link
-                  href={`/${locale}/interview/${jobId}/apply`}
-                  className='w-full'
+          {/* Rules Section */}
+          <section className='space-y-10 w-full'>
+            <div className='flex items-center justify-center gap-4'>
+              <div className='h-px w-16 bg-slate-800' />
+              <h2 className='text-sm font-bold uppercase tracking-[0.3em] text-slate-500'>
+                {t('apply.rules.title')}
+              </h2>
+              <div className='h-px w-16 bg-slate-800' />
+            </div>
+
+            <div className='grid grid-cols-1 md:grid-cols-2 gap-6 w-full'>
+              {rules.map((rule, idx) => (
+                <div
+                  key={idx}
+                  className='group relative p-8 rounded-2xl bg-white/[0.02] border border-white/[0.05] flex items-start gap-5 transition-all duration-300 hover:bg-white/[0.04] hover:border-primary/20 hover:shadow-lg hover:shadow-primary/5'
                 >
-                  <Button
-                    size='lg'
-                    className='w-full text-lg font-semibold group h-14 bg-primary hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(var(--primary),0.3)]'
-                  >
-                    {t('start')}
-                    <ArrowRight className='ml-2 group-hover:translate-x-1 transition-transform' />
-                  </Button>
-                </Link>
-              </div>
-            </CardFooter>
-          </Card>
+                  <div className='p-3 rounded-xl bg-slate-900 border border-white/[0.05] group-hover:border-primary/30 group-hover:text-primary transition-colors shrink-0'>
+                    {rule.icon}
+                  </div>
+                  <div className='space-y-2 text-left'>
+                    <h4 className='text-lg font-bold text-slate-200 uppercase tracking-tight group-hover:text-white transition-colors'>
+                      {rule.title}
+                    </h4>
+                    <p className='text-base text-slate-400 leading-relaxed font-normal group-hover:text-slate-300 transition-colors'>
+                      {rule.description}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
 
-          {/* Side Highlights (Hidden on small screens) */}
-          <div className='hidden lg:flex flex-col gap-4 w-72'>
-            <div className='p-6 rounded-2xl border border-primary/20 bg-primary/5 flex flex-col gap-4'>
-              <h3 className='font-semibold text-primary'>{t('howItWorks')}</h3>
-              <ul className='space-y-4'>
-                <li className='flex gap-3 text-sm'>
-                  <span className='shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs'>
-                    1
-                  </span>
-                  <span className='text-muted-foreground'>{t('step1')}</span>
-                </li>
-                <li className='flex gap-3 text-sm'>
-                  <span className='shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs'>
-                    2
-                  </span>
-                  <span className='text-muted-foreground'>{t('step2')}</span>
-                </li>
-                <li className='flex gap-3 text-sm'>
-                  <span className='shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold text-xs'>
-                    3
-                  </span>
-                  <span className='text-muted-foreground'>{t('step3')}</span>
-                </li>
-              </ul>
-            </div>
-            <div className='p-6 rounded-2xl border border-border bg-background/50 text-sm italic text-muted-foreground'>
-              {t('quote')}
-            </div>
-          </div>
-        </div>
+          {/* CTA Footer */}
+          <footer className='pt-12 text-center flex flex-col items-center gap-8'>
+            <p className='text-sm md:text-base text-slate-400 font-semibold uppercase tracking-widest max-w-2xl'>
+              {t('apply.rules.intro')}
+            </p>
+
+            <Link
+              href={`/${locale}/interview/${jobId}/apply`}
+              className='w-full max-w-md cursor-pointer group'
+            >
+              <Button
+                size='lg'
+                className='w-full h-16 text-xl font-bold bg-primary hover:bg-primary/90 text-white rounded-2xl shadow-xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98]'
+              >
+                <span>{t('apply.rules.continue')}</span>
+                <ArrowRight className='ml-3 w-6 h-6 group-hover:translate-x-1.5 transition-transform' />
+              </Button>
+            </Link>
+          </footer>
+        </main>
       </div>
     </div>
   );

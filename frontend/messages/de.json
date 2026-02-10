@@ -158,7 +158,20 @@
     "quote": "\"Einfach, fair und schnell. Kein wochenlanges Warten mehr auf ein erstes Screening.\"",
     "apply": {
       "badge": "Bewerbung",
-      "description": "Bitte geben Sie Ihre Daten ein, um den Interview-Prozess zu starten.",
+      "description": "Bitte geben Sie Ihre Daten ein, um den Interview-Проzess zu starten.",
+      "rules": {
+        "title": "Interview-Regeln",
+        "intro": "Bitte lesen Sie die folgenden Regeln sorgfältig durch, bevor Sie mit dem Interview beginnen.",
+        "timer": "Individuelle Timer",
+        "timerDesc": "Jede Frage hat ein spezifisches Zeitlimit, basierend на her Komplexität.",
+        "autoSubmit": "Auto-Absendung",
+        "autoSubmitDesc": "Wenn der Timer Null erreicht, wird Ihre Antwort automatisch gespeichert und wir gehen zum nächsten Schritt.",
+        "noBack": "Einweg-Ablauf",
+        "noBackDesc": "Sie können nach dem Absenden неcht zu vorherigen Antworten zurückkehren.",
+        "environment": "Ruhige Umgebung",
+        "environmentDesc": "Stellen Sie sicher, dass Sie eine stabile Verbindung und keine Ablenkungen haben.",
+        "continue": "Weiter zur Registrierung"
+      },
       "firstName": "Vorname",
       "firstNamePlaceholder": "Max",
       "lastName": "Nachname",

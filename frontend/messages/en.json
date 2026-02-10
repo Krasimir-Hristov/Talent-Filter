@@ -159,6 +159,19 @@
     "apply": {
       "badge": "Application",
       "description": "Please enter your details to begin the interview process.",
+      "rules": {
+        "title": "Interview Rules",
+        "intro": "Please review the following rules before starting your automated interview session.",
+        "timer": "Individual Timers",
+        "timerDesc": "Each question has a specific time limit based on its complexity.",
+        "autoSubmit": "Auto-Submission",
+        "autoSubmitDesc": "When the timer reaches zero, your answer is automatically saved and we move to the next step.",
+        "noBack": "One-Way Flow",
+        "noBackDesc": "You cannot go back or edit previous answers once submitted.",
+        "environment": "Quiet Environment",
+        "environmentDesc": "Ensure you have a stable connection and a distraction-free space.",
+        "continue": "Continue to Registration"
+      },
       "firstName": "First Name",
       "firstNamePlaceholder": "John",
       "lastName": "Last Name",
