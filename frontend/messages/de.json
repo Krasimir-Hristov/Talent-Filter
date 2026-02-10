@@ -78,9 +78,12 @@
     "addQuestion": "Frage hinzufügen",
     "addManual": "Manuell hinzufügen",
     "aiSuggest": "KI-Vorschlag",
+    "suggestQuestion": "KI-Vorschlag",
     "aiRefine": "KI-Verfeinerung",
     "refining": "Verfeinerung...",
     "regenerate": "Neu generieren",
+    "noQuestions": "Noch keine Fragen. Fügen Sie eine hinzu!",
+    "addFirstQuestion": "Frage hinzufügen",
     "save": "Interview speichern",
     "saving": "Wird gespeichert...",
     "startOver": "Neu beginnen",
@@ -208,7 +211,14 @@
       "submitting": "Senden...",
       "submitAnswer": "Antwort senden",
       "autoSave": "Auto-Speichern aktiviert",
-      "noGoingBack": "Sobald die Antwort gesendet wurde, kann sie nicht mehr bearbeitet werden."
+      "noGoingBack": "Sobald die Antwort gesendet wurde, kann sie nicht mehr bearbeitet werden.",
+      "loading": "Ihr Interview wird vorbereitet...",
+      "errorTitle": "Sitzungsfehler",
+      "errorGeneric": "Beim Laden Ihres Interviews ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.",
+      "completedTitle": "Interview abgeschlossen!",
+      "completedMessage": "Vielen Dank für die Teilnahme am Interview. Ihre Antworten wurden aufgezeichnet und werden vom Einstellungsteam überprüft.",
+      "completedFooter": "Sie können diese Seite jetzt schließen.",
+      "pasteWarning": "Bitte geben Sie Ihre Antworten selbst ein. Kopieren und Einfügen ist nicht erlaubt."
     }
   }
 }

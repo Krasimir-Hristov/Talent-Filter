@@ -13,6 +13,7 @@ interface QuestionCardProps {
   isSubmitting: boolean;
   onResponseChange: (value: string) => void;
   onSubmit: () => void;
+  onPasteAttempt?: () => void;
   maxChars?: number;
 }
 
@@ -23,6 +24,7 @@ export function QuestionCard({
   isSubmitting,
   onResponseChange,
   onSubmit,
+  onPasteAttempt,
   maxChars = 2000,
 }: QuestionCardProps) {
   const t = useTranslations('Interview');
@@ -58,6 +60,9 @@ export function QuestionCard({
           <Textarea
             value={response}
             onChange={(e) => onResponseChange(e.target.value)}
+            onPaste={() => {
+              onPasteAttempt?.();
+            }}
             disabled={isSubmitting}
             placeholder={t('session.answerPlaceholder')}
             className='bg-transparent border-0 focus-visible:ring-0 text-lg md:text-xl text-slate-200 placeholder:text-slate-600 min-h-[300px] resize-none p-6 md:p-8 selection:bg-primary/30 font-medium leading-relaxed rounded-[1.8rem]'

@@ -78,9 +78,12 @@
     "addQuestion": "Add Question",
     "addManual": "Add Manual",
     "aiSuggest": "AI Suggest",
+    "suggestQuestion": "AI Suggestion",
     "aiRefine": "AI Refine",
     "refining": "Refining...",
     "regenerate": "Regenerate",
+    "noQuestions": "No questions yet. Start by adding one!",
+    "addFirstQuestion": "Add Question",
     "save": "Save Interview",
     "saving": "Saving...",
     "startOver": "Start Over",
@@ -208,7 +211,14 @@
       "submitting": "Submitting...",
       "submitAnswer": "Submit Answer",
       "autoSave": "Auto-saving enabled",
-      "noGoingBack": "Once submitted, you cannot edit this answer."
+      "noGoingBack": "Once submitted, you cannot edit this answer.",
+      "loading": "Preparing your interview...",
+      "errorTitle": "Session Error",
+      "errorGeneric": "Something went wrong loading your interview. Please try again.",
+      "completedTitle": "Interview Complete!",
+      "completedMessage": "Thank you for completing the interview. Your responses have been recorded and will be reviewed by the hiring team.",
+      "completedFooter": "You may now close this page.",
+      "pasteWarning": "Please type your answers yourself. Copy-pasting is not allowed."
     }
   }
 }

@@ -1,6 +1,12 @@
 from fastapi import APIRouter, Depends
 from supabase import Client
-from app.schemas.interview import InterviewStartRequest, InterviewStartResponse
+from app.schemas.interview import (
+    InterviewStartRequest,
+    InterviewStartResponse,
+    SessionQuestionsResponse,
+    SubmitAnswerRequest,
+    SubmitAnswerResponse,
+)
 from app.services.interview_service import InterviewService
 from app.api.deps import get_service_role_client, rate_limit
 
@@ -54,3 +60,61 @@ async def start_interview(
         phone=request.phone,
     )
     return result
+
+
+@router.get(
+    "/{interview_id}/session",
+    response_model=SessionQuestionsResponse,
+    dependencies=[Depends(rate_limit)],
+)
+async def get_session_questions(
+    interview_id: str,
+    service: InterviewService = Depends(get_interview_service),
+):
+    """
+    Fetch the questions for an active interview session.
+
+    Public endpoint (no auth required). Rate limited.
+
+    SECURITY: Only returns question text + time limits.
+    Ideal answers and weights are never exposed to the candidate.
+
+    Raises:
+        404: Interview not found
+        410: Interview already completed or abandoned
+        429: Rate limit exceeded
+    """
+    return await service.get_session_questions(interview_id)
+
+
+@router.post(
+    "/{interview_id}/submit-answer",
+    response_model=SubmitAnswerResponse,
+    dependencies=[Depends(rate_limit)],
+)
+async def submit_answer(
+    interview_id: str,
+    request: SubmitAnswerRequest,
+    service: InterviewService = Depends(get_interview_service),
+):
+    """
+    Submit an answer for a specific question in an interview session.
+
+    Public endpoint (no auth required). Rate limited.
+
+    Accepts the answer text along with anti-cheat metadata
+    (paste_count, tab_switches) which is silently stored.
+
+    Raises:
+        404: Interview not found
+        410: Interview no longer active
+        429: Rate limit exceeded
+    """
+    return await service.submit_answer(
+        interview_id=interview_id,
+        question_id=request.question_id,
+        answer_text=request.answer_text,
+        time_spent_seconds=request.time_spent_seconds,
+        paste_count=request.paste_count,
+        tab_switches=request.tab_switches,
+    )

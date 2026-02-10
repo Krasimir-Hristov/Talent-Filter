@@ -1,4 +1,4 @@
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 from supabase import Client
 from fastapi import HTTPException, status
 
@@ -130,4 +130,204 @@ class InterviewService:
             "job_title": job["title"],
             "total_questions": len(questions),
             "start_time": interview["start_time"],
+        }
+
+    async def _get_sorted_questions(self, job_id: str) -> List[Dict[str, Any]]:
+        """
+        Helper to fetch and sort questions for a job.
+        Sorting logic:
+        1. Timed questions come first (time_limit > 0)
+        2. Untimed questions come last (time_limit == 0)
+        3. Secondary sort by order_index
+        """
+        response = (
+            self.supabase.table("questions")
+            .select("id, text, time_limit, order_index")
+            .eq("job_id", job_id)
+            .order("order_index")
+            .execute()
+        )
+
+        questions = response.data or []
+
+        # Sort: untimed (0) goes to the end (key=1), timed goes first (key=0)
+        return sorted(
+            questions,
+            key=lambda q: (
+                1 if q.get("time_limit", 0) == 0 else 0,
+                q.get("order_index", 0),
+            ),
+        )
+
+    # ========================================================================
+    # SESSION: Fetch questions for an active interview
+    # ========================================================================
+
+    async def get_session_questions(self, interview_id: str) -> Dict[str, Any]:
+        """
+        Fetch the questions for an active interview session.
+
+        SECURITY:
+        - Only returns questions if the interview status is 'in_progress'.
+        - Excludes `ideal_answer` and `weight` — candidates must never see
+          evaluation criteria, not even in the browser's Network tab.
+
+        Flow:
+        1. Verify the interview exists and is in_progress
+        2. Get the job_id from the interview
+        3. Fetch questions for that job (safe fields only)
+        4. Return ordered question list
+        """
+
+        # 1. Verify interview exists and is active
+        interview_resp = (
+            self.supabase.table("interviews")
+            .select("id, job_id, status")
+            .eq("id", interview_id)
+            .execute()
+        )
+
+        if not interview_resp.data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Interview session not found.",
+            )
+
+        interview = interview_resp.data[0]
+
+        if interview["status"] != "in_progress":
+            raise HTTPException(
+                status_code=status.HTTP_410_GONE,
+                detail="This interview session has already been completed or abandoned.",
+            )
+
+        job_id = interview["job_id"]
+
+        # 2. Fetch job title
+        job_resp = (
+            self.supabase.table("jobs").select("title").eq("id", job_id).execute()
+        )
+
+        job_title = job_resp.data[0]["title"] if job_resp.data else "Unknown Position"
+
+        job_title = job_resp.data[0]["title"] if job_resp.data else "Unknown Position"
+
+        # 3. Fetch questions using the consistent sorting logic
+        questions = await self._get_sorted_questions(job_id)
+
+        return {
+            "interview_id": interview_id,
+            "job_title": job_title,
+            "questions": questions,
+            "total_questions": len(questions),
+        }
+
+    # ========================================================================
+    # SESSION: Submit an answer to a question
+    # ========================================================================
+
+    async def submit_answer(
+        self,
+        interview_id: str,
+        question_id: str,
+        answer_text: str,
+        time_spent_seconds: int = 0,
+        paste_count: int = 0,
+        tab_switches: int = 0,
+    ) -> Dict[str, Any]:
+        """
+        Record a candidate's answer for a specific question.
+
+        SECURITY:
+        - Validates that the interview is still 'in_progress'.
+        - Uses upsert so network retries don't create duplicates.
+        - Anti-cheat metadata (paste_count, tab_switches) is silently stored.
+
+        Flow:
+        1. Verify interview is still in_progress
+        2. Upsert the answer into interview_answers
+        3. Check if there are more questions remaining
+        4. If last question → mark interview as 'completed'
+        5. Return confirmation + next question index (or None)
+        """
+
+        # 1. Verify interview is active
+        interview_resp = (
+            self.supabase.table("interviews")
+            .select("id, job_id, status")
+            .eq("id", interview_id)
+            .execute()
+        )
+
+        if not interview_resp.data:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Interview session not found.",
+            )
+
+        interview = interview_resp.data[0]
+
+        if interview["status"] != "in_progress":
+            raise HTTPException(
+                status_code=status.HTTP_410_GONE,
+                detail="This interview session is no longer active.",
+            )
+
+        # 2. Upsert the answer (on conflict: interview_id + question_id)
+        answer_payload = {
+            "interview_id": interview_id,
+            "question_id": question_id,
+            "answer_text": answer_text.strip(),
+            "time_spent_seconds": time_spent_seconds,
+            "paste_count": paste_count,
+            "tab_switches": tab_switches,
+        }
+
+        answer_resp = (
+            self.supabase.table("interview_answers")
+            .upsert(answer_payload, on_conflict="interview_id,question_id")
+            .execute()
+        )
+
+        if not answer_resp.data:
+            raise HTTPException(
+                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                detail="Failed to save answer.",
+            )
+
+        answer = answer_resp.data[0]
+
+        # 3. Determine if there are more questions
+        job_id = interview["job_id"]
+
+        # Use consistent sorting logic
+        all_questions = await self._get_sorted_questions(job_id)
+
+        # Find current question's position
+        answered_resp = (
+            self.supabase.table("interview_answers")
+            .select("question_id")
+            .eq("interview_id", interview_id)
+            .execute()
+        )
+
+        answered_ids = {a["question_id"] for a in (answered_resp.data or [])}
+
+        # Find next unanswered question
+        next_question_index = None
+        for i, q in enumerate(all_questions):
+            if q["id"] not in answered_ids:
+                next_question_index = i
+                break
+
+        # 4. If all questions answered → complete the interview
+        if next_question_index is None:
+            self.supabase.table("interviews").update(
+                {"status": "completed", "end_time": "now()"}
+            ).eq("id", interview_id).execute()
+
+        return {
+            "success": True,
+            "answer_id": answer["id"],
+            "next_question_index": next_question_index,
         }

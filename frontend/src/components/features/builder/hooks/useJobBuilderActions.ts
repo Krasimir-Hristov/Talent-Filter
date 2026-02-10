@@ -1,6 +1,7 @@
 import { useRouter } from '@/i18n/routing';
 import { toast } from 'sonner';
 import { useTranslations, useLocale } from 'next-intl';
+import { useQueryClient } from '@tanstack/react-query';
 
 import { apiFetch } from '@/lib/api';
 import { useAuthStore } from '@/store/useAuthStore';
@@ -15,6 +16,7 @@ export function useJobBuilderActions() {
   const t = useTranslations('JobWizard');
   const router = useRouter();
   const locale = useLocale();
+  const queryClient = useQueryClient();
   const token = useAuthStore((state: any) => state.accessToken);
 
   const {
@@ -183,11 +185,13 @@ export function useJobBuilderActions() {
         body: JSON.stringify({
           title,
           description,
-          notes: notes.trim() || undefined, // Include notes in payload
+          notes: notes.trim() || undefined,
           questions: questionsForBackend,
+          status: 'active', // Ensure job is active by default
         }),
       });
 
+      queryClient.invalidateQueries({ queryKey: ['jobs'] });
       toast.success(t('success.saved') || 'Job created successfully!');
       router.push('/dashboard');
     } catch (error: any) {
