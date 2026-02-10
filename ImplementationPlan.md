@@ -92,6 +92,7 @@ This document outlines the step-by-step roadmap for building the MVP.
       - [x] Validate required fields (Title, Description).
       - [x] POST to `/jobs/create` with complete payload.
       - [x] Success/Error toast notifications and redirection.
+      - [x] **Dashboard List Sync**: Implemented query cache invalidation for immediate list updates.
   - [x] **3.9. Job Details View (`/dashboard/jobs/[id]`)**
     - [x] Full Localization (EN/DE).
 
@@ -128,28 +129,24 @@ This document outlines the step-by-step roadmap for building the MVP.
   - [x] **4.3.3. Create Candidate & Interview**: Insert records and redirect to the interview session.
   - [x] **4.3.4. Closed Status Handling**: If job status is `closed`, show "Position Filled" banner.
 
-- [ ] **4.4. The Interview Session Interface (UI Focus)**
-  - [ ] **4.4.1. Session Layout Structure**:
-    - Focused, distraction-free environment using the "Midnight & Indigo" theme.
-    - Persistent Header + Main Content + Navigation Footer.
-  - [ ] **4.4.2. `InterviewHeader` Component**:
-    - [ ] Real-time Progress Indicator (e.g., "Step 1 of 8").
-    - [ ] Dynamic Timer Bar (Visual state only, no countdown yet).
-    - [ ] Job title and "Candidate Session" branding.
-  - [ ] **4.4.3. `QuestionDisplay` & `AnswerArea`**:
-    - [ ] High-impact question typography (large and readable).
-    - [ ] Premium `Textarea` for answers with glassmorphism and rounded-3xl corners.
-    - [ ] Placeholder and subtle instructions for the candidate.
-  - [ ] **4.4.4. Navigation & Interaction Mocks**:
-    - [ ] "Submit and Continue" button with the new `rounded-full` styling.
-    - [ ] Subtle loading and transition states between questions (simulated).
+- [x] **4.4. The Interview Session Interface**
+  - [x] **4.4.1. Session Layout Structure**: Focused, distraction-free environment using the "Midnight & Indigo" theme.
+  - [x] **4.4.2. `InterviewHeader` Component**: Real-time progress indicators, dynamic timer state, and branding.
+  - [x] **4.4.3. `QuestionCard` & `AnswerArea`**: Premium typography, glassmorphism Textarea, and intuitive input feedback.
+  - [x] **4.4.4. Navigation & Flow Logic**: Robust state management (Zustand) for question transitions and answer persistence.
 
-- [ ] **4.5. Anti-Cheat & Integrity Mechanisms (Stealth Mode)**
-  - [ ] **4.5.1. Massive Insert Detection**: Silent flag in `interview_answers`.
-  - [ ] **4.5.2. Focus Tracking**: Silent `tab_switches` increment.
-  - [ ] **4.5.3. UI Hardening**: Disable context menu/copy-paste on question text.
+- [x] **4.5. Anti-Cheat & Integrity Mechanisms (Stealth Mode)**
+  - [x] **4.5.1. Speed-Paste Detection**: Silent logging of rapid text insertions.
+  - [x] **4.5.2. Focus Tracking**: Recording tab/window switches to monitor engagement.
+  - [x] **4.5.3. Stealth Monitoring**: Shifted from "blocking" interactions to "silent recording" for superior UX.
 
-- [ ] **4.6. Recruitment Intelligence (Prep)**
+- [x] **4.6. UX & Stability Refinements**
+  - [x] **Smart Question Sorting**: Questions with `time_limit=0` (untimed) are automatically pushed to the end.
+  - [x] **Unlimited Time Support**: Untimed questions use a count-up timer to record actual time spent.
+  - [x] **Translation Coverage**: Resolved `MISSING_MESSAGE` console errors for Job Wizard (AI Suggestion Flow).
+  - [x] **API Proxy Path Stability**: Fixed base URL path issues for seamless session initialization.
+
+- [ ] **4.7. Recruitment Intelligence (Prep)**
   - [ ] Candidate Table (sortable) - _Pending Implementation_. (Moved from Phase 3)
 
 ## Phase 5: AI Grading & Recruiter Insights
