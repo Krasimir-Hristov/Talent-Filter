@@ -7,10 +7,10 @@ import { LanguageSwitcher } from '@/components/features/language-switcher';
 import { Button } from '@/components/ui/button';
 import {
   Card,
-  CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
+  CardContent,
 } from '@/components/ui/card';
 import { ArrowLeft } from 'lucide-react';
 import Link from 'next/link';
@@ -57,21 +57,18 @@ export default async function ApplyPage({ params }: ApplyPageProps) {
     }
   }
 
-  // Check if job is closed
   if (job && job.status === 'closed') {
     isClosed = true;
   }
 
-  // Rate limited state
   if (isRateLimited) {
     return (
-      <div className='min-h-screen bg-background flex items-center justify-center p-4'>
-        <Card className='max-w-md w-full border-destructive/50 bg-destructive/5'>
+      <div className='min-h-screen bg-[#020617] flex items-center justify-center p-4'>
+        <Card className='max-w-md w-full border-destructive/50 bg-slate-900/50 backdrop-blur-xl'>
           <CardHeader>
-            <CardTitle className='text-destructive'>
+            <CardTitle className='text-destructive text-center'>
               {t('tooManyRequests')}
             </CardTitle>
-            <CardDescription>{t('tooManyRequestsDesc')}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -80,16 +77,17 @@ export default async function ApplyPage({ params }: ApplyPageProps) {
 
   if (!job) notFound();
 
-  // Job closed state
   if (isClosed) {
     return (
-      <div className='min-h-screen bg-background flex items-center justify-center p-4'>
-        <Card className='max-w-md w-full border-amber-500/50 bg-amber-500/5'>
+      <div className='min-h-screen bg-[#020617] flex items-center justify-center p-4'>
+        <Card className='max-w-md w-full border-amber-500/50 bg-slate-900/50 backdrop-blur-xl'>
           <CardHeader>
-            <CardTitle className='text-amber-600 dark:text-amber-400'>
+            <CardTitle className='text-amber-500 text-center'>
               {t('apply.positionClosed')}
             </CardTitle>
-            <CardDescription>{t('apply.positionClosedDesc')}</CardDescription>
+            <CardDescription className='text-center text-slate-400'>
+              {t('apply.positionClosedDesc')}
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Link href={`/${locale}`}>
@@ -105,33 +103,30 @@ export default async function ApplyPage({ params }: ApplyPageProps) {
   }
 
   return (
-    <div className='min-h-screen bg-background relative overflow-hidden flex items-center justify-center p-4 md:p-8'>
-      {/* Background decoration */}
-      <div className='absolute top-0 left-0 w-full h-full pointer-events-none overflow-hidden'>
-        <div className='absolute -top-[10%] -right-[10%] w-[40%] h-[40%] bg-primary/10 rounded-full blur-[120px]' />
-        <div className='absolute -bottom-[10%] -left-[10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]' />
-      </div>
+    <div className='min-h-screen bg-[#020617] text-slate-50 relative font-sans selection:bg-primary/30'>
+      {/* Background gradients */}
+      <div className='fixed inset-0 pointer-events-none -z-10 bg-[radial-gradient(ellipse_at_top,var(--tw-gradient-stops))] from-slate-900 via-[#020617] to-[#020617]' />
 
-      {/* Language Switcher */}
-      <div className='absolute top-4 right-4 z-50 animate-in fade-in slide-in-from-top-4 duration-700 delay-300'>
+      {/* Language Switcher - FIXED TOP RIGHT (Matches landing page) */}
+      <div className='fixed z-100' style={{ top: '2rem', right: '2rem' }}>
         <LanguageSwitcher />
       </div>
 
-      {/* Back Link */}
-      <div className='absolute top-4 left-4 z-50 animate-in fade-in slide-in-from-top-4 duration-700 delay-300'>
-        <Link href={`/${locale}/interview/${jobId}`}>
-          <Button
-            variant='ghost'
-            size='sm'
-            className='text-muted-foreground hover:text-foreground'
-          >
-            <ArrowLeft className='mr-1 h-4 w-4' />
-            {t('apply.backToDetails')}
-          </Button>
+      {/* Back Link - Styled to match the premium theme */}
+      <div
+        className='fixed z-100 flex items-center gap-2 px-6 py-2 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 transition-colors animate-in fade-in slide-in-from-left-4 duration-700'
+        style={{ top: '2rem', left: '2rem' }}
+      >
+        <Link
+          href={`/${locale}/interview/${jobId}`}
+          className='flex items-center gap-2 text-sm font-bold uppercase tracking-widest text-slate-400 hover:text-white transition-colors'
+        >
+          <ArrowLeft className='h-4 w-4' />
+          {t('apply.backToDetails')}
         </Link>
       </div>
 
-      <div className='relative z-10 w-full flex justify-center animate-in fade-in slide-in-from-bottom-4 duration-700'>
+      <div className='flex flex-col items-center justify-center min-h-screen py-24 px-6 animate-in fade-in slide-in-from-bottom-8 duration-700'>
         <RegistrationForm jobId={jobId} jobTitle={job.title} locale={locale} />
       </div>
     </div>

@@ -14,7 +14,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
@@ -23,10 +22,10 @@ import {
   AlertCircle,
   ArrowRight,
   Loader2,
-  UserPlus,
   Mail,
   Phone,
   User,
+  Sparkles,
 } from 'lucide-react';
 
 interface RegistrationFormProps {
@@ -44,7 +43,6 @@ export function RegistrationForm({
   const router = useRouter();
   const [serverError, setServerError] = useState<string | null>(null);
 
-  // Dynamic Zod schema with localized error messages
   const registrationSchema = z.object({
     first_name: z.string().min(1, t('apply.validation.firstNameRequired')),
     last_name: z.string().min(1, t('apply.validation.lastNameRequired')),
@@ -83,7 +81,6 @@ export function RegistrationForm({
         phone: data.phone!,
       });
 
-      // Success! Redirect to the interview session
       router.push(
         `/${locale}/interview/${jobId}/session?sid=${session.interview_id}`,
       );
@@ -101,94 +98,95 @@ export function RegistrationForm({
   };
 
   return (
-    <Card className='w-full max-w-lg border-primary/20 bg-background/60 backdrop-blur-xl shadow-2xl'>
-      <CardHeader className='text-center pb-4'>
-        <div className='flex items-center justify-center gap-2 mb-2'>
+    <Card className='w-full max-w-2xl rounded-4xl bg-white/2 border border-white/5 backdrop-blur-3xl shadow-2xl p-4 md:p-8 animate-in fade-in zoom-in-95 duration-700'>
+      <CardHeader className='text-center space-y-6 pb-8'>
+        <div className='flex justify-center'>
           <Badge
             variant='outline'
-            className='text-primary border-primary/30 uppercase tracking-widest text-[10px]'
+            className='px-4 py-1.5 border-primary/20 bg-primary/5 text-primary text-[10px] uppercase tracking-[0.2em] font-bold rounded-full'
           >
             {t('apply.badge')}
           </Badge>
         </div>
-        <CardTitle className='text-2xl md:text-3xl font-bold bg-clip-text text-transparent bg-linear-to-r from-foreground to-foreground/70'>
-          {jobTitle}
-        </CardTitle>
-        <CardDescription className='text-muted-foreground mt-2'>
-          {t('apply.description')}
-        </CardDescription>
+
+        <div className='space-y-4'>
+          <CardTitle className='text-4xl md:text-5xl font-black tracking-tight text-white leading-tight'>
+            {jobTitle}
+          </CardTitle>
+          <div className='h-1 w-12 bg-primary/40 rounded-full mx-auto' />
+          <CardDescription className='text-lg md:text-xl text-slate-400 font-medium'>
+            {t('apply.description')}
+          </CardDescription>
+        </div>
       </CardHeader>
 
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <CardContent className='space-y-5'>
-          {/* Server Error Banner */}
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-10'>
+        <CardContent className='space-y-8'>
           {serverError && (
-            <div className='flex items-start gap-3 p-4 rounded-xl border border-destructive/30 bg-destructive/5 text-destructive text-sm animate-in fade-in slide-in-from-top-2 duration-300'>
-              <AlertCircle size={18} className='shrink-0 mt-0.5' />
+            <div className='flex items-center gap-3 p-5 rounded-2xl border border-destructive/20 bg-destructive/5 text-destructive font-medium animate-in fade-in slide-in-from-top-2'>
+              <AlertCircle size={20} className='shrink-0' />
               <p>{serverError}</p>
             </div>
           )}
 
-          {/* Name Fields — Side by side */}
-          <div className='grid grid-cols-2 gap-4'>
-            <div className='space-y-2'>
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-8'>
+            <div className='space-y-3'>
               <Label
                 htmlFor='first_name'
-                className='text-sm font-medium flex items-center gap-1.5'
+                className='text-xs font-black uppercase tracking-widest text-slate-500 pl-1 flex items-center gap-2'
               >
-                <User size={14} className='text-muted-foreground' />
+                <User size={14} className='text-primary/60' />
                 {t('apply.firstName')}
               </Label>
               <Input
                 id='first_name'
                 placeholder={t('apply.firstNamePlaceholder')}
                 {...register('first_name')}
-                className={
+                className={`h-14 px-5 rounded-2xl bg-white/5 border-white/10 text-white placeholder:text-slate-600 focus:border-primary/50 focus:ring-primary/20 transition-all ${
                   errors.first_name
-                    ? 'border-destructive focus-visible:ring-destructive/30'
+                    ? 'border-destructive/50 ring-destructive/10'
                     : ''
-                }
+                }`}
               />
               {errors.first_name && (
-                <p className='text-xs text-destructive mt-1'>
+                <p className='text-xs text-destructive font-semibold pl-1'>
                   {errors.first_name.message}
                 </p>
               )}
             </div>
 
-            <div className='space-y-2'>
+            <div className='space-y-3'>
               <Label
                 htmlFor='last_name'
-                className='text-sm font-medium flex items-center gap-1.5'
+                className='text-xs font-black uppercase tracking-widest text-slate-500 pl-1 flex items-center gap-2'
               >
-                <User size={14} className='text-muted-foreground' />
+                <User size={14} className='text-primary/60' />
                 {t('apply.lastName')}
               </Label>
               <Input
                 id='last_name'
                 placeholder={t('apply.lastNamePlaceholder')}
                 {...register('last_name')}
-                className={
+                className={`h-14 px-5 rounded-2xl bg-white/5 border-white/10 text-white placeholder:text-slate-600 focus:border-primary/50 focus:ring-primary/20 transition-all ${
                   errors.last_name
-                    ? 'border-destructive focus-visible:ring-destructive/30'
+                    ? 'border-destructive/50 ring-destructive/10'
                     : ''
-                }
+                }`}
               />
               {errors.last_name && (
-                <p className='text-xs text-destructive mt-1'>
+                <p className='text-xs text-destructive font-semibold pl-1'>
                   {errors.last_name.message}
                 </p>
               )}
             </div>
           </div>
 
-          {/* Email */}
-          <div className='space-y-2'>
+          <div className='space-y-3'>
             <Label
               htmlFor='email'
-              className='text-sm font-medium flex items-center gap-1.5'
+              className='text-xs font-black uppercase tracking-widest text-slate-500 pl-1 flex items-center gap-2'
             >
-              <Mail size={14} className='text-muted-foreground' />
+              <Mail size={14} className='text-primary/60' />
               {t('apply.email')}
             </Label>
             <Input
@@ -196,28 +194,25 @@ export function RegistrationForm({
               type='email'
               placeholder={t('apply.emailPlaceholder')}
               {...register('email')}
-              className={
-                errors.email
-                  ? 'border-destructive focus-visible:ring-destructive/30'
-                  : ''
-              }
+              className={`h-14 px-5 rounded-2xl bg-white/5 border-white/10 text-white placeholder:text-slate-600 focus:border-primary/50 focus:ring-primary/20 transition-all ${
+                errors.email ? 'border-destructive/50 ring-destructive/10' : ''
+              }`}
             />
             {errors.email && (
-              <p className='text-xs text-destructive mt-1'>
+              <p className='text-xs text-destructive font-semibold pl-1'>
                 {errors.email.message}
               </p>
             )}
           </div>
 
-          {/* Phone (Optional) */}
-          <div className='space-y-2'>
+          <div className='space-y-3'>
             <Label
               htmlFor='phone'
-              className='text-sm font-medium flex items-center gap-1.5'
+              className='text-xs font-black uppercase tracking-widest text-slate-500 pl-1 flex items-center gap-2'
             >
-              <Phone size={14} className='text-muted-foreground' />
+              <Phone size={14} className='text-primary/60' />
               {t('apply.phone')}
-              <span className='text-xs text-muted-foreground font-normal ml-1'>
+              <span className='lowercase font-normal opacity-50 italic'>
                 ({t('apply.optional')})
               </span>
             </Label>
@@ -226,34 +221,36 @@ export function RegistrationForm({
               type='tel'
               placeholder={t('apply.phonePlaceholder')}
               {...register('phone')}
+              className='h-14 px-5 rounded-2xl bg-white/5 border-white/10 text-white placeholder:text-slate-600 focus:border-primary/50 focus:ring-primary/20 transition-all'
             />
           </div>
         </CardContent>
 
-        <CardFooter className='flex flex-col gap-4 pt-6 border-t border-border/50 bg-muted/30'>
-          <p className='text-[10px] text-muted-foreground text-center italic'>
+        <div className='flex flex-col items-center gap-10 pt-4'>
+          <p className='text-[10px] text-slate-500 text-center uppercase tracking-widest font-black leading-relaxed max-w-sm'>
             {t('apply.consent')}
           </p>
+
           <Button
             type='submit'
             size='lg'
             disabled={isSubmitting}
-            className='w-full text-lg font-semibold group h-14 bg-primary hover:bg-primary/90 transition-all shadow-[0_0_20px_rgba(var(--primary),0.3)]'
+            className='w-full h-16 text-xl font-black bg-primary hover:bg-primary/90 text-white rounded-full shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-[0.98] group'
           >
             {isSubmitting ? (
-              <>
-                <Loader2 className='mr-2 h-5 w-5 animate-spin' />
-                {t('apply.submitting')}
-              </>
+              <div className='flex items-center gap-3'>
+                <Loader2 className='h-6 w-6 animate-spin' />
+                <span>{t('apply.submitting')}</span>
+              </div>
             ) : (
-              <>
-                <UserPlus className='mr-2 h-5 w-5' />
-                {t('apply.submit')}
-                <ArrowRight className='ml-2 group-hover:translate-x-1 transition-transform' />
-              </>
+              <div className='flex items-center gap-3'>
+                <Sparkles className='h-6 w-6 text-white/50 group-hover:text-white transition-colors' />
+                <span>{t('apply.submit')}</span>
+                <ArrowRight className='h-6 w-6 group-hover:translate-x-2 transition-transform' />
+              </div>
             )}
           </Button>
-        </CardFooter>
+        </div>
       </form>
     </Card>
   );
